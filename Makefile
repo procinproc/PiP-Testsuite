@@ -59,7 +59,7 @@ SUBDIRS_CLEAN = $(SIBDIRS_COMMON) \
 
 include $(top_srcdir)/build/rule.mk
 
-subdir-all subdir-debug subdir-testclean subdir-veryclean:
+subdir-all subdir-debug :
 	@target=`expr $@ : 'subdir-\(.*\)'`; \
 	. $(top_srcdir)/config.sh; \
 	echo "version ${PIP_VERSION_MAJOR}"; \
@@ -74,10 +74,11 @@ subdir-all subdir-debug subdir-testclean subdir-veryclean:
 		make -C $${dir} $${target}; \
 	done
 
-subdir-clean:
-	@for dir in $(SUBDIRS_CLEAN); do \
+subdir-clean subdir-testclean subdir-veryclean :
+	@target=`expr $@ : 'subdir-\(.*\)'`; \
+	for dir in $(SUBDIRS_CLEAN); do \
 		echo '[' making $${dir} ']'; \
-		make -C $${dir} clean; \
+		make -C $${dir} $${target}; \
 	done
 
 all: subdir-all
