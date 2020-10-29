@@ -1,0 +1,11 @@
+
+PIP_VERSION          = @pip_version@
+PIP_VERSION_MAJOR    = @pip_version_major@
+PIP_VERSION_MINOR    = @pip_version_minor@
+PIP_VERSION_SUBMINOR = @pip_version_subminor@
+
+PIP_DIR = @with_pip@
+
+CC  = @CC@
+CXX = @CXX@
+F77 = @F77@

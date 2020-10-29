@@ -1,0 +1,24 @@
+
+PIP_DIR=@with_pip@
+
+export PIP_VERSION=@pip_version@
+export PIP_VERSION_MAJOR=@pip_version_major@
+export PIP_VERSION_MINOR=@pip_version_minor@
+export PIP_VERSION_SUBMINOR=@pip_version_subminor@
+
+export PIP_BINDIR=${PIP_DIR}/bin
+export PIP_LIBDIR=${PIP_DIR}/lib
+
+export PIPCC=${PIP_BINDIR}/pipcc
+export PIP_CHECK=${PIP_BINDIR}/pip-check
+export PIP_MODE_CMD=${PIP_BINDIR}/pip-mode
+export PIPS=${PIP_BINDIR}/pips
+export PRINTPIPMODE=${PIP_BINDIR}/printpipmode
+
+export LIBPIPSO=${PIP_LIBDIR}/libpip.so
+
+if test -f ${PIP_DIR}/preload/pip_preload.so; then
+    export PIP_PRELOAD=${PIP_DIR}/preload/pip_preload.so
+else
+    export PIP_PRELOAD=${PIP_DIR}/lib/pip_preload.so
+fi

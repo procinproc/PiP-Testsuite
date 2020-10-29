@@ -1,0 +1,14 @@
+%include util-common/test-v3.list
+%include util-v3/test-v3.list
+%include pipcc/test-v3.list
+%include basics-v1/test-v3.list
+%include basics-v2/test-v3.list
+%include compat-v1/test-v3.list
+%include compat-v2/test-v3.list
+%include issues/test-v3.list
+%include pthread/test-v3.list
+%include openmp/test-v3.list
+%include cxx/test-v3.list
+%include fortran/test-v3.list
+%include blt-v3/test-v3.list
+%include prog-v2/test-v3.list

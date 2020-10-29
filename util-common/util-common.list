@@ -1,0 +1,5 @@
+NG timer 0 inf
+NG timer 0 pip_task 1 inf
+NG timer 0 pip_task 8 inf
+timer 1 ./path-task.sh 1
+timer 1 ./path-task.sh 8

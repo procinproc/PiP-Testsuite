@@ -1,0 +1,6 @@
+timer 1 NG piprun
+timer 1 NG piprun -n 8
+timer 1 NG piprun -n 100000 ./abc
+timer 1 NG piprun -n 8 nosuchfile
+timer 1 OK piprun -n 1 ./abc
+timer 1 OK piprun -n 8 ./abc

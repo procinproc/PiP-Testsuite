@@ -1,0 +1,6 @@
+NG timer 0 pip_blt  1 1  inf
+NG timer 0 pip_blt  4 4  inf
+NG timer 0 pip_blt  8 24 inf
+timer 1 ./path-blt.sh 1 1
+timer 1 ./path-blt.sh 4 4
+timer 1 ./path-blt.sh 8 24

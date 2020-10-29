@@ -1,0 +1,8 @@
+timer 1 ./pagefault 1
+timer 1 ./pagefault 8
+timer 1 pip_task 1 ./fork
+timer 1 pip_task 8 ./fork
+skip T UNSUPPORTED timer 1 pip_task 1 ./pip_dlopen
+skip T UNSUPPORTED timer 1 pip_task 8 ./pip_dlopen
+##timer 1 ./sigchld 1
+##timer 1 ./sigchld 8

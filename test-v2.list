@@ -1,0 +1,12 @@
+%include util-common/test-v2.list
+%include pipcc/test-v2.list
+%include basics-v1/test-v2.list
+%include basics-v2/test-v2.list
+%include compat-v1/test-v2.list
+%include compat-v2/test-v2.list
+%include issues/test-v2.list
+%include pthread/test-v2.list
+%include openmp/test-v2.list
+%include cxx/test-v2.list
+%include fortran/test-v2.list
+%include prog-v2/test-v2.list

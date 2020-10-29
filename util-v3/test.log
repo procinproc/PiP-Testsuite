@@ -1,0 +1,314 @@
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 1 1 inf PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14226)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 1
+@:= 1 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 1 1 inf PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14239)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 1
+@:= 1 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 1 1 inf PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14252)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 1
+@:= 1 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 4 4 inf PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14267)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 4
+@:= 4 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 4 4 inf PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14280)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 4
+@:= 4 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 4 4 inf PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14293)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 4
+@:= 4 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 8 24 inf PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14307)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 8
+@:= 24 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 8 24 inf PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14320)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 8
+@:= 24 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: NG timer 0 pip_blt 8 24 inf PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stderr
+
+[pip_blt(14333)] pip_blt.c:41 (access( argv[3], X_OK )): -1:'Unknown error -1' (errno: 2:'No such file or directory')
+
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: NG
+@:= timer 0
+@:= pip_blt 8
+@:= 24 inf
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 1 1 PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 1 1
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 1 1 PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 1 1
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 1 1 PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 1 1
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 4 4 PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955456 - 2020-10-29 16:10:56
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 4 4
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 4 4 PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955456 - 2020-10-29 16:10:56
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955457 - 2020-10-29 16:10:57
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 4 4
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 4 4 PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955457 - 2020-10-29 16:10:57
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] ../bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+[main] /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955457 - 2020-10-29 16:10:57
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 4 4
+@:= PASS 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 8 24 PIP_MODE=process:preload
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955457 - 2020-10-29 16:10:57
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955457 - 2020-10-29 16:10:57
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 8 24
+@:= UNTESTED 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 8 24 PIP_MODE=process:got
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955457 - 2020-10-29 16:10:57
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955457 - 2020-10-29 16:10:57
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 8 24
+@:= UNTESTED 
+=== ============================================================ ====
+--- util-v3.list: timer 1 ./path-blt.sh 8 24 PIP_MODE=pthread
+--- ------------------------------------------------------------ ----
+@@_ start at 1603955457 - 2020-10-29 16:10:57
+@@:stdout
+relative path: ../bin/abc
+absolute path: /home/ahori/PiP/PiP-testsuite/bin/abc
+@@~  end  at 1603955457 - 2020-10-29 16:10:57
+--- ------------------------------------------------------------ ----
+@:= util-v3.list: timer
+@:= 1 ./path-blt.sh
+@:= 8 24
+@:= UNTESTED 
+=== ============================================================ ====
+=== ============================================================ ====
