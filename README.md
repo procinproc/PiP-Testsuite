@@ -17,9 +17,9 @@ see the [LICENSE](LICENSE) file for details.
 
 # Usage
 
-  $ cd TOP_SRCDIR
-  $ ./configure PIP_INSTALLED_DIR
-  $ make test
+    $ cd TOP_SRCDIR
+    $ ./configure PIP_INSTALLED_DIR
+    $ make test
 
 # Author
 
