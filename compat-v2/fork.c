@@ -60,7 +60,7 @@ int main( int argc, char **argv ) {
       }
     }
 #if PIP_VERSION > 1
-    CHECK( pip_yield(0), RV, return(EXIT_FAIL) );
+    CHECK( pip_yield(0), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
 #endif
   }
   for( i=0; i<nfork; i++ ) {

@@ -70,13 +70,16 @@ COMMON = pip_init pip_exit pip_spawn pip_wait pip_misc return exit \
 
 include $(top_srcdir)/build/rule.mk
 
-all: $(PROGRAMS)
+all: $(PROGRAMS) $(DEPS)
+	$(MAKE) -C ../basics-common
 	@for p in $(COMMON); do \
 	  echo "ln -s -f ../basics-common/$${p}"; \
 	  ln -s -f ../basics-common/$${p}; \
 	done
 
-post-clean-hook : rm -f $(COMMON)
+post-clean-hook :
+	$(MAKE) -C ../basics-common clean
+	$(RM) $(COMMON)
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 

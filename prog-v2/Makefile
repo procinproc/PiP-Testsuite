@@ -35,20 +35,22 @@ include $(top_srcdir)/build/var.mk
 
 PROGRAMS = abc def ghi xyz
 
+DEPENDS = $(DEPS) Makefile
+
 include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
-abc: abc.c Makefile
+abc: abc.c $(DEPENDS)
 	$(PIPCC) $< -o $@
 
-def: abc.c Makefile
+def: abc.c $(DEPENDS)
 	$(PIPCC) $< -o $@
 
-ghi: abc.c Makefile
+ghi: abc.c $(DEPENDS)
 	$(PIPCC) $< -o $@
 
-xyz: abc.c Makefile
+xyz: abc.c $(DEPENDS)
 	$(PIPCC) $< -o $@
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list

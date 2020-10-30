@@ -32,20 +32,30 @@ top_builddir = ..
 top_srcdir = $(top_builddir)
 srcdir = .
 
-COMMON = pip_init pip_exit pip_spawn pip_wait pip_misc return exit \
-	prog-noexec prog-nopie prog-nordynamic prog-pie
+COMMON = pip_init pip_wait pip_exit pip_spawn pip_wait pip_misc  \
+	return exit prog-noexec prog-nopie prog-nordynamic prog-pie
 
 include $(top_srcdir)/build/var.mk
 
 include $(top_srcdir)/build/rule.mk
 
-all :
+all : $(DEPS)
+	$(MAKE) -C ../basics-common all
 	@for p in $(COMMON); do \
 	  echo "ln -s -f ../basics-common/$${p}"; \
 	  ln -s -f ../basics-common/$${p}; \
 	done
 
-clean : rm -f $(COMMON)
+debug :: $(DEPS)
+	$(MAKE) -C ../basics-common debug
+	@for p in $(COMMON); do \
+	  echo "ln -s -f ../basics-common/$${p}"; \
+	  ln -s -f ../basics-common/$${p}; \
+	done
+
+post-clean-hook :
+	$(MAKE) -C ../basics-common clean
+	$(RM) $(COMMON)
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 

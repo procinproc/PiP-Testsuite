@@ -97,5 +97,5 @@ post-testclean-hook:
 
 all : $(PROGRAMS)
 
-%: %.c $(SRCS) $(DEPINCS) $(DEPLIBS) Makefile
+%: %.c $(SRCS) $(DEPS) Makefile
 	$(PIPCC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@

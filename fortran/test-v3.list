@@ -1,1 +1,2 @@
-%include fortran.list
+%include fort-v1.list
+%include fort-v3.list

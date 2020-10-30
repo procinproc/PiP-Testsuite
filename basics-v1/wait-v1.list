@@ -1,6 +1,2 @@
 timer 1 ./pip_wait 1
 timer 1 ./pip_wait 8
-skip T UNSUPPORTED timer 1 ./pip_wait 1 2
-skip T UNSUPPORTED timer 1 ./pip_wait 8 2
-skip T UNSUPPORTED timer 1 ./pip_wait 1 15
-skip T UNSUPPORTED timer 1 ./pip_wait 8 15

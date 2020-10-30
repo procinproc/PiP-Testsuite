@@ -35,9 +35,9 @@ include $(top_srcdir)/build/var.mk
 
 PROGRAMS = abc
 
-include $(top_srcdir)/build/rule.mk
-
 all: $(PROGRAMS)
+
+include $(top_srcdir)/build/rule.mk
 
 abc: abc.c $(DEPS)
 	$(PIPCC) $< -o $@

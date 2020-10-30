@@ -51,11 +51,11 @@ SUBDIRS_V3 = $(SUBDIRS_COMMON) \
 	compat-v1 compat-v2 \
 	blt-v3
 
-SUBDIRS_CLEAN = $(SIBDIRS_COMMON) \
-	basics-v1 basics-v2 blt-v3 build \
+SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
+	basics-v1 basics-v2 blt-v3 \
 	compat-v1 compat-v2 cxx fortran include  \
 	prog-v1 prog-v2 pthread release util-v3 \
-	pipgdb porting
+	pipgdb porting build
 
 include $(top_srcdir)/build/rule.mk
 
@@ -92,6 +92,7 @@ testclean: subdir-testclean
 post-veryclean-hook:
 	$(RM) config.log config.status .build_version
 	$(RM) -r autom4te.cache
+	$(RM) config.sh build/config.mk
 
 debug::
 	$(MAKE) subdir-debug;

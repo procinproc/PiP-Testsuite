@@ -1,3 +1,4 @@
+timer 1 ./pip_init got
 timer 1 ./pip_fin
 timer 1 ./pip_task_spawn
 timer 1 ./spawn_pie

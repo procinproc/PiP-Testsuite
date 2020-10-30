@@ -60,7 +60,11 @@ int main( int argc, char **argv ) {
   CHECK( pip_init(&pipid,&ntasks,NULL,0), RV, return(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
     status = 0;
+#if PIP_VERSION > 1
     CHECK( pip_wait(PIP_PIPID_ROOT,&status), RV!=EDEADLK, return(EXIT_FAIL) );
+#else
+    CHECK( pip_wait(PIP_PIPID_ROOT,&status), RV!=EINVAL,  return(EXIT_FAIL) );
+#endif
     CHECK( pip_wait(0,&status),              RV!=ECHILD,  return(EXIT_FAIL) );
 
     core = PIP_CPUCORE_ASIS;
@@ -85,7 +89,11 @@ int main( int argc, char **argv ) {
 	CHECK( (WTERMSIG(status)==sig), !RV, return(EXIT_FAIL) );
       }
       status = 0;
+#if PIP_VERSION > 1
       CHECK( pip_wait(i,&status), RV!=ECHILD, return(EXIT_FAIL) );
+#else
+      CHECK( pip_wait(i,&status), RV!=ESRCH&&RV!=ECHILD, return(EXIT_FAIL) );
+#endif
     }
   } else {
     CHECK( pip_wait(0,&status),   RV!=EPERM,  return(EXIT_FAIL) );

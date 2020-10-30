@@ -1,13 +1,5 @@
 Github:
-	https://github.com/RIKEN-SysSoft/PiP
+	https://github.com/RIKEN-SysSoft/PiP-testsuite
 
-Version 1.0.0 (27 Feb. 2019)
-	The first release version (deprecated)
-
-Version 2.0.0 (XX YY 2020)
-	The first stable version
-	Supporting CentOS8/RHEL8
-
-Version 3.0.0 (XX YY 2020)
-	Adding BLT and ULP features
-	Supporting CentOS8/RHEL8
+Version 1.0.0 (30 Oct. 2020)
+	The first release version
