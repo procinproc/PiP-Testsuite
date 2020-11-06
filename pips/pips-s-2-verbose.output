@@ -1,0 +1,24 @@
+PIPS: kill -s INT 23336
+kill 23336 INT
+PIPS: kill -s INT 23337
+kill 23337 INT
+PIPS: kill -s INT 23338
+kill 23338 INT
+PIPS: kill -s INT 23340
+kill 23340 INT
+PIPS: kill -s INT 23341
+kill 23341 INT
+PIPS: kill -s INT 23342
+kill 23342 INT
+PIPS: kill -s INT 23343
+kill 23343 INT
+PIPS: kill -s INT 23344
+kill 23344 INT
+PIPS: kill -s INT 23345
+kill 23345 INT
+PIPS: kill -s INT 23346
+kill 23346 INT
+PIPS: kill -s INT 23347
+kill 23347 INT
+PIPS: kill -s INT 23348
+kill 23348 INT
