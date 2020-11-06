@@ -134,7 +134,7 @@ do_test true  pips-family-a --family a
 do_test true  pips-f-a-c    -f a c
 do_test false pips-f-nosuch -f nosuchpip
 
-do_test true  pip-test-kill      --kill
+do_test true  pips-test-kill      --kill
 do_test true  pips-task-k        --task -k
 do_test true  pips-task-k-a      --task -k a
 do_test false pips-signal        --signal
@@ -160,5 +160,4 @@ if $flag_error; then
     echo "FAILED"
     exit 1
 fi
-echo "SUCCEEDED"
 exit 0
