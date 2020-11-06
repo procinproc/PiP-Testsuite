@@ -1,2 +1,2 @@
 timer 1 ./pip_wait 1
-timer 1 ./pip_wait 8
+##timer 1 ./pip_wait 8
