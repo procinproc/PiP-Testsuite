@@ -167,8 +167,6 @@ INLINE void dump_env( char *tag, char **envv, int nomore ) {
   }
 }
 
-#ifndef __cplusplus
-
 INLINE char *signal_name( int sig ) {
   char *signam_tab[] = {
     "(signal0)",		/* 0 */
@@ -304,63 +302,6 @@ INLINE void set_sigint_watcher( void ) {
   sigact.sa_sigaction = sigint_watcher;
   sigact.sa_flags     = SA_RESETHAND;
   CHECK( sigaction( SIGINT, &sigact, NULL ), RV, abend(EXIT_UNTESTED) );
-}
-
-#define PROCFD		"/proc/self/fd"
-INLINE int print_fds( FILE *file ) {
-  struct dirent **entry_list;
-  int count;
-  int err = 0;
-
-  int filter( const struct dirent *entry ) {
-    return entry->d_type == DT_LNK;
-  }
-
-  if( ( count = scandir( PROCFD, &entry_list, filter, alphasort ) ) < 0 ) {
-    err = errno;
-  } else {
-    char pipidstr[64];
-    int pipid;
-    int i;
-
-    (void) pip_get_pipid( &pipid );
-    if( pipid == PIP_PIPID_ROOT ) {
-      sprintf( pipidstr, "ROOT" );
-    } else {
-      sprintf( pipidstr, "%d", pipid );
-    }
-    for( i=0; i<count; i++ ) {
-      struct dirent *entry = entry_list[i];
-      char path[512];
-      char name[512];
-      int cc;
-
-      sprintf( path, "%s/%s", PROCFD, entry->d_name );
-      free(entry);
-      if( ( cc = readlink( path, name, 512 ) ) < 0 ) {
-	err = errno;
-	break;
-      }
-      name[cc] = '\0';
-      fprintf( file, "[%s] %s -> %s\n", pipidstr, path, name );
-    }
-    free( entry_list );
-  }
-  return err;
-}
-#endif
-
-INLINE unsigned long get_total_memory( void ) {
-  FILE *fp;
-  int ns = 0;
-  unsigned long memtotal = 0;
-
-  if( ( fp = fopen( "/proc/meminfo", "r" ) ) != NULL ) {
-    ns = fscanf( fp, "MemTotal: %lu", &memtotal );
-    fclose( fp );
-  }
-  if ( ns > 0 ) return memtotal;
-  return 0;
 }
 
 #endif /* __test_h__ */

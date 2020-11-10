@@ -34,3 +34,5 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 include $(top_srcdir)/build/rule.mk
+
+# just for 'make clean'
