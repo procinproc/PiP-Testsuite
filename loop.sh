@@ -3,14 +3,22 @@
 dir=`dirname $0`;
 dir_real=`cd $dir && pwd`;
 
-dir_util=$dir_real/util;
-dir_bin=$dir_real/../bin;
-dir_script=$dir_real/scripts;
+if ! [ -f ${dir_real}/config.sh ]; then
+    ${dir_real}/configure --help
+    exit 1
+fi
+. $dir_real/config.sh
 
 cmdline="$0 $@";
 cmd=`basename $0`;
 ext=0;
 TMP='';
+
+PIP_MODE_CHECK=${dir}/util-common/pip_mode_check
+if ! [ -x ${PIP_MODE_CHECK} ]; then
+    echo "Unable to find ${PIP_MODE_CHECK}. Maybe not build yet."
+    exit 1
+fi
 
 prt_ext() {
     exit=$1
@@ -50,8 +58,8 @@ print_usage() {
 }
 
 finalize() {
-    $dir_bin/pips -s TERM -l;
-    $dir_bin/pips -s KILL > /dev/null 2>&1;
+    ${PIPS} -s TERM -v;
+    ${PIPS} -s KILL > /dev/null 2>&1;
     if [ x"$TMP" != x ]; then
 	if [ -f $TMP ]; then
 	    echo "Logfile: $FILE";
@@ -138,7 +146,7 @@ if [ $nomode -eq 0 ]; then
     fi
     for mode in $mode_list
     do
-	if $dir/scripts/pip-mode $mode $dir/util/pip_mode_check > /dev/null 2>&1; then
+	if ${PIP_MODE_CMD} $mode ${dir}/util-common/pip_mode_check > /dev/null 2>&1; then
 	    mlist="$mlist $mode";
 	fi
     done
@@ -166,10 +174,10 @@ while true; do
 		if [ $quiet -eq 0 ]; then
 		    echo -n $i$mode "";
 		fi
-		$dir_script/pip-mode $mode $@ >> $TMP 2>&1;
+		${PIP_MODE_CMD} $mode $@ >> $TMP 2>&1;
 	    else
 		echo "[[" "$i$mode" "]]" "$cmdline" `date` | tee -a $TMP;
-		$dir_script/pip-mode $mode $@ 2>&1 | tee -a $TMP;
+		${PIP_MODE_CMD} $mode $@ 2>&1 | tee -a $TMP;
 	    fi
 	    ext=$?;
 	    if [ $ext != 0 ] ; then
