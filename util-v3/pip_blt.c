@@ -111,15 +111,17 @@ int main( int argc, char **argv ) {
   extval = 0;
   for( i=0; i<ntasks; i++ ) {
     int status = 0;
-    CHECK( pip_wait_any( &pipid, &status ), RV, return(EXIT_FAIL) );
+    int signal;
+    pipid = i;
+    CHECK( pip_wait( pipid, &status ), RV, return(EXIT_FAIL) );
     if( WIFEXITED( status ) ) {
       extval = WEXITSTATUS( status );
       if( extval ) {
 	fprintf( stderr, "Task[%d] returns %d\n", pipid, extval );
       }
     } else if( WIFSIGNALED( status ) ) {
-      extval = WTERMSIG( status );
-      fprintf( stderr, "Task[%d] is signaled %d\n", pipid, extval );
+      signal = WTERMSIG( status );
+      fprintf( stderr, "Task[%d] is signaled %d\n", pipid, signal );
       extval = EXIT_UNRESOLVED;
     } else {
       extval = EXIT_UNRESOLVED;
@@ -127,5 +129,5 @@ int main( int argc, char **argv ) {
     if( err == 0 && extval != 0 ) err = extval;
   }
   CHECK( pip_fin(), RV, return(EXIT_UNTESTED) );
-  return extval;
+  return err;
 }
