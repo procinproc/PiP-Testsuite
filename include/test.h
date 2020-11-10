@@ -167,8 +167,8 @@ INLINE void dump_env( char *tag, char **envv, int nomore ) {
   }
 }
 
-INLINE char *signal_name( int sig ) {
-  char *signam_tab[] = {
+INLINE const char *signal_name( int sig ) {
+  const char *signam_tab[] = {
     "(signal0)",		/* 0 */
     "SIGHUP",			/* 1 */
     "SIGINT",			/* 2 */
@@ -257,7 +257,7 @@ INLINE void watch_anysignal( void ) {
   set_signal_watcher( SIGTTOU );
 }
 
-INLINE int set_signal_handler( int signal, void(*handler)() ) {
+INLINE int set_signal_handler( int signal, void(*handler)(int, siginfo_t*, void*) ) {
   struct sigaction sigact;
   memset( (void*) &sigact, 0, sizeof( sigact ) );
   sigact.sa_sigaction = handler;
