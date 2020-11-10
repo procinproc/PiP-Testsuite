@@ -35,43 +35,116 @@
 
 #include <test.h>
 
-#define NITERS		(100)
+#define NITERS		(5)
 #define MALLOC_MAX	(1024*1024*32)
 
-void *my_malloc( void ) {
-  int32_t sz;
-  void *p;
+#define FREEMEM_THRESHOLD	(512*1024*1024) /* 1 GB */
+#define VARIATION	(0.33)
 
-  sz = random();
-  sz <<= 6;
-  sz &= MALLOC_MAX - 1;
-  if( ( p = malloc( sz ) ) != NULL ) memset( p, 0, sz );
+#define MEMINFO_PATH	"/proc/meminfo"
+
+FILE *fp = NULL;
+
+ssize_t freemem( void ) {
+  char name[32] = { 0 };
+  char unit[4]  = { 0 };
+  ssize_t  fm       = 0;
+
+  if( fp == NULL ) {
+    if( ( fp = fopen( MEMINFO_PATH, "r" ) ) == NULL ) return -1;
+  }
+  while( fscanf( fp, "%30s %ld %2s\n", name, &fm, unit ) == 3 ) {
+    if( strcmp( "MemFree:", name ) == 0 ) {
+      rewind( fp );
+      switch( unit[0]  ) {
+      case 'g':
+      case 'G':
+	fm *= 1024;
+	/* fallthrough */
+      case 'm':
+      case 'M':
+	fm *= 1024;
+	/* fallthrough */
+      case 'k':
+      case 'K':
+	fm *= 1024;
+	break;
+      default:
+	break;
+      }
+      break;
+    }
+  }
+  return fm;
+}
+
+char *my_malloc( size_t min, size_t max, int pipid ) {
+  long int rd, sz;
+  char *p;
+  int i;
+
+  rd = random() % ( max - min );
+  sz = rd + min;
+
+  if( ( p = (char*) malloc( (size_t) sz ) ) != NULL ) {
+    for( i=0; i<sz; i++ ) p[i] = (char) pipid;
+  }
   return p;
 }
 
-int malloc_loop( int niters ) {
-  void *prev, *p;
+void my_free( char *alloc, size_t min, int pipid ) {
+  int i;
+  for( i=0; i<min; i++ ) {
+    if( alloc[i] != (char) pipid ) pip_exit( EXIT_FAIL );
+  }
+}
+
+int malloc_loop( int niters, int pipid ) {
+  ssize_t fm, ave, min, max;
+  char *prev, *p;
   int i;
 
-  fprintf( stderr, "niters:%d\n", niters );
-  CHECK( ( prev = my_malloc() ), RV==0, return(ENOMEM) );
+  fm = freemem();
+  if( fm > 0 ) {
+    fm = FREEMEM_THRESHOLD;
+  } else if( fm < FREEMEM_THRESHOLD ) {
+    fprintf( stderr, "Not enough memory for malloc test (%d MB)\n", fm/1024 );
+    pip_exit( EXIT_UNTESTED );
+  }
+  fm  = ( fm > FREEMEM_THRESHOLD )? FREEMEM_THRESHOLD : fm;
+  ave = ( fm / 4 ) >> pipid;
+  ave = ( ave < 256 )? 256: ave;
+  min = (ssize_t) ( ((float)ave) - ( ((float)ave) * VARIATION ) );
+  max = (ssize_t) ( ((float)ave) + ( ((float)ave) * VARIATION ) );
+
+  niters <<= pipid;;
+
+  fprintf( stderr, "[%d] FREE:%7ld  AVE:%7ld  MIN:%7ld  MAX:%7ld  iters:%d\n",
+	   pipid, fm, ave/1024, min/1024, max/1024, niters );
+  CHECK( ( prev = my_malloc(min,max,pipid) ), RV==0, return(ENOMEM) );
   for( i=0; i<niters; i++ ) {
-    CHECK( ( p = my_malloc() ),  RV==0, return(ENOMEM) );
-    free( prev );
+#if PIP_VERSION > 1
+    CHECK( pip_yield(PIP_YIELD_USER), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
+#endif
+    CHECK( ( p = my_malloc(min,max,pipid) ),  RV==0, return(ENOMEM) );
+    my_free( prev, min, pipid );
     prev = p;
   }
-  free( prev );
+  if( fp != NULL ) fclose( fp );
+  my_free( prev, min, pipid );
   return 0;
 }
 
 int main( int argc, char **argv ) {
   int niters = 0;
+  int pipid  = 0;
 
   if( argc > 1 ) {
     niters = strtol( argv[1], NULL, 10 );
   }
   niters = ( niters <= 0 ) ? NITERS : niters;
 
-  CHECK( malloc_loop( niters ), RV, return(EXIT_FAIL) );
+  CHECK( pip_get_pipid( &pipid ),      RV, return(EXIT_FAIL) );
+  CHECK( malloc_loop( niters, pipid ), RV, return(EXIT_FAIL) );
   return 0;
 }
