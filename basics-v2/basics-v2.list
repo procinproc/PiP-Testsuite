@@ -6,12 +6,12 @@ timer 1 ./corebind 1
 timer 1 ./corebind 8
 skip T UNSUPPORTED timer 1 ./hook_and_coe 1
 skip T UNSUPPORTED timer 1 ./hook_and_coe 8
-timer 1 ./seek-file.sh  1
-timer 1 ./seek-pipe.sh  1
-timer 1 ./seek-outin.sh 1
-timer 4 ./seek-file.sh  4
-timer 4 ./seek-pipe.sh  4
-timer 4 ./seek-outin.sh 4
+timer 4 ./seek-file.sh  1
+timer 4 ./seek-pipe.sh  1
+timer 4 ./seek-outin.sh 1
+timer 8 ./seek-file.sh  4
+timer 8 ./seek-pipe.sh  4
+timer 8 ./seek-outin.sh 4
 timer 1 ./pip_barrier  1 10
 timer 1 ./pip_barrier  8 10
 timer 2 ./pip_barrier2 1 10
