@@ -34,40 +34,91 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = a b c
+SRCS_V1  = pip_init.c \
+	   pip_wait.c \
+	   pip_exit.c \
+	   exit.c \
+	   return.c \
+	   pip_spawn.c \
+	   pip_misc.c
 
-SRCS = a.c
+PROG_V1 = pip_init \
+	  pip_wait \
+	  pip_exit \
+	  exit \
+	  return \
+	  pip_spawn \
+	  pip_misc
+
+SRCS_V2 = $(SRCS_V1) \
+	  pip_wait_any.c \
+	  pip_trywait.c \
+	  pip_trywait_any.c \
+	  pip_fin.c \
+	  pip_task_spawn.c \
+	  corebind.c \
+	  spawn_pie.c \
+	  hook_and_coe.c \
+	  pip_barrier.c \
+	  pip_barrier2.c \
+	  seek.c \
+	  pip_kill.c \
+	  pip_namexp.c \
+	  pip_aux.c
+
+PROG_V2 = $(PROG_V1) \
+	  pip_wait_any \
+	  pip_trywait \
+	  pip_trywait_any \
+	  pip_fin \
+	  pip_task_spawn \
+	  corebind \
+	  spawn_pie \
+	  hook_and_coe \
+	  pip_barrier \
+	  pip_barrier2 \
+	  seek \
+	  pip_kill \
+	  pip_namexp \
+	  pip_aux
+
+SRCS_V3 = $(SRCS_V2)
+PROG_V3 = $(PROG_V2)
+
+PROG_TEST = prog-noexec \
+	    prog-nopie \
+	    prog-pie \
+	    prog-nordynamic
+
+PROG_ALL = $(PROG_V3) $(PROG_TEST)
+
+SRCS     = $(SRCS_V$(PIP_VERSION_MAJOR))
+PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR)) $(PROG_TEST)
 
 include $(top_srcdir)/build/rule.mk
 
-all: test
+all: $(PROGRAMS)
 
-check: test
+prog-noexec : prog.c $(DEPS) Makefile
+	$(CC) -g -O2 prog.c -o prog-noexec
+	chmod -x prog-noexec
 
-a: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o a
+prog-nopie : prog.c $(DEPS) Makefile
+	$(CC) -g -O2 prog.c -o prog-nopie
 
-b: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o b
+prog-pie : prog.c $(DEPS) Makefile
+	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-pie
 
-c: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o c
+prog-nordynamic : prog.c Makefile
+	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic
 
-test: clean
-	./pips-test.sh
+debug :: $(DEPS)
+	$(MAKE) -C ../basics-common debug
 
-gen: $(PROGRAMS)
-	. ../config.sh; \
-	PIP_MODE=thread      $(PIP_EXEC) -n 4 ./a 30 & \
-	PIP_MODE=process:got $(PIP_EXEC) -n 3 ./b 30 & \
-	LD_PRELOAD=$${PIP_PRELOAD} PIP_MODE=process:preload $(PIP_EXEC) -n 2 ./c 30 &
-	$(RM) *.input *.output
-	./pips-test.sh gen
-	${PIPS} -k a b c pip-exec
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
+
+test :
+	../test.sh $(TEST_LIST)
 
 post-clean-hook:
-	$(RM) $(PROGRAMS)
-	$(RM) -f *.check *.log
-
-post-distclean-hook: post-clean-hook
-	$(RM) *.input *.output
+	$(RM) $(PROG_ALL)

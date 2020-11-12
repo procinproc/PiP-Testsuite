@@ -34,40 +34,49 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = a b c
+CWD = $(shell pwd)
+CPPFLAGS += -I../include -DCWD=\"$(CWD)\" -DPIPS=\"$(PIPS)\"
 
-SRCS = a.c
+SRCS_V1 = dlmopen_count.c ompnumthread.c timer.c inf.c \
+	pip_mode_check.c pip_task.c
+SRCS_V2 = $(SRCS_V1)
+SRCS_V3 = $(SRCS_V2) pip_blt.c
+
+PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check pip_task
+PROG_V2 = $(PROG_V1)
+PROG_V3 = $(PROG_V2) pip_blt
+
+PROG_ALL = ($PROG_V3)
+
+SRCS = $(SRCS_V$(PIP_VERSION_MAJOR))
+PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR))
 
 include $(top_srcdir)/build/rule.mk
 
-all: test
+all: $(PROGRAMS)
 
-check: test
+dlmopen_count: dlmopen_count.c $(DEPS)
+	$(PIPCC) -g -O2 $(CPPFLAGS)  $< -o $@
 
-a: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o a
+ompnumthread: ompnumthread.c $(DEPS)
+	$(CC) -fopenmp -openmp $< -o $@
 
-b: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o b
+timer: timer.c $(DEPS)
+	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
 
-c: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o c
+pip_mode_check : pip_mode_check.c $(DEPS)
+	$(PIPCC) -g -O2 $(CPPFLAGS) --piptask $< -o $@
 
-test: clean
-	./pips-test.sh
+pip_task : pip_task.c $(DEPS)
+	$(PIPCC) -g -O2 $(CPPFLAGS) --piproot $< -o $@
 
-gen: $(PROGRAMS)
-	. ../config.sh; \
-	PIP_MODE=thread      $(PIP_EXEC) -n 4 ./a 30 & \
-	PIP_MODE=process:got $(PIP_EXEC) -n 3 ./b 30 & \
-	LD_PRELOAD=$${PIP_PRELOAD} PIP_MODE=process:preload $(PIP_EXEC) -n 2 ./c 30 &
-	$(RM) *.input *.output
-	./pips-test.sh gen
-	${PIPS} -k a b c pip-exec
+inf : inf.c $(DEPS)
+	$(CC) -g -O2 $(CPPFLAGS) $< -o $@
+
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
+
+test :
+	../test.sh $(TEST_LIST)
 
 post-clean-hook:
-	$(RM) $(PROGRAMS)
-	$(RM) -f *.check *.log
-
-post-distclean-hook: post-clean-hook
-	$(RM) *.input *.output
+	$(RM) $(PROG_ALL)

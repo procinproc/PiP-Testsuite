@@ -34,40 +34,37 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = a b c
+SRCS_V1  = malloc.c ctype.c gettimeofday.c \
+	   gethostname.c gethostbyname.c getaddrinfo.c \
+	   const_destruct.c system.c  get_nprocs.c environ.c \
+	   atexit.c on_exit.c
+PROG_V1  = malloc ctype gettimeofday \
+	   gethostname gethostbyname getaddrinfo \
+	   const_destruct system  get_nprocs environ \
+	   atexit on_exit
 
-SRCS = a.c
+SRCS_V2  = $(SRCS_V1) fork.c sigchld.c pagefault.c pip_dlopen.c libnull.c
+PROG_V2  = $(PROG_V1) fork sigchld pagefault pip_dlopen libnull.so
+
+SRCS_V3 = $(SRCS_V2)
+PROG_V3 = $(PROG_V2)
+
+PROG_ALL = $(PROG_V3)
+
+SRCS     = $(SRCS_V$(PIP_VERSION_MAJOR))
+PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR))
 
 include $(top_srcdir)/build/rule.mk
 
-all: test
+all: $(PROGRAMS)
 
-check: test
+libnull.so: libnull.c Makefile
+	$(PIPCC) --nopip -g -O3 -fPIC -shared libnull.c -o libnull.so
 
-a: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o a
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-b: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o b
-
-c: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o c
-
-test: clean
-	./pips-test.sh
-
-gen: $(PROGRAMS)
-	. ../config.sh; \
-	PIP_MODE=thread      $(PIP_EXEC) -n 4 ./a 30 & \
-	PIP_MODE=process:got $(PIP_EXEC) -n 3 ./b 30 & \
-	LD_PRELOAD=$${PIP_PRELOAD} PIP_MODE=process:preload $(PIP_EXEC) -n 2 ./c 30 &
-	$(RM) *.input *.output
-	./pips-test.sh gen
-	${PIPS} -k a b c pip-exec
+test : all
+	../test.sh $(TEST_LIST)
 
 post-clean-hook:
-	$(RM) $(PROGRAMS)
-	$(RM) -f *.check *.log
-
-post-distclean-hook: post-clean-hook
-	$(RM) *.input *.output
+	$(RM) $(PROG_ALL)

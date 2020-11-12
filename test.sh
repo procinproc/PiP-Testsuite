@@ -85,14 +85,8 @@ if [ "${BUILD_VERSION}" != "${CONFIG_VERSION}" ]; then
     exit 1
 fi
 
-path_common=.:${dir_real}/util-common:${dir_real}/basics-common:${PIP_DIR}/bin
+path=.:${dir_real}/utils:${dir_real}/basics:${PIP_DIR}/bin
 if [ x"$SUMMARY_FILE" = x ]; then
-    case ${PIP_VERSION_MAJOR} in
-	1|2) path=${path_common};;
-	3)   path=${path_common}:${dir_real}/util-v3;;
-	*)   echo "Unknown PiP Version ($PIP_VERSION_MAJOR)";
-	     exit 1;;
-    esac
     export PATH=${path}:$PATH
     sum_file=$dir_real/.test-sum-$$.sh
 else
@@ -348,7 +342,7 @@ run_test_T=''
 for pip_mode in $pip_mode_list
 do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	case `PIP_MODE=$pip_mode_name $dir/util-common/pip_mode_check 2>/dev/null | grep -e process -e thread` in
+	case `PIP_MODE=$pip_mode_name pip_mode_check 2>/dev/null | grep -e process -e thread` in
 	$pip_mode_name)
 		eval "run_test_${pip_mode}=${pip_mode}"
 		if [ x"$SUMMARY_FILE" = x ]; then
@@ -552,4 +546,24 @@ if [ x"$SUMMARY_FILE" = x ]; then
 fi
 
 case $n_KILLED in 0) :;; *) exit $EXIT_KILLED;; esac
-[ $n_FAIL -eq 0 -a $n_UNRESOLVED -eq 0 -a $n_PASS -gt 0 ]
+case $n_PASS   in 0)        exit $EXIT_FAIL;;   esac
+
+if [ x"$SUMMARY_FILE" != x ]; then
+    if [ $n_FAIL -eq 0 -a $n_UNRESOLVED -eq 0 -a $n_PASS -gt 0 ]; then
+	exit $EXIT_FAIL
+    fi
+else
+    if [ x"${PIP_TEST_THRESHOLD}" == x ]; then
+	if [ $n_FAIL -ne 0 -o $n_UNRESOLVED -ne 0 ]; then
+            exit $EXIT_FAIL
+	fi
+    else
+	nerr=`expr $n_FAIL + $n_UNRESOLVED`
+	if [ $nerr -ge ${PIP_TEST_THRESHOLD} ]; then
+            exit $EXIT_FAIL
+	fi
+	echo "Some test fails ($nerr) but less than PIP_TEST_THRESHOLD ($PIP_TEST_THRESHOLD)"
+    fi
+fi
+
+exit $EXIT_PASS

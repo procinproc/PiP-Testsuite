@@ -1,0 +1,24 @@
+timer 1 ./pip_init
+timer 1 ./pip_init null
+timer 1 ./pip_init preload
+timer 1 ./pip_init twice
+timer 1 ./pip_init ntask_is_zero
+timer 1 ./pip_init ntask_too_big
+timer 1 ./pip_init invalid_opts
+timer 1 ./pip_init both_pthread_process
+timer 1 ./pip_init both_preload_clone
+timer 1 ./pip_init pip_task_unset
+timer 1 pip_task 1 ./pip_init pip_child_task
+timer 1 pip_task 8 ./pip_init pip_child_task
+timer 1 ./pip_exit
+timer 1 pip_task 1 ./pip_exit
+timer 1 pip_task 8 ./pip_exit
+timer 1 pip_task 1 ./return
+timer 1 pip_task 8 ./return
+skip T UNSUPPORTED timer 1 pip_task 1 ./exit
+skip T UNSUPPORTED timer 1 pip_task 8 ./exit
+timer 1 ./pip_spawn
+timer 1 pip_task 1 ./pip_spawn
+timer 1 pip_task 8 ./pip_spawn
+timer 1 pip_task 1 ./pip_misc
+timer 1 pip_task 8 ./pip_misc

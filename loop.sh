@@ -14,7 +14,7 @@ cmd=`basename $0`;
 ext=0;
 TMP='';
 
-PIP_MODE_CHECK=${dir}/util-common/pip_mode_check
+PIP_MODE_CHECK=${dir}/utils/pip_mode_check
 if ! [ -x ${PIP_MODE_CHECK} ]; then
     echo "Unable to find ${PIP_MODE_CHECK}. Maybe not build yet."
     exit 1
@@ -146,7 +146,7 @@ if [ $nomode -eq 0 ]; then
     fi
     for mode in $mode_list
     do
-	if ${PIP_MODE_CMD} $mode ${dir}/util-common/pip_mode_check > /dev/null 2>&1; then
+	if ${PIP_MODE_CMD} $mode ${PIP_MODE_CHECK} > /dev/null 2>&1; then
 	    mlist="$mlist $mode";
 	fi
     done

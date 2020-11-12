@@ -30,44 +30,28 @@
 
 top_builddir = ..
 top_srcdir = $(top_builddir)
-srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = a b c
-
-SRCS = a.c
+PROGRAMS = abc def ghi xyz
 
 include $(top_srcdir)/build/rule.mk
 
-all: test
+all: $(PROGRAMS)
 
-check: test
+abc: abc.c $(DEPS) Makefile
+	$(PIPCC) $< -o $@
 
-a: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o a
+def: abc.c $(DEPS) Makefile
+	$(PIPCC) $< -o $@
 
-b: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o b
+ghi: abc.c $(DEPS) Makefile
+	$(PIPCC) $< -o $@
 
-c: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o c
+xyz: abc.c $(DEPS) Makefile
+	$(PIPCC) $< -o $@
 
-test: clean
-	./pips-test.sh
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-gen: $(PROGRAMS)
-	. ../config.sh; \
-	PIP_MODE=thread      $(PIP_EXEC) -n 4 ./a 30 & \
-	PIP_MODE=process:got $(PIP_EXEC) -n 3 ./b 30 & \
-	LD_PRELOAD=$${PIP_PRELOAD} PIP_MODE=process:preload $(PIP_EXEC) -n 2 ./c 30 &
-	$(RM) *.input *.output
-	./pips-test.sh gen
-	${PIPS} -k a b c pip-exec
-
-post-clean-hook:
-	$(RM) $(PROGRAMS)
-	$(RM) -f *.check *.log
-
-post-distclean-hook: post-clean-hook
-	$(RM) *.input *.output
+test :
+	../test.sh $(TEST_LIST)

@@ -34,28 +34,16 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-SUBDIRS_COMMON = bin pipcc util-common basics-common pthread openmp cxx fortran issues
+SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx fortran issues
 
-SUBDIRS_V1 = $(SUBDIRS_COMMON) \
-	prog-v1 \
-	basics-v1 \
-	compat-v1
-SUBDIRS_V2 = $(SUBDIRS_COMMON) \
-	prog-v2 \
-	basics-v1 basics-v2 \
-	compat-v1 compat-v2
-SUBDIRS_V3 = $(SUBDIRS_COMMON) \
-	prog-v2 \
-	util-v3 \
-	basics-v1 basics-v2 \
-	compat-v1 compat-v2 \
-	blt-v3
+SUBDIRS_V1 = $(SUBDIRS_COMMON) prog compat
+SUBDIRS_V2 = $(SUBDIRS_COMMON) prog compat
+SUBDIRS_V3 = $(SUBDIRS_COMMON) prog compat blt
 
 SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
-	basics-v1 basics-v2 blt-v3 \
-	compat-v1 compat-v2 cxx fortran include  \
-	prog-v1 prog-v2 pthread release util-v3 \
-	pipgdb porting build
+	prog compat blt \
+	build include release \
+	pipgdb porting
 
 include $(top_srcdir)/build/rule.mk
 
@@ -67,6 +55,7 @@ subdir-all subdir-debug :
 		1) SUBDIRS="$(SUBDIRS_V1)" ;; \
 		2) SUBDIRS="$(SUBDIRS_V2)" ;; \
 		3) SUBDIRS="$(SUBDIRS_V3)" ;; \
+	        *) echo "Unsupported PiP version"; exit 1;; \
 	esac; \
 	for dir in -- $${SUBDIRS}; do \
 		case $${dir} in --) continue;; esac; \

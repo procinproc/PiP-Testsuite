@@ -1,10 +1,10 @@
-%include util-common/test-v1.list
+%include utils/test-v1.list
 %include pipcc/test-v1.list
-%include basics-v1/test-v1.list
-%include compat-v1/test-v1.list
+%include basics1/test-v1.list
+%include compat/test-v1.list
 %include issues/test-v1.list
 %include pthread/test-v1.list
 ##%include openmp/test-v1.list
 %include cxx/test-v1.list
 %include fortran/test-v1.list
-%include prog-v1/test-v1.list
+%include prog/test-v1.list
