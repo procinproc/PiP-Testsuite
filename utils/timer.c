@@ -46,17 +46,41 @@
 static pid_t pid        = 0;
 static char *prog       = NULL;
 static char *target     = NULL;
-static int timer_period = 0;
+static int timer_count  = 0;
 static int timedout     = 0;
+static int timer_period = 0;
+static int timer_actual = 0;
 
 static void cleanup( void ) {
   if( pid > 0 ) {
-    system( PIPS " -l" );
     (void) kill( pid, SIGHUP );
+    system( PIPS );
     sleep( 1 );
     system( PIPS " -s KILL > /dev/null 2>&1" );
     (void) kill( pid, SIGKILL );
   }
+}
+
+static int get_load() {
+  FILE *fp;
+  int ncores = 0;
+  float load;
+
+  if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) == NULL ) {
+    return 0;
+  }
+  fscanf( fp, "%d", &ncores );
+  fclose( fp );
+
+  if( ( fp = popen( "cat /proc/loadavg", "r" ) ) == NULL ) {
+    return 0;
+  }
+  fscanf( fp, "%f", &load );
+  fclose( fp );
+
+  load /= (float) ncores;
+  printf( "load: %g\n", load );
+  return (int)load;
 }
 
 static bool ignore_alarm( void ) {
@@ -67,23 +91,29 @@ static bool ignore_alarm( void ) {
 }
 
 static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
-  timedout = 1;
-  /* XXX - the followings are NOT async-signal-safe */
-  fprintf( stderr, "\nTimer expired (%d sec) !!\n\n", timer_period );
-  cleanup();
-  (void) ignore_alarm();
-  //exit( EXIT_UNRESOLVED );
+  timer_actual ++;
+  printf( "%d %d\n", timer_count, timer_actual );
+  if( --timer_count == 0 ) {
+    timedout = 1;
+    (void) ignore_alarm();
+    cleanup();
+  } else if( get_load() > 1 ) {
+    timer_count += 1;
+  }
 }
 
 static void set_timer( int timer ) {
   struct sigaction sigact;
   struct itimerval tv;
+  int load = get_load();
 
+  timer *= ( load + 1 );
   timer_period = timer;
+  timer_count  = timer;
 
   memset( (void*) &sigact, 0, sizeof( sigact ) );
   sigact.sa_sigaction = timer_watcher;
-  sigact.sa_flags     = SA_RESETHAND;
+  sigact.sa_flags     = SA_RESTART;
   if( sigaction( SIGALRM, &sigact, NULL ) != 0 ) {
     fprintf( stderr, "[%s] sigaction(): %d\n", prog, errno );
     cleanup();
@@ -91,8 +121,8 @@ static void set_timer( int timer ) {
   }
   memset( &tv, 0, sizeof(tv) );
   if( timer > 0 ) {
-    tv.it_interval.tv_sec = timer;
-    tv.it_value.tv_sec    = timer;
+    tv.it_interval.tv_sec = 1;
+    tv.it_value.tv_sec    = 1;
   } else {
     tv.it_interval.tv_usec = 10*1000;
     tv.it_value.tv_usec    = 10*1000;
@@ -156,14 +186,18 @@ int main( int argc, char **argv ) {
       rv = wait( &status );
       if (rv != -1 || errno != EINTR) break;
     }
-    pid = 0;
     if (rv == -1) {
       fprintf( stderr, "'%s' failed to wait: %s\n", target, strerror(errno) );
     } else if( WIFEXITED( status ) ) {
       exit( WEXITSTATUS( status ) );
     } else if( WIFSIGNALED( status ) ) {
-      int sig = WTERMSIG( status );
-      fprintf( stderr, "'%s' terminated due to signal (%s)\n", target, strsignal(sig) );
+      if( timedout ) {
+	fprintf( stderr, "\nTimer expired (%d/%d sec) !!\n\n", timer_period, timer_actual );
+	cleanup();
+      } else {
+	int sig = WTERMSIG( status );
+	fprintf( stderr, "'%s' terminated due to signal (%s)\n", target, strsignal(sig) );
+      }
     }
     exit( EXIT_UNRESOLVED );
 
