@@ -50,36 +50,40 @@ static int timer_count  = 0;
 static int timedout     = 0;
 static int timer_period = 0;
 static int timer_actual = 0;
+static int ncores       = 0;
+static float fnc        = 1.0;
 
 static void cleanup( void ) {
   if( pid > 0 ) {
     (void) kill( pid, SIGHUP );
-    system( PIPS );
     sleep( 1 );
-    system( PIPS " -s KILL > /dev/null 2>&1" );
+    system( PIPS " -s KILL" );
     (void) kill( pid, SIGKILL );
   }
 }
 
 static int get_load() {
   FILE *fp;
-  int ncores = 0;
-  float load;
+  int	nc;
+  float load = 0.0;
 
-  if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) == NULL ) {
-    return 0;
+  if( ncores == 0 ) {
+    if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) != NULL ) {
+      fscanf( fp, "%d", &ncores );
+      fclose( fp );
+      nc = ncores / 2;
+      nc = ( nc > 0 ) ? nc : 1;
+      fnc = 1.0 / (float) nc;
+    }
   }
-  fscanf( fp, "%d", &ncores );
-  fclose( fp );
-
-  if( ( fp = popen( "cat /proc/loadavg", "r" ) ) == NULL ) {
-    return 0;
+  if( ncores > 0 ) {
+    if( ( fp = fopen( "/proc/loadavg", "r" ) ) != NULL ) {
+      fscanf( fp, "%f", &load );
+      fclose( fp );
+      load *= fnc;
+      printf( "load: %g\n", load );
+    }
   }
-  fscanf( fp, "%f", &load );
-  fclose( fp );
-
-  load /= (float) ncores;
-  printf( "load: %g\n", load );
   return (int)load;
 }
 
@@ -91,25 +95,28 @@ static bool ignore_alarm( void ) {
 }
 
 static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
+  int ld;
+
+  if( timedout ) return;
+  ld = get_load();
   timer_actual ++;
-  printf( "%d %d\n", timer_count, timer_actual );
-  if( --timer_count == 0 ) {
-    timedout = 1;
-    (void) ignore_alarm();
-    cleanup();
-  } else if( get_load() > 1 ) {
-    timer_count += 1;
+  printf( "%d %d  %d\n", timer_count, timer_actual, ld );
+  if( ld == 0 ) {
+    if( --timer_count <= 0 ) {
+      timedout = 1;
+      (void) ignore_alarm();
+      cleanup();
+    }
   }
 }
 
-static void set_timer( int timer ) {
+static void set_timer( int time ) {
   struct sigaction sigact;
   struct itimerval tv;
   int load = get_load();
 
-  timer *= ( load + 1 );
-  timer_period = timer;
-  timer_count  = timer;
+  timer_period = time;
+  timer_count  = time;
 
   memset( (void*) &sigact, 0, sizeof( sigact ) );
   sigact.sa_sigaction = timer_watcher;
@@ -120,7 +127,7 @@ static void set_timer( int timer ) {
     exit( EXIT_UNTESTED );
   }
   memset( &tv, 0, sizeof(tv) );
-  if( timer > 0 ) {
+  if( time > 0 ) {
     tv.it_interval.tv_sec = 1;
     tv.it_value.tv_sec    = 1;
   } else {
