@@ -548,22 +548,17 @@ fi
 case $n_KILLED in 0) :;; *) exit $EXIT_KILLED;; esac
 case $n_PASS   in 0)        exit $EXIT_FAIL;;   esac
 
-if [ x"$SUMMARY_FILE" != x ]; then
-    if [ $n_FAIL -eq 0 -a $n_UNRESOLVED -eq 0 -a $n_PASS -gt 0 ]; then
-	exit $EXIT_FAIL
-    fi
-else
-    if [ x"${PIP_TEST_THRESHOLD}" == x ]; then
-	if [ $n_FAIL -ne 0 -o $n_UNRESOLVED -ne 0 ]; then
-            exit $EXIT_FAIL
-	fi
-    else
+if [ $n_FAIL -eq 0 -a $n_UNRESOLVED -eq 0 -a $n_PASS -gt 0 ]; then
+    exit $EXIT_PASS
+fi
+
+if [ x"${SUMMARY_FILE}" == x ]; then
+    if [ x"${PIP_TEST_THRESHOLD}" != x ]; then
 	nerr=`expr $n_FAIL + $n_UNRESOLVED`
-	if [ $nerr -ge ${PIP_TEST_THRESHOLD} ]; then
-            exit $EXIT_FAIL
+	if [ $nerr -lt ${PIP_TEST_THRESHOLD} ]; then
+	    echo "Some test fails ($nerr) but less than PIP_TEST_THRESHOLD ($PIP_TEST_THRESHOLD)"
 	fi
-	echo "Some test fails ($nerr) but less than PIP_TEST_THRESHOLD ($PIP_TEST_THRESHOLD)"
     fi
 fi
 
-exit $EXIT_PASS
+exit $EXIT_FAIL
