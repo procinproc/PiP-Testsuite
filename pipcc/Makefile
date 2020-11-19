@@ -34,20 +34,17 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = hello
-
-SRCS = hello.c
-
-OBJS = hello.o
-
 include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
+TEST_OBJS = nopip piproot piptask pipboth hello hello.o root task
+
 test :
+	$(RM) $(TEST_OBJS)
 	../test.sh $(TEST_LIST)
 
 post-clean-hook:
-	$(RM) $(PROGRAMS) a.out hello.o root task
+	$(RM) $(PROGRAMS) $(TEST_OBJS)

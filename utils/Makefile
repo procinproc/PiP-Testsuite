@@ -33,6 +33,7 @@ top_srcdir = $(top_builddir)
 srcdir = .
 
 include $(top_srcdir)/build/var.mk
+include $(top_srcdir)/build/config.mk
 
 CWD = $(shell pwd)
 CPPFLAGS += -I../include -DCWD=\"$(CWD)\" -DPIPS=\"$(PIPS)\"

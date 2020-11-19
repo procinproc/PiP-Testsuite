@@ -28,7 +28,7 @@ int main( int argc, char **argv ) {
 
   if( argc < 3 ) return EXIT_UNTESTED;
   CHECK( access( argv[2], X_OK ),     RV, return(EXIT_UNTESTED) );
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
 #endif
 

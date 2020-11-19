@@ -33,14 +33,18 @@
  * Written by Atsushi HORI <ahori@riken.jp>
  */
 
-#include <stdio.h>
+#if PIP_VERSION_MAJOR==1
 #include <pip.h>
+#else
+#include <pip/pip.h>
+#endif
+#include <stdio.h>
 
 int main( int argc, char **argv ) {
   int pipid, ntasks;
 
   pip_init( &pipid, &ntasks, NULL, 0 );
-  printf( "<%d> Hello, I am fine !!\n", pipid );
+  printf( "Hello, I am a PiP task [%d] !!\n", pipid );
   pip_fin();
   return 0;
 }

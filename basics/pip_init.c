@@ -33,7 +33,7 @@
 #include <test.h>
 
 static int test_pip_init( char **argv ) {
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   int pipid, ntasks;
   void *exp;
 

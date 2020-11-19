@@ -40,7 +40,7 @@ int main( int argc, char **argv ) {
 #ifdef NO_IMPLICIT_INIT
   /*** before calling pip_init(), this must fail ***/
 
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_is_initialized(), 	    RV, 	return(EXIT_FAIL) );
   CHECK( pip_isa_root(), 	    RV, 	return(EXIT_FAIL) );
   CHECK( pip_isa_task(),	    RV, 	return(EXIT_FAIL) );
@@ -55,18 +55,18 @@ int main( int argc, char **argv ) {
 	 RV,
 	 return(EXIT_FAIL) );
 #else
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_is_initialized(), 	    !RV, 	return(EXIT_FAIL) );
 #endif
   //CHECK( pip_isa_root(), 	    !RV, 	return(EXIT_FAIL) );
   //CHECK( pip_isa_task(),	    !RV, 	return(EXIT_FAIL) );
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_get_pipid( NULL ),	    RV, 	return(EXIT_FAIL) );
 #else
   CHECK( pip_get_pipid( NULL ),	    RV!=EINVAL, return(EXIT_FAIL) );
 #endif
   CHECK( pip_get_pipid( &pipid ),   RV, 	return(EXIT_FAIL) );
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_get_mode( NULL ),	    RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_mode( &mode ),	    RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &ntasks ), RV,	return(EXIT_FAIL) );
@@ -81,7 +81,7 @@ int main( int argc, char **argv ) {
   CHECK( pip_init( &pipid, &ntasks, NULL, 0 ), RV, return(EXIT_FAIL) );
 
   /*** after calling pip_init(), this must succeed ***/
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_is_initialized(), 	!RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &nt ),	RV,	return(EXIT_FAIL) );
   CHECK( nt!=ntasks, 		RV,	return(EXIT_FAIL) );
@@ -95,7 +95,7 @@ int main( int argc, char **argv ) {
   if( strcmp( mode_str, PIP_ENV_MODE_PTHREAD          ) != 0 &&
       strcmp( mode_str, PIP_ENV_MODE_PROCESS          ) != 0 &&
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_PRELOAD  ) != 0 &&
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_GOT      ) != 0 &&
 #endif
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_PIPCLONE ) != 0 ) {
@@ -104,7 +104,7 @@ int main( int argc, char **argv ) {
 
   /* pip_isa_root() */
   if(
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
      pip_isa_root()
 #else
      pipid == PIP_PIPID_ROOT
@@ -116,7 +116,7 @@ int main( int argc, char **argv ) {
     CHECK( id!=PIP_PIPID_ROOT, 	      RV,	return(EXIT_FAIL) );
 
   } else if(
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
 	    pip_isa_task()
 #else
 	    pipid != PIP_PIPID_ROOT
@@ -125,7 +125,7 @@ int main( int argc, char **argv ) {
     char *env;
     int nte;
 
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
     CHECK( pip_get_pipid( NULL ),     RV,	  return(EXIT_FAIL) );
 #else
     CHECK( pip_get_pipid( NULL ),     RV!=EINVAL, return(EXIT_FAIL) );

@@ -93,7 +93,7 @@ int main( int argc, char **argv ) {
       delete objs[i];
       objs[i] = NULL;
     }
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
     uintptr_t id;
     CHECK( pip_get_system_id( PIP_PIPID_MYSELF, &id ), RV, return(EXIT_FAIL) );
 #else

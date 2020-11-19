@@ -40,7 +40,11 @@
 #define _GNU_SOURCE
 #endif
 
+#if PIP_VERSION_MAJOR==1
 #include <pip.h>
+#else
+#include <pip/pip.h>
+#endif
 
 #include <sys/syscall.h>
 #include <sys/types.h>
@@ -127,7 +131,7 @@ extern char *__progname;
 #endif
 
 INLINE void abend( int extval ) {
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   (void) pip_kill_all_tasks();
 #endif
   exit( extval );

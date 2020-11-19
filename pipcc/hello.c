@@ -33,8 +33,12 @@
  * Written by Atsushi HORI <ahori@riken.jp>
  */
 
-#include <stdio.h>
+#if PIP_VERSION_MAJOR==1
 #include <pip.h>
+#else
+#include <pip/pip.h>
+#endif
+#include <stdio.h>
 
 int pipid, ntasks = 4;
 

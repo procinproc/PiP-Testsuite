@@ -33,7 +33,11 @@
  * Written by Atsushi HORI <ahori@riken.jp>
  */
 
+#if PIP_VERSION_MAJOR==1
 #include <pip.h>
+#else
+#include <pip/pip.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 

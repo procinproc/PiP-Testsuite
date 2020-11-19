@@ -123,7 +123,7 @@ int malloc_loop( int niters, int pipid ) {
 	   pipid, fm, ave/1024, min/1024, max/1024, niters );
   CHECK( ( prev = my_malloc(min,max,pipid) ), RV==0, return(ENOMEM) );
   for( i=0; i<niters; i++ ) {
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
     CHECK( pip_yield(PIP_YIELD_USER), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
 #endif
     CHECK( ( p = my_malloc(min,max,pipid) ),  RV==0, return(ENOMEM) );
@@ -144,7 +144,7 @@ int main( int argc, char **argv ) {
   }
   niters = ( niters <= 0 ) ? NITERS : niters;
 
-  CHECK( pip_get_pipid( &pipid ),      RV, return(EXIT_FAIL) );
-  CHECK( malloc_loop( niters, pipid ), RV, return(EXIT_FAIL) );
+  CHECK( pip_init( &pipid, NULL, NULL, 0 ), RV, return(EXIT_FAIL) );
+  CHECK( malloc_loop( niters, pipid ),      RV, return(EXIT_FAIL) );
   return 0;
 }

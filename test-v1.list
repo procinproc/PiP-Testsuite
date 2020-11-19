@@ -1,6 +1,6 @@
 %include utils/test-v1.list
 %include pipcc/test-v1.list
-%include basics1/test-v1.list
+%include basics/test-v1.list
 %include compat/test-v1.list
 %include issues/test-v1.list
 %include pthread/test-v1.list

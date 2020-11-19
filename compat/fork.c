@@ -59,7 +59,7 @@ int main( int argc, char **argv ) {
 	exit( 0 );
       }
     }
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
     CHECK( pip_yield(0), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
 #endif
   }

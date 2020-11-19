@@ -27,7 +27,7 @@ PIP_EXEC     = $(PIP_BINDIR)/pip-exec
 PRINTPIPMODE = $(PIP_BINDIR)/printpipmode
 PIPS         = $(PIP_BINDIR)/pips
 
-CFLAGS += -I$(top_srcdir)/include -DPIP_VERSION=$(PIP_VERSION_MAJOR)
+CFLAGS += -I$(top_srcdir)/include
 DEPINCS = $(top_srcdir)/include/test.h
 DEPLIBS = $(PIPLIB)
 DEPS    = $(top_srcdir)/config.status $(DEPINCS) $(DEPLIBS)

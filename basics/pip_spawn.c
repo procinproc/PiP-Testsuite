@@ -52,7 +52,7 @@ int main( int argc, char **argv ) {
 
   /* after calling pip_init() */
   if(
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
      pip_isa_task()
 #else
      pipid != PIP_PIPID_ROOT
@@ -80,7 +80,7 @@ int main( int argc, char **argv ) {
 	   RV!=EINVAL,
 	   return(EXIT_FAIL) );
 
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
     pipid = PIP_PIPID_ANY;
     coreno = PIP_CPUCORE_CORENO_MAX + 1;
     CHECK( pip_spawn( argv[0], argv, NULL, coreno, &pipid,

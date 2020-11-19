@@ -39,10 +39,16 @@ case "${with_pip}" in
 ""|yes|no)   AC_MSG_ERROR([--with-pip is a mandatory option]);;
 esac
 if test -d "${with_pip}/include" \
-   -a -f "${with_pip}/include/pip_config.h" -a -f "${with_pip}/include/pip.h" \
    -a -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so" \
    -a -d "${with_pip}/bin" -a -x "${with_pip}/bin/pipcc"; then
-   pver_str=`grep PACKAGE_VERSION ${with_pip}/include/pip_config.h 2> /dev/null`
+   if test -f "${with_pip}/include/pip.h"; then
+       pipincdir="${with_pip}/include"
+   elif test -f "${with_pip}/include/pip/pip.h"; then
+       pipincdir="${with_pip}/include/pip"
+   else
+       AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
+   fi
+   pver_str=`grep PACKAGE_VERSION ${pipincdir}/pip_config.h 2> /dev/null`
    if test -z "${pver_str}"; then
        AC_MSG_ERROR([pip_config.h ???])
    fi
@@ -51,7 +57,7 @@ if test -d "${with_pip}/include" \
    pip_version_minor=`echo ${pip_version} | cut -d '.' -f 2`
    pip_version_subminor=`echo ${pip_version} | cut -d '.' -f 3`
 else
-  AC_MSG_ERROR([--with-pip does not seem to be a PiP directory])
+   AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
 fi
 
 AC_MSG_RESULT([${with_pip}])

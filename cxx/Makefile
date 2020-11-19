@@ -42,6 +42,8 @@ include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
+CPPFLAGS += -DPIP_VERSION_MAJOR=${PIP_VERSION_MAJOR}
+
 %: %.cc $(DEPS)
 	CC=$(CXX) $(PIPCC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) $< -o $@
 

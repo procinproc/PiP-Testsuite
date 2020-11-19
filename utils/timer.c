@@ -172,7 +172,7 @@ int main( int argc, char **argv ) {
   if( pip_test_timer_scale != NULL && isdigit(pip_test_timer_scale[0]) ) {
     time *= strtol( pip_test_timer_scale, NULL, 10 );
   }
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   extern int pip_is_debug_build( void );
   if( pip_is_debug_build() && !flag_debug ) {
     time *= DEBUG_SCALE;

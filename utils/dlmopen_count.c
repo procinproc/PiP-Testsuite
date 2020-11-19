@@ -30,9 +30,7 @@
  * official policies, either expressed or implied, of the PiP project.$
  */
 
-#define _GNU_SOURCE
-
-#include <pip.h>
+#include <test.h>
 
 #include <dlfcn.h>
 #include <limits.h>
