@@ -79,7 +79,6 @@ static int get_load() {
       fscanf( fp, "%f", &load );
       fclose( fp );
       load *= fnc;
-      printf( "load: %g\n", load );
     }
   }
   return (int)load;
@@ -98,7 +97,6 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   if( timedout ) return;
   ld = get_load();
   timer_actual ++;
-  printf( "%d %d  %d\n", timer_count, timer_actual, ld );
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
       timedout = 1;
