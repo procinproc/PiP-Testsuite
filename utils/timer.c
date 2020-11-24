@@ -52,11 +52,13 @@ static int ncores       = 0;
 static float fnc        = 1.0;
 
 static void cleanup( void ) {
+  char *sysstr;
   if( pid > 0 ) {
     (void) kill( pid, SIGHUP );
     sleep( 1 );
-    system( PIPS " -s KILL" );
-    (void) kill( pid, SIGKILL );
+    asprintf( &sysstr, "%s -s KILL -f %d", PIPS, pid );
+    system( sysstr );
+    free( sysstr );
   }
 }
 
@@ -84,11 +86,14 @@ static int get_load() {
   return (int)load;
 }
 
-static bool ignore_alarm( void ) {
+static void unset_timer( void ) {
   struct sigaction sigact;
   memset( (void*) &sigact, 0, sizeof( sigact ) );
   sigact.sa_handler = SIG_IGN;
-  return( sigaction( SIGALRM, &sigact, NULL ) == 0 );
+  if( sigaction( SIGALRM, &sigact, NULL ) != 0 ) {
+    fprintf( stderr, "[%s] sigaction(): %d\n", prog, errno );
+    cleanup();
+  }
 }
 
 static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
@@ -100,7 +105,7 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
       timedout = 1;
-      (void) ignore_alarm();
+      unset_timer();
       cleanup();
     }
   }
@@ -134,13 +139,6 @@ static void set_timer( int time ) {
     fprintf( stderr, "[%s] setitimer(): %d\n", prog, errno );
     cleanup();
     exit( EXIT_UNTESTED );
-  }
-}
-
-static void unset_timer( void ) {
-  if( !ignore_alarm() ) {
-    fprintf( stderr, "[%s] sigaction(): %d\n", prog, errno );
-    cleanup();
   }
 }
 
@@ -187,9 +185,11 @@ int main( int argc, char **argv ) {
     set_timer( time );
     for( ;; ) {
       rv = wait( &status );
-      if (rv != -1 || errno != EINTR) break;
+      if( rv != -1 || errno != EINTR ) break;
     }
-    if (rv == -1) {
+    unset_timer();
+
+    if( rv == -1 ) {
       fprintf( stderr, "'%s' failed to wait: %s\n", target, strerror(errno) );
     } else if( WIFEXITED( status ) ) {
       exit( WEXITSTATUS( status ) );
