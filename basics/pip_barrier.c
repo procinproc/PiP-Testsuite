@@ -67,7 +67,9 @@ int main( int argc, char **argv ) {
   niters = ( niters <= 0 ) ? NITERS : niters;
 
   expp = &exp;
+#ifdef DEBUG
   fprintf( stderr, "[[%d]] expp:%p\n", getpid(), expp );
+#endif
   CHECK( pip_init(&pipid,&ntasks,(void**)&expp,0), RV, return(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
     CHECK( pip_barrier_init(&exp.barr,ntasks), RV, return(EXIT_FAIL) );
@@ -93,7 +95,9 @@ int main( int argc, char **argv ) {
     CHECK( expp->count==niters, !RV, return(EXIT_FAIL) );
 
   } else {
+#ifdef DEBUG
     fprintf( stderr, "<<%d>> expp:%p\n", getpid(), expp );
+#endif
     srand( ( pipid + 1 ) * ( pipid + 1 ) );
     for( i=0; i<niters; i++ ) {
       CHECK( expp->count!=i, 		      RV, return(EXIT_FAIL) );
@@ -101,8 +105,11 @@ int main( int argc, char **argv ) {
       usleep( rand() % 10000 );
       if( ( i % ntasks ) == pipid ) expp->count ++;
       CHECK( pip_barrier_wait( &expp->barr ), RV, return(EXIT_FAIL) );
-      fprintf( stderr, "%c", i/10+'0' );
+      fprintf( stderr, "%c", i%10+'0' );
     }
+    fflush( NULL );
+    CHECK( pip_barrier_wait( &expp->barr ), RV, return(EXIT_FAIL) );
+    if( pipid == 0 ) fprintf( stderr, "\n" );
   }
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return extval;

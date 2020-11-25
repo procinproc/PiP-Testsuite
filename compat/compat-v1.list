@@ -14,8 +14,8 @@ timer 1 pip_task 1 ./gettimeofday
 timer 1 pip_task 8 ./gettimeofday
 timer 1 pip_task 1 ./gethostname
 timer 1 pip_task 8 ./gethostname
-timer 1 pip_task 1 ./getaddrinfo
-timer 1 pip_task 8 ./getaddrinfo
+timer 3 pip_task 1 ./getaddrinfo
+timer 3 pip_task 8 ./getaddrinfo
 timer 1 pip_task 1 ./gethostbyname
 timer 1 pip_task 8 ./gethostbyname
 timer 1 pip_task 1 ./const_destruct
