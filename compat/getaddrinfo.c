@@ -97,7 +97,7 @@ void *test_loop( void *niters_p ) {
   int i;
 
 #ifndef PTHREADS
-#if PIP_VERSION > 1
+#if PIP_VERSION_MAJOR > 1
   int pipid, ntasks, sync = 0, *syncp;
   CHECK( pip_get_pipid(  &pipid ),  RV, exit(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &ntasks ), RV,	exit(EXIT_FAIL) );
