@@ -39,10 +39,13 @@
 #else
 
 #include <pthread.h>
+#include <stdint.h>
+#include <unistd.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+
 #define CHECK(F,C,A) \
   do { errno=0; long int RV=(intptr_t)(F);	\
     if(C) { printf("%s()=%ld",#F,RV); A; } } while(0)
