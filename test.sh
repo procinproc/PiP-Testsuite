@@ -588,6 +588,7 @@ if [ x"${SUMMARY_FILE}" == x ]; then
 	nerr=`expr $n_FAIL + $n_UNRESOLVED`
 	if [ $nerr -lt ${PIP_TEST_THRESHOLD} ]; then
 	    echo "Some test fails ($nerr) but less than PIP_TEST_THRESHOLD ($PIP_TEST_THRESHOLD)"
+	    exit $EXIT_PASS
 	fi
     fi
 fi
