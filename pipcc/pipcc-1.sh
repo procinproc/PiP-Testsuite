@@ -36,8 +36,6 @@ dir=`dirname $0`;
 . ${dir}/../config.sh
 . $dir/../exit_code.sh.inc;
 
-CPPFLAGS=-DPIP_VERSION=${PIP_VERSION_MAJOR}
-
 rm -f root task
 
 ${PIPCC} ${CPPFLAGS} --piproot root.c -o root;
