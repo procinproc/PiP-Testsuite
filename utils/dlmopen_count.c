@@ -91,5 +91,7 @@ main(int argc, char **argv)
 	n = ( n > m ) ? m : n;
 	printf("%d\n", n);
 
+	if( !n ) return 1;
+
 	return 0;
 }

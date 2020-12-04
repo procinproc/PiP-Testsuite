@@ -42,5 +42,6 @@ int main() {
     nth = omp_get_num_threads();
   }
   printf( "%d\n", nth );
+  if( !nth ) return 1;
   return 0;
 }
