@@ -49,7 +49,7 @@ PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check pip_task
 PROG_V2 = $(PROG_V1)
 PROG_V3 = $(PROG_V2) pip_blt
 
-PROG_ALL = ($PROG_V3)
+PROG_ALL = $(PROG_V3)
 
 SRCS = $(SRCS_V$(PIP_VERSION_MAJOR))
 PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR))
