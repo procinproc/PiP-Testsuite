@@ -68,7 +68,7 @@ timer: timer.c $(DEPS)
 	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
 
 pip_mode_check : pip_mode_check.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS) --piptask $< -o $@
+	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
 
 pip_task : pip_task.c $(DEPS)
 	$(PIPCC) -g -O2 $(CPPFLAGS) --piproot $< -o $@
