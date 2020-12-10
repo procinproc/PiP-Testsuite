@@ -8,7 +8,7 @@ versions.  This package can also be installed by the PiP package
 installing program
 ([PiP-pip](https://github.com/RIKEN-SysSoft/PiP-pip)) and once the
 installation is finished the installed PiP will be automatically
-tested by using this program.
+tested.
 
 # License
 
