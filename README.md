@@ -21,6 +21,31 @@ see the [LICENSE](LICENSE) file for details.
     $ ./configure --with-pip=<PIP_INSTALLED_DIR>
     $ make test
 
+Here is the sample output of the test results;
+
+    ...
+    NTASKS:   300
+    NTHREADS: 32
+    testing L - process:preload
+    testing G - process:got
+    testing C - process:pipclone
+    testing T - pthread
+    
+    >>> utils/test-v2.list
+    >>> utils.list
+    utils.list: NG timer 0 inf                                                         L -- PASS
+    utils.list: NG timer 0 inf                                                         G -- PASS
+    ...
+    prog-v2.list: timer 1 OK pip-exec -n 4 ./xyz 0 0 1 2 3 : -n 3 ./xyz 4 4 5 6        C -- PASS
+    prog-v2.list: timer 1 OK pip-exec -n 4 ./xyz 0 0 1 2 3 : -n 3 ./xyz 4 4 5 6        T -- PASS
+    <<< prog-v2.list
+    <<< prog/test-v2.list
+    
+    Total test: 596
+      success            : 574
+      failure            : 0
+      unsupported        : 22
+
 # Author
 
 Atsushi Hori<br>
