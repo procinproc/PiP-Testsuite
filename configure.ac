@@ -72,11 +72,12 @@ AC_SUBST(pip_version_subminor)
 # Checks for programs.
 AC_PROG_CC()
 AC_PROG_CXX()
-AC_PROG_F77()
 
 if test x"$GCC" = x"yes"; then
   CFLAGS="$CFLAGS -Wall"
 fi
+
+AC_CHECK_PROGS([FC],[gfortran g95 g77])
 
 # Checks for libraries.
 

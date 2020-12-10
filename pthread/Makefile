@@ -44,5 +44,5 @@ include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
-test :
+test: all
 	../test.sh test.list

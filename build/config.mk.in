@@ -8,4 +8,4 @@ PIP_DIR = @with_pip@
 
 CC  = @CC@
 CXX = @CXX@
-F77 = @F77@
+FC  = @FC@

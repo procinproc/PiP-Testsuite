@@ -22,6 +22,7 @@ PIP_BINDIR = $(PIP_DIR)/bin
 
 PIPLIB       = $(PIP_LIBDIR)/libpip.so
 PIPCC        = $(PIP_BINDIR)/pipcc
+PIPFC        = $(PIP_BINDIR)/pipfc
 PIP_CHECK    = $(PIP_BINDIR)/pip-check
 PIP_EXEC     = $(PIP_BINDIR)/pip-exec
 PRINTPIPMODE = $(PIP_BINDIR)/printpipmode

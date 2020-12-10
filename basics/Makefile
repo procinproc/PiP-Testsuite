@@ -119,7 +119,7 @@ debug :: $(DEPS)
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-test :
+test: all
 	../test.sh $(TEST_LIST)
 
 post-clean-hook:

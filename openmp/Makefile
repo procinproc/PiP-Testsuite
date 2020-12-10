@@ -52,5 +52,5 @@ all: $(PROGRAMS)
 %: %.c $(DEPS)
 	$(PIPCC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -openmp $< -o $@
 
-test :
+test: all
 	../test.sh test.list

@@ -65,7 +65,7 @@ libnull.so: libnull.c Makefile
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-test : all
+test: all
 	../test.sh $(TEST_LIST)
 
 post-clean-hook:

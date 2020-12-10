@@ -55,5 +55,5 @@ xyz: abc.c $(DEPS) Makefile
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-test :
+test: all
 	../test.sh $(TEST_LIST)
