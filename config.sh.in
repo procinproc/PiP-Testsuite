@@ -20,5 +20,5 @@ export LIBPIPSO=${PIP_LIBDIR}/libpip.so
 if test -f ${PIP_DIR}/preload/pip_preload.so; then
     export PIP_PRELOAD=${PIP_DIR}/preload/pip_preload.so
 else
-    export PIP_PRELOAD=${PIP_DIR}/lib/pip_preload.so
+    export PIP_PRELOAD=${PIP_LIBDIR}/pip_preload.so
 fi
