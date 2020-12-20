@@ -17,7 +17,6 @@ LDFLAGS  = $(DEFAULT_LDFLAGS)
 PROGRAMS = $(PROGRAM)
 
 PIP_INCDIR = $(PIP_DIR)/include
-PIP_LIBDIR = $(PIP_DIR)/lib
 PIP_BINDIR = $(PIP_DIR)/bin
 
 PIPLIB       = $(PIP_LIBDIR)/libpip.so
