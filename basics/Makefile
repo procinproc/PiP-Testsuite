@@ -110,6 +110,7 @@ prog-nopie : prog.c $(DEPS) Makefile
 
 prog-pie : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-pie
+	$(PIP_UNPIE) prog-pie
 
 prog-nordynamic : prog.c Makefile
 	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic

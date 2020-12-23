@@ -27,6 +27,7 @@ PIP_CHECK    = $(PIP_BINDIR)/pip-check
 PIP_EXEC     = $(PIP_BINDIR)/pip-exec
 PRINTPIPMODE = $(PIP_BINDIR)/printpipmode
 PIPS         = $(PIP_BINDIR)/pips
+PIP_UNPIE    = $(PIP_BINDIR)/pip_unpie
 
 CFLAGS += -I$(top_srcdir)/include
 DEPINCS = $(top_srcdir)/include/test.h
