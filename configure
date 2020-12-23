@@ -598,6 +598,7 @@ CPPFLAGS
 LDFLAGS
 CFLAGS
 CC
+PIP_LIBDIR
 pip_version_subminor
 pip_version_minor
 pip_version_major
@@ -1979,7 +1980,8 @@ case "${with_pip}" in
 ""|yes|no)   as_fn_error $? "--with-pip is a mandatory option" "$LINENO" 5;;
 esac
 if test -d "${with_pip}/include" \
-   -a -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so" \
+   -a '(' -d "${with_pip}/lib64" -a -x "${with_pip}/lib64/libpip.so" -o \
+          -d "${with_pip}/lib"   -a -x "${with_pip}/lib/libpip.so" ')' \
    -a -d "${with_pip}/bin" -a -x "${with_pip}/bin/pipcc"; then
    if test -f "${with_pip}/include/pip.h"; then
        pipincdir="${with_pip}/include"
@@ -1996,6 +1998,13 @@ if test -d "${with_pip}/include" \
    pip_version_major=`echo ${pip_version} | cut -d '.' -f 1`
    pip_version_minor=`echo ${pip_version} | cut -d '.' -f 2`
    pip_version_subminor=`echo ${pip_version} | cut -d '.' -f 3`
+   if test -d "${with_pip}/lib64" -a -x "${with_pip}/lib64/libpip.so"; then
+     PIP_LIBDIR="${with_pip}/lib64"
+   elif test -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so"; then
+     PIP_LIBDIR="${with_pip}/lib"
+   else
+     as_fn_error $? "cannot determine PIP_LIBDIR" "$LINENO" 5
+   fi
 else
    as_fn_error $? "--with-pip doesn't seem to be a PiP directory" "$LINENO" 5
 fi
@@ -2004,6 +2013,7 @@ fi
 $as_echo "${with_pip}" >&6; }
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: PIP_VERSION_MAJOR=${pip_version_major}" >&5
 $as_echo "PIP_VERSION_MAJOR=${pip_version_major}" >&6; }
+
 
 
 

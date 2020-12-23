@@ -7,7 +7,7 @@ export PIP_VERSION_MINOR=@pip_version_minor@
 export PIP_VERSION_SUBMINOR=@pip_version_subminor@
 
 export PIP_BINDIR=${PIP_DIR}/bin
-export PIP_LIBDIR=${PIP_DIR}/lib
+export PIP_LIBDIR=@PIP_LIBDIR@
 
 export PIPCC=${PIP_BINDIR}/pipcc
 export PIP_CHECK=${PIP_BINDIR}/pip-check
@@ -20,5 +20,5 @@ export LIBPIPSO=${PIP_LIBDIR}/libpip.so
 if test -f ${PIP_DIR}/preload/pip_preload.so; then
     export PIP_PRELOAD=${PIP_DIR}/preload/pip_preload.so
 else
-    export PIP_PRELOAD=${PIP_DIR}/lib/pip_preload.so
+    export PIP_PRELOAD=${PIP_LIBDIR}/pip_preload.so
 fi

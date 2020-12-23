@@ -5,6 +5,7 @@ PIP_VERSION_MINOR    = @pip_version_minor@
 PIP_VERSION_SUBMINOR = @pip_version_subminor@
 
 PIP_DIR = @with_pip@
+PIP_LIBDIR = @PIP_LIBDIR@
 
 CC  = @CC@
 CXX = @CXX@

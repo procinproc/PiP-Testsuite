@@ -39,7 +39,8 @@ case "${with_pip}" in
 ""|yes|no)   AC_MSG_ERROR([--with-pip is a mandatory option]);;
 esac
 if test -d "${with_pip}/include" \
-   -a -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so" \
+   -a '(' -d "${with_pip}/lib64" -a -x "${with_pip}/lib64/libpip.so" -o \
+          -d "${with_pip}/lib"   -a -x "${with_pip}/lib/libpip.so" ')' \
    -a -d "${with_pip}/bin" -a -x "${with_pip}/bin/pipcc"; then
    if test -f "${with_pip}/include/pip.h"; then
        pipincdir="${with_pip}/include"
@@ -56,6 +57,13 @@ if test -d "${with_pip}/include" \
    pip_version_major=`echo ${pip_version} | cut -d '.' -f 1`
    pip_version_minor=`echo ${pip_version} | cut -d '.' -f 2`
    pip_version_subminor=`echo ${pip_version} | cut -d '.' -f 3`
+   if test -d "${with_pip}/lib64" -a -x "${with_pip}/lib64/libpip.so"; then
+     PIP_LIBDIR="${with_pip}/lib64"
+   elif test -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so"; then
+     PIP_LIBDIR="${with_pip}/lib"
+   else
+     AC_MSG_ERROR([cannot determine PIP_LIBDIR])
+   fi
 else
    AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
 fi
@@ -68,6 +76,7 @@ AC_SUBST(pip_version)
 AC_SUBST(pip_version_major)
 AC_SUBST(pip_version_minor)
 AC_SUBST(pip_version_subminor)
+AC_SUBST(PIP_LIBDIR)
 
 # Checks for programs.
 AC_PROG_CC()
