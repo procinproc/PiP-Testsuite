@@ -2,3 +2,6 @@
 ./pip-mode.sh
 ./pipcc-0.sh
 ./pipcc-1.sh
+./pipcc-misc.sh
+./pipfc-0.sh
+./pipfc-misc.sh

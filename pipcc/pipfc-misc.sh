@@ -36,8 +36,6 @@ dir=`dirname $0`
 . ${dir}/../config.sh
 . ${dir}/../exit_code.sh.inc
 
-hello="hello";
-
 check () {
     echo "Testing ..$@"
     $@;
@@ -47,13 +45,15 @@ check () {
     echo
 }
 
-rm -f ${hello}.o ${hello}
+check ${PIPFC} --version
+check ${PIPFC} --where
+check ${PIPFC} --which
 
-check ${PIPCC} ${CPPFLAGS} -g -c ${hello}.c -o ${hello}.o
-check ${PIPCC} ${CPPFLAGS} -g ${hello}.o -o ${hello}
-check ${PIP_CHECK} -b ${hello}
+check ${PIPFC} --version --where
+check ${PIPFC} --version --which
+check ${PIPFC} --where --which
 
-check ./${hello}
+check ${PIPFC} --version --where --which
 
 echo $tstp ": PASS"
 exit $EXIT_PASS;

@@ -10,10 +10,12 @@ export PIP_BINDIR=${PIP_DIR}/bin
 export PIP_LIBDIR=@PIP_LIBDIR@
 
 export PIPCC=${PIP_BINDIR}/pipcc
+export PIPFC=${PIP_BINDIR}/pipfc
 export PIP_CHECK=${PIP_BINDIR}/pip-check
 export PIP_MODE_CMD=${PIP_BINDIR}/pip-mode
 export PIPS=${PIP_BINDIR}/pips
 export PRINTPIPMODE=${PIP_BINDIR}/printpipmode
+export PIP_EXEC=${PIP_BINDIR}/pip-exec
 
 export LIBPIPSO=${PIP_LIBDIR}/libpip.so
 
