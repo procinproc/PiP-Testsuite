@@ -92,7 +92,6 @@ int main( int argc, char **argv ) {
   CHECK( ( ( mode_str = pip_get_mode_str() ) != NULL ),
 	 !RV,
 	 return(EXIT_FAIL) );
-  mode_str = pip_get_mode_str();
   if( strcmp( mode_str, PIP_ENV_MODE_PTHREAD          ) != 0 &&
       strcmp( mode_str, PIP_ENV_MODE_PROCESS          ) != 0 &&
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_PRELOAD  ) != 0 &&

@@ -42,7 +42,7 @@ all: $(PROGRAMS)
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-TEST_OBJS = nopip piproot piptask pipboth hello hello.o root task
+TEST_OBJS = nopip piproot piptask pipboth hello hello.o root task fhello fhello.o
 
 test :
 	$(RM) $(TEST_OBJS)
