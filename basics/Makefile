@@ -116,7 +116,7 @@ prog-nordynamic : prog.c Makefile
 	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic
 
 debug :: $(DEPS)
-	$(MAKE) -C ../basics-common debug
+	CPPFLAGS="-DDEBUG" $(MAKE) all;
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 

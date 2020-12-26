@@ -88,8 +88,6 @@ post-veryclean-hook:
 debug::
 	$(MAKE) subdir-debug;
 
-cdebug:: clean debug
-
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
 test: all
