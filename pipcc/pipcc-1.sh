@@ -78,7 +78,7 @@ else
     echo "${PIP_CHECK} -t task -- SUCCESS";
 fi
 
-timer 1 ./root
+../utils/timer 1 ./root
 if [ $? -ne 0 ]; then
     echo 'timer 1 ./root -- FAIL';
     exit $EXIT_FAIL;
