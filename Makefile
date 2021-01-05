@@ -92,3 +92,6 @@ TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
 test: all
 	./test.sh $(TEST_LIST)
+
+test10: all
+	env PIP_TEST_THRESHOLD=10 ./test.sh $(TEST_LIST)
