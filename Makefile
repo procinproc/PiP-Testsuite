@@ -93,5 +93,32 @@ TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 test: all
 	./test.sh $(TEST_LIST)
 
+test1: all
+	env PIP_TEST_THRESHOLD=1 ./test.sh $(TEST_LIST)
+
+test2: all
+	env PIP_TEST_THRESHOLD=2 ./test.sh $(TEST_LIST)
+
+test3: all
+	env PIP_TEST_THRESHOLD=3 ./test.sh $(TEST_LIST)
+
+test4: all
+	env PIP_TEST_THRESHOLD=4 ./test.sh $(TEST_LIST)
+
+test5: all
+	env PIP_TEST_THRESHOLD=5 ./test.sh $(TEST_LIST)
+
+test6: all
+	env PIP_TEST_THRESHOLD=6 ./test.sh $(TEST_LIST)
+
+test7: all
+	env PIP_TEST_THRESHOLD=7 ./test.sh $(TEST_LIST)
+
+test8: all
+	env PIP_TEST_THRESHOLD=8 ./test.sh $(TEST_LIST)
+
+test9: all
+	env PIP_TEST_THRESHOLD=9 ./test.sh $(TEST_LIST)
+
 test10: all
 	env PIP_TEST_THRESHOLD=10 ./test.sh $(TEST_LIST)
