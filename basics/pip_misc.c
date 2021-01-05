@@ -92,14 +92,14 @@ int main( int argc, char **argv ) {
   CHECK( ( ( mode_str = pip_get_mode_str() ) != NULL ),
 	 !RV,
 	 return(EXIT_FAIL) );
-  if( strcmp( mode_str, PIP_ENV_MODE_PTHREAD          ) != 0 &&
-      strcmp( mode_str, PIP_ENV_MODE_PROCESS          ) != 0 &&
+  if( strcmp( mode_str, PIP_ENV_MODE_PROCESS          ) != 0 &&
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_PRELOAD  ) != 0 &&
-#if PIP_VERSION_MAJOR > 1
+      strcmp( mode_str, PIP_ENV_MODE_PROCESS_PIPCLONE ) != 0 &&
+#ifdef PIP_ENV_MODE_PROCESS_GOT
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_GOT      ) != 0 &&
 #endif
-      strcmp( mode_str, PIP_ENV_MODE_PROCESS_PIPCLONE ) != 0 ) {
-    CHECK( 1, RV, return(EXIT_FAIL) );
+      strcmp( mode_str, PIP_ENV_MODE_PTHREAD          ) != 0 ) {
+      CHECK( 1, RV, return(EXIT_FAIL) );
   }
 
   /* pip_isa_root() */
