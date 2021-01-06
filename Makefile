@@ -36,11 +36,11 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx fortran issues
+SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx issues
 
 SUBDIRS_V1 = $(SUBDIRS_COMMON) prog compat
-SUBDIRS_V2 = $(SUBDIRS_COMMON) prog compat
-SUBDIRS_V3 = $(SUBDIRS_COMMON) prog compat blt
+SUBDIRS_V2 = $(SUBDIRS_COMMON) fortran prog compat 
+SUBDIRS_V3 = $(SUBDIRS_COMMON) fortran prog compat blt
 
 SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
 	prog compat blt \

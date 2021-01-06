@@ -39,7 +39,7 @@ static int static_user_func( void *argp ) {
   int arg;
   int pipid = -100;
 
-#ifdef NO_IMPLICIT_INIT
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_get_pipid( &pipid ), 	  RV!=EPERM, return(1) );
 #else
   CHECK( pip_get_pipid( &pipid ), 	  RV,        return(1) );
@@ -56,10 +56,10 @@ int global_user_func( void *argp ) {
   int arg = *((int*)argp);
   int pipid = -100;
 
-#ifdef NO_IMPLICIT_INIT
-  CHECK( pip_get_pipid( &pipid ), 	  RV!=EPERM, return(1) );
-#else
+#if PIP_VERSION_MAJOR > 1
   CHECK( pip_get_pipid( &pipid ), 	  RV,        return(1) );
+#else
+  CHECK( pip_get_pipid( &pipid ), 	  RV!=EPERM, return(1) );
 #endif
   CHECK( pip_init( NULL, NULL, NULL, 0 ), RV,        return(1) );
   CHECK( pip_get_pipid( &pipid ), 	  RV,        return(1) );

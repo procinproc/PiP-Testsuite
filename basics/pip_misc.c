@@ -37,58 +37,37 @@ int main( int argc, char **argv ) {
   int mode, ntasks, nt, pipid, id;
   const char *mode_str = NULL;
 
+#if PIP_VERSION_MAJOR > 1
   /* newer PiP lib. allows to call PiP functions without calling pip_init() */
-#ifdef NO_IMPLICIT_INIT
-  /*** before calling pip_init(), this must fail ***/
-
-#if PIP_VERSION_MAJOR > 1
-  CHECK( pip_is_initialized(), 	    RV, 	return(EXIT_FAIL) );
-  CHECK( pip_isa_root(), 	    RV, 	return(EXIT_FAIL) );
-  CHECK( pip_isa_task(),	    RV, 	return(EXIT_FAIL) );
-#endif
-  CHECK( pip_get_pipid( NULL ),	    RV!=EPERM, 	return(EXIT_FAIL) );
-  CHECK( pip_get_pipid( &pipid ),   RV!=EPERM, 	return(EXIT_FAIL) );
-  CHECK( pip_get_mode( NULL ),	    RV!=EPERM, 	return(EXIT_FAIL) );
-  CHECK( pip_get_mode( &mode ),	    RV!=EPERM, 	return(EXIT_FAIL) );
-  CHECK( pip_get_ntasks( &ntasks ), RV!=EPERM,	return(EXIT_FAIL) );
-
-  CHECK( ( ( mode_str = pip_get_mode_str() ) != NULL ),
-	 RV,
-	 return(EXIT_FAIL) );
-#else
-#if PIP_VERSION_MAJOR > 1
   CHECK( pip_is_initialized(), 	    !RV, 	return(EXIT_FAIL) );
-#endif
-  //CHECK( pip_isa_root(), 	    !RV, 	return(EXIT_FAIL) );
-  //CHECK( pip_isa_task(),	    !RV, 	return(EXIT_FAIL) );
-#if PIP_VERSION_MAJOR > 1
+  CHECK( pip_get_ntasks( &ntasks ), RV,	        return(EXIT_FAIL) );
   CHECK( pip_get_pipid( NULL ),	    RV, 	return(EXIT_FAIL) );
-#else
-  CHECK( pip_get_pipid( NULL ),	    RV!=EINVAL, return(EXIT_FAIL) );
-#endif
   CHECK( pip_get_pipid( &pipid ),   RV, 	return(EXIT_FAIL) );
-#if PIP_VERSION_MAJOR > 1
   CHECK( pip_get_mode( NULL ),	    RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_mode( &mode ),	    RV, 	return(EXIT_FAIL) );
-  CHECK( pip_get_ntasks( &ntasks ), RV,	return(EXIT_FAIL) );
   CHECK( ( ( mode_str = pip_get_mode_str() ) == NULL ),
 	 RV,
 	 return(EXIT_FAIL) );
 #else
+  CHECK( pip_get_ntasks( &ntasks ), RV!=EPERM,	return(EXIT_FAIL) );
+  CHECK( pip_get_pipid( NULL ),	    RV!=EINVAL, return(EXIT_FAIL) );
+  CHECK( pip_get_pipid( &pipid ),   RV!=EPERM, 	return(EXIT_FAIL) );
   CHECK( pip_get_mode( NULL ),	    RV!=EINVAL, return(EXIT_FAIL) );
+  CHECK( pip_get_mode( &mode ),	    RV!=EPERM, 	return(EXIT_FAIL) );
+  CHECK( ( ( mode_str = pip_get_mode_str() ) != NULL ),
+	 RV,
+	 return(EXIT_FAIL) );
 #endif
-#endif
+
   ntasks = NTASKS;
   CHECK( pip_init( &pipid, &ntasks, NULL, 0 ), RV, return(EXIT_FAIL) );
 
-  /*** after calling pip_init(), this must succeed ***/
 #if PIP_VERSION_MAJOR > 1
   CHECK( pip_is_initialized(), 	!RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &nt ),	RV,	return(EXIT_FAIL) );
   CHECK( nt!=ntasks, 		RV,	return(EXIT_FAIL) );
 #endif
   CHECK( pip_get_mode( &mode ),	RV,	return(EXIT_FAIL) );
-
   CHECK( ( ( mode_str = pip_get_mode_str() ) != NULL ),
 	 !RV,
 	 return(EXIT_FAIL) );
@@ -99,7 +78,7 @@ int main( int argc, char **argv ) {
       strcmp( mode_str, PIP_ENV_MODE_PROCESS_GOT      ) != 0 &&
 #endif
       strcmp( mode_str, PIP_ENV_MODE_PTHREAD          ) != 0 ) {
-      CHECK( 1, RV, return(EXIT_FAIL) );
+    CHECK( 1, RV, return(EXIT_FAIL) );
   }
 
   /* pip_isa_root() */
