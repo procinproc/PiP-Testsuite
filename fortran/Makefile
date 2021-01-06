@@ -44,7 +44,7 @@ include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
-%: %.f $(SRCS) Makefile
+%: %.f $(SRCS) $(DEPS)
 	$(PIPFC) $(DBGFLAG) $< -o $@
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
