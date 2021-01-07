@@ -38,7 +38,8 @@ include $(top_srcdir)/build/var.mk
 
 SRCS  = fflush-ticket518.c fflush-ticket518+.c localtime_r.c localtime_t.c
 
-PROGRAMS  = fflush-ticket518 fflush-ticket518+ localtime_r localtime_t
+#PROGRAMS  = fflush-ticket518 fflush-ticket518+ localtime_r localtime_t
+PROGRAMS  = fflush-ticket518 fflush-ticket518+ 
 
 include $(top_srcdir)/build/rule.mk
 
