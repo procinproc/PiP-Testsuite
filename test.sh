@@ -168,12 +168,6 @@ if ! [ -f ${PIP_PRELOAD} ]; then
     exit 1;
 fi
 
-if [ -z "${LD_PRELOAD}" ]; then
-    export LD_PRELOAD=${PIP_PRELOAD}
-else
-    export LD_PRELOAD=${PIP_PRELOAD}:${LD_PRELOAD}
-fi
-
 if [ x"$MCEXEC" != x ]; then
     if [ $TEST_PIP_TASKS -gt $OMP_NUM_THREADS ]; then
 	TEST_PIP_TASKS=$OMP_NUM_THREADS;
@@ -372,9 +366,9 @@ run_test_C=''
 run_test_T=''
 for pip_mode in $pip_mode_list
 do
-	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	case `PIP_MODE=$pip_mode_name pip_mode_check 2>/dev/null | grep -e process -e thread` in
-	$pip_mode_name)
+	case `${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null` in
+	pthread|process:preload|process:got|process:pipclone)
+		eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
 		eval "run_test_${pip_mode}=${pip_mode}"
 		if [ x"$SUMMARY_FILE" = x ]; then
 		    echo "testing ${pip_mode} - ${pip_mode_name}";
@@ -466,9 +460,8 @@ while read line; do
 		rm -f $TEST_OUT_STDOUT $TEST_OUT_STDERR $TEST_OUT_TIME
 
 		SECONDS=0
-		PIP_MODE=${pip_mode_name} \
-		    ${MCEXEC} ${cmd} > ${TEST_OUT_STDOUT} 2> ${TEST_OUT_STDERR} \
-		    < /dev/null;
+		${PIP_MODE_CMD} -${pip_mode} ${MCEXEC} ${cmd} \
+		    > ${TEST_OUT_STDOUT} 2> ${TEST_OUT_STDERR} < /dev/null;
 		test_exit_status=$?
 		t=$SECONDS
 

@@ -49,32 +49,72 @@ static int test_pip_init( char **argv ) {
 }
 
 static int test_pip_init_null( char **argv ) {
+  char *env = getenv( PIP_ENV_MODE );
+  int pip_mode;
+
   CHECK( pip_init( NULL, NULL, NULL, 0 ), RV, return(EXIT_FAIL) );
+
+  if( env == NULL ) return EXIT_PASS;
+
+  CHECK( pip_get_mode( &pip_mode ), RV, return(EXIT_FAIL) );
+  switch( pip_mode ) {
+  case PIP_MODE_PTHREAD:
+    CHECK( ( strcasecmp( env, PIP_ENV_MODE_THREAD  ) == 0 ||
+	     strcasecmp( env, PIP_ENV_MODE_PTHREAD ) == 0 ), !RV, return(EXIT_FAIL) );
+    break;
+  case PIP_MODE_PROCESS_PRELOAD:
+    CHECK( strcasecmp( env, PIP_ENV_MODE_PROCESS_PRELOAD ),   RV, return(EXIT_FAIL) );
+    break;
+  case PIP_MODE_PROCESS_PIPCLONE:
+    CHECK( strcasecmp( env, PIP_ENV_MODE_PROCESS_PIPCLONE ),  RV, return(EXIT_FAIL) );
+    break;
+#ifdef PIP_MODE_PROCESS_GOT
+  case PIP_MODE_PROCESS_GOT:
+    CHECK( strcasecmp( env, PIP_ENV_MODE_PROCESS_GOT ),       RV, return(EXIT_FAIL) );
+    break;
+#endif
+  default:
+    return(EXIT_FAIL);
+  }
   return EXIT_PASS;
 }
 
 static int test_pip_init_preload( char **argv ) {
+  char *env = getenv( PIP_ENV_MODE );
   int pipid, ntasks;
   void *exp;
 
   ntasks = NTASKS;
   exp = NULL;
-  CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_PRELOAD ),
-	 RV,
-	 return(EXIT_FAIL) );
+  if( env == NULL || strcasecmp( env, PIP_ENV_MODE_PROCESS_PRELOAD ) == 0 ) {
+    CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_PRELOAD ),
+	   RV,
+	   return(EXIT_FAIL) );
+  } else {
+    CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_PRELOAD ),
+	   RV!=EPERM,
+	   return(EXIT_FAIL) );
+  }
   return EXIT_PASS;
 }
 
 #ifdef PIP_MODE_PROCESS_GOT
 static int test_pip_init_got( char **argv ) {
+  char *env = getenv( PIP_ENV_MODE );
   int pipid, ntasks;
   void *exp;
 
   ntasks = NTASKS;
   exp = NULL;
-  CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_GOT ),
-	 RV,
-	 return(EXIT_FAIL) );
+  if( strcasecmp( env, PIP_ENV_MODE_PROCESS_PRELOAD ) == 0 ) {
+    CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_GOT ),
+	   RV!=EPERM,
+	   return(EXIT_FAIL) );
+  } else {
+    CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_GOT ),
+	   RV,
+	   return(EXIT_FAIL) );
+  }
   return EXIT_PASS;
 }
 #endif
