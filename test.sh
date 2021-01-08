@@ -364,19 +364,69 @@ run_test_L=''
 run_test_G=''
 run_test_C=''
 run_test_T=''
-for pip_mode in $pip_mode_list
-do
-	case `${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null` in
-	pthread|process:preload|process:got|process:pipclone)
-		eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-		eval "run_test_${pip_mode}=${pip_mode}"
-		if [ x"$SUMMARY_FILE" = x ]; then
-		    echo "testing ${pip_mode} - ${pip_mode_name}";
-		fi
-		;;
-	*)	echo >&2 "WARNING: $pip_mode_name is not testable";;
+if [ x"${SUMMARY_FILE}" == x ]; then
+    for pip_mode in $pip_mode_list; do
+	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
+	mode_actual=`${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null`
+	case $pip_mode in
+	    L)
+		case $mode_actual in
+		    process:preload) 
+			run_test_L='L';
+			echo "testing ${pip_mode} - ${pip_mode_name}";;
+		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
+		esac;;
+	    G)
+		case $mode_actual in
+		    process:got) 
+			run_test_G='G';
+			echo "testing ${pip_mode} - ${pip_mode_name}";;
+		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
+		esac;;
+	    C)
+		case $mode_actual in
+		    process:pipclone) 
+			run_test_C='C';
+			echo "testing ${pip_mode} - ${pip_mode_name}";;
+		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
+		esac;;
+	    T)
+		case $mode_actual in
+		    pthread) 
+			run_test_T='T';
+			echo "testing ${pip_mode} - ${pip_mode_name}";;
+		    *)  echo >&2 "WARNING: $pip_mode_name ($pip_mode) is not testable";;
+		esac;;
 	esac
-done
+    done
+else
+    for pip_mode in $pip_mode_list; do
+	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
+	mode_actual=`${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null`
+	case $pip_mode in
+	    L)
+		case $mode_actual in
+		    process:preload) run_test_L='L';;
+		    *)  :;;
+		esac;;
+	    G)
+		case $mode_actual in
+		    process:got) run_test_G='G';;
+		    *)  :;;
+		esac;;
+	    C)
+		case $mode_actual in
+		    process:pipclone) run_test_C='C';;
+		    *)  :;;
+		esac;;
+	    T)
+		case $mode_actual in
+		    pthread) run_test_T='T';;
+		    *)  :;;
+		esac;;
+	esac
+    done
+fi
 
 pip_mode_list="$run_test_L $run_test_G $run_test_C $run_test_T"
 
