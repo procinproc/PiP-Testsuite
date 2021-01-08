@@ -106,7 +106,7 @@ static int test_pip_init_got( char **argv ) {
 
   ntasks = NTASKS;
   exp = NULL;
-  if( strcasecmp( env, PIP_ENV_MODE_PROCESS_PRELOAD ) == 0 ) {
+  if( env != NULL && strcasecmp( env, PIP_ENV_MODE_PROCESS_PRELOAD ) == 0 ) {
     CHECK( pip_init( &pipid, &ntasks, &exp, PIP_MODE_PROCESS_GOT ),
 	   RV!=EPERM,
 	   return(EXIT_FAIL) );
