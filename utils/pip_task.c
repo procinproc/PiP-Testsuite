@@ -89,14 +89,14 @@ int main( int argc, char **argv ) {
     CHECK( pip_spawn( argv[2], &argv[2], NULL, c, &pipid,
 		      NULL, NULL, NULL ),
 	   RV,
-	   return(EXIT_UNTESTED) );
-    CHECK( pipid, RV!=i, return(EXIT_UNTESTED) );
+	   return(EXIT_FAIL) );
+    CHECK( pipid, RV!=i, return(EXIT_FAIL) );
   }
   err    = 0;
   extval = 0;
   for( i=0; i<ntasks; i++ ) {
     status = 0;
-    CHECK( pip_wait( i, &status ), RV, return(EXIT_UNTESTED) );
+    CHECK( pip_wait( i, &status ), RV, return(EXIT_FAIL) );
     if( WIFEXITED( status ) ) {
       extval = WEXITSTATUS( status );
       if( extval ) {
@@ -108,6 +108,6 @@ int main( int argc, char **argv ) {
     if( err == 0 && extval != 0 ) err = extval;
   }
 
-  CHECK( pip_fin(), RV, return(EXIT_UNTESTED) );
+  CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return err;
 }

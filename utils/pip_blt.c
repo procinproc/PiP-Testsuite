@@ -110,7 +110,7 @@ int main( int argc, char **argv ) {
 			  PIP_TASK_INACTIVE,
 			  &pipid, NULL, &queues[j], NULL ),
 	   RV,
-	   return(EXIT_UNTESTED) );
+	   return(EXIT_FAIL) );
     CHECK( is_taskq_empty( &queues[j]), RV, return(EXIT_FAIL) );
   }
   for( i=npass,j=0; i<ntasks; i++,j++ ) {
@@ -130,7 +130,7 @@ int main( int argc, char **argv ) {
 			  PIP_TASK_ACTIVE,
 			  &pipid, NULL, &queues[j], NULL ),
 	   RV,
-	   return(EXIT_UNTESTED) );
+	   return(EXIT_FAIL) );
     CHECK( is_taskq_empty( &queues[j]), !RV, return(EXIT_FAIL) );
   }
   err    = 0;
@@ -154,6 +154,6 @@ int main( int argc, char **argv ) {
     }
     if( err == 0 && extval != 0 ) err = extval;
   }
-  CHECK( pip_fin(), RV, return(EXIT_UNTESTED) );
+  CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return err;
 }
