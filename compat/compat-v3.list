@@ -22,3 +22,5 @@ skip T UNSUPPORTED timer 1 pip_blt 1 1 ./pip_dlopen
 skip T UNSUPPORTED timer 1 pip_blt 8 8 ./pip_dlopen
 timer  5 pip_blt 1 1 ./getaddrinfo
 timer 10 pip_blt 8 8 ./getaddrinfo
+timer 2  pip_blt 1 1 ./malloc-x
+timer 10 pip_blt 8 8 ./malloc-x
