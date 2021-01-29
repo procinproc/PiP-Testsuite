@@ -32,6 +32,7 @@
  */
 
 #include <test.h>
+#include <pip/pip_machdep.h>
 #include <malloc.h>
 #include <mcheck.h>
 
