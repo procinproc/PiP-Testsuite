@@ -55,5 +55,7 @@ check ${PIP_CHECK} -b ${hello}
 
 check ./${hello}
 
+CC="cc -v -O3" check ${PIPCC} ${hello}.c -o ${hello}
+
 echo $tstp ": PASS"
 exit $EXIT_PASS;
