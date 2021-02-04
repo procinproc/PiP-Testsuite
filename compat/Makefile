@@ -38,17 +38,17 @@ include $(top_srcdir)/build/var.mk
 
 SRCS_V1  = malloc.c ctype.c gettimeofday.c \
 	   gethostname.c gethostbyname.c \
-	   const_destruct.c system.c  get_nprocs.c environ.c \
+	   const_destruct.c system.c get_nprocs.c environ.c \
 	   atexit.c on_exit.c
 PROG_V1  = malloc ctype gettimeofday \
 	   gethostname gethostbyname \
-	   const_destruct system  get_nprocs environ \
+	   const_destruct system get_nprocs environ \
 	   atexit on_exit
 
 SRCS_V2  = $(SRCS_V1) fork.c sigchld.c pagefault.c pip_dlopen.c libnull.c \
-	getaddrinfo.c malloc-x.c
+	getaddrinfo.c malloc-x.c realloc-x.c
 PROG_V2  = $(PROG_V1) fork sigchld pagefault pip_dlopen libnull.so \
-	getaddrinfo malloc-x
+	getaddrinfo malloc-x realloc-x
 
 SRCS_V3 = $(SRCS_V2)
 PROG_V3 = $(PROG_V2)

@@ -108,7 +108,7 @@ int main( int argc, char **argv ) {
       sz = random() % MAX;
       who = slots[n].who;
 #ifdef DEBUG
-      printf( "[%d:%d] free[%d] and malloc(%lu): %p\n", pipid, n, who, sz, &slots[n] );
+      printf( "[%d:%d] realloc(%d:%lu): %p\n", pipid, n, who, sz, &slots[n] );
 #endif
       switch( mprobe( slots[n].region ) ) {
       case MCHECK_HEAD:
@@ -124,8 +124,7 @@ int main( int argc, char **argv ) {
 	return EXIT_FAIL;
 	break;
       }
-      free( slots[n].region );
-      slots[n].region = malloc( sz );
+      slots[n].region = realloc( slots[n].region, sz );
       slots[n].who = pipid;
     }
     pip_spin_unlock( &slots[n].lock );
