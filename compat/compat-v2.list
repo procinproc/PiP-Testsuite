@@ -8,5 +8,6 @@ timer  5 pip_task 1 ./getaddrinfo
 timer 10 pip_task 8 ./getaddrinfo
 timer 10 pip_task 8 ./malloc-x
 timer 10 pip_task 8 ./realloc-x
+timer 10 pip_task 8 ./memalign-x
 ##timer 1 ./sigchld 1
 ##timer 1 ./sigchld 8
