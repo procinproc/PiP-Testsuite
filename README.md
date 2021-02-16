@@ -46,6 +46,17 @@ Here is the sample output of the test results;
       failure            : 0
       unsupported        : 22
 
+# Mailing Lists
+
+If you have any questions or comments on PiP-Testsuite and/or PiP iteself, 
+send e-mails to;
+
+    procinproc-info@googlegroups.com
+
+Or, join our PiP users' mailing list;
+
+    procinproc-users@googlegroups.com
+
 # Author
 
 Atsushi Hori<br>
