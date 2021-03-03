@@ -149,29 +149,23 @@ fi
 
 . $dir/exit_code.sh.inc
 
-export NTASKS=`$MCEXEC dlmopen_count -p`
-if [ $NTASKS -lt 8 ]; then
-    echo "dlmopen_count:$NTASKS is not enough"
-    exit 1;
-fi
+##export NTASKS=`$MCEXEC dlmopen_count -p`
+##if [ $NTASKS -lt 8 ]; then
+##    echo "dlmopen_count:$NTASKS is not enough"
+##    exit 1;
+##fi
 
-export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
-if [ $OMP_NUM_THREADS -lt 4 ]; then
-    echo "ompnumthread:$OMP_NUM_THREADS is not enough"
-    exit 1;
-fi
+##export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
+##if [ $OMP_NUM_THREADS -lt 4 ]; then
+##    echo "ompnumthread:$OMP_NUM_THREADS is not enough"
+##    exit 1;
+##fi
 
 debug=`${LIBPIPSO} --debug`
 
 if ! [ -f ${PIP_PRELOAD} ]; then
     echo "Unable to find pip_preload.so";
     exit 1;
-fi
-
-if [ x"$MCEXEC" != x ]; then
-    if [ $TEST_PIP_TASKS -gt $OMP_NUM_THREADS ]; then
-	TEST_PIP_TASKS=$OMP_NUM_THREADS;
-    fi
 fi
 
 file_summary() {
