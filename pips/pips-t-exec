@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/ahori/PiP/pip-2/install/bin/pips", line 459, in <module>
+    read_ps_output( fstream )
+  File "/home/ahori/PiP/pip-2/install/bin/pips", line 443, in read_ps_output
+    if isa_piproot( cmd ) or isa_piptask( cmd ):
+  File "/home/ahori/PiP/pip-2/install/bin/pips", line 387, in isa_piptask
+    if pip_task_symbol( cmd[0] ):
+  File "/home/ahori/PiP/pip-2/install/bin/pips", line 362, in pip_task_symbol
+    if sym in '0123456789':
+TypeError: 'in <string>' requires string as left operand, not int

@@ -1,4 +1,5 @@
 PID   TID   TT       TIME     PIP COMMAND  
-13040 13040 pts/0    00:00:00 RT  pip-exec 
-13041 13041 pts/0    00:00:00 RG  pip-exec 
-13042 13042 pts/0    00:00:00 RL  pip-exec 
+19497 19497 pts/2    00:00:00 RL  pip-exec 
+19498 19498 pts/2    00:00:00 RT  pip-exec 
+19501 19501 pts/2    00:00:00 RC  pip-exec 
+19502 19502 pts/2    00:00:00 RG  pip-exec 

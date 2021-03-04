@@ -36,8 +36,7 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-PROGRAMS = a b c
-
+PROGRAMS = ~a~ ~b~ ~c~ ~d~
 SRCS = a.c
 
 include $(top_srcdir)/build/rule.mk
@@ -46,26 +45,30 @@ all: test
 
 check: test
 
-a: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o a
+~a~: a.c $(DEPS) Makefile
+	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
 
-b: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o b
+~b~: a.c $(DEPS) Makefile
+	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
 
-c: a.c $(DEPS) Makefile
-	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o c
+~c~: a.c $(DEPS) Makefile
+	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
+
+~d~: a.c $(DEPS) Makefile
+	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
 
 test: clean
 	./pips-test.sh
 
 gen: $(PROGRAMS)
 	. ../config.sh; \
-	PIP_MODE=thread      $(PIP_EXEC) -n 4 ./a 30 & \
-	PIP_MODE=process:got $(PIP_EXEC) -n 3 ./b 30 & \
-	LD_PRELOAD=$${PIP_PRELOAD} PIP_MODE=process:preload $(PIP_EXEC) -n 2 ./c 30 &
+	$(PIP_MODE) -T $(PIP_EXEC) -n 5 ./~a~ 30 & \
+	$(PIP_MODE) -G $(PIP_EXEC) -n 4 ./~b~ 30 & \
+	$(PIP_MODE) -C $(PIP_EXEC) -n 3 ./~c~ 30 & \
+	$(PIP_MODE) -L $(PIP_EXEC) -n 2 ./~d~ 30 &
 	$(RM) *.input *.output
 	./pips-test.sh gen
-	${PIPS} -k a b c pip-exec
+	${PIPS} -k -f $(PROGRAMS)
 
 post-clean-hook:
 	$(RM) $(PROGRAMS)
