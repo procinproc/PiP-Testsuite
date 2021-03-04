@@ -24,6 +24,7 @@ PIPCC        = $(PIP_BINDIR)/pipcc
 PIPFC        = $(PIP_BINDIR)/pipfc
 PIP_CHECK    = $(PIP_BINDIR)/pip-check
 PIP_EXEC     = $(PIP_BINDIR)/pip-exec
+PIP_MODE     = $(PIP_BINDIR)/pip-mode
 PRINTPIPMODE = $(PIP_BINDIR)/printpipmode
 PIPS         = $(PIP_BINDIR)/pips
 PIP_UNPIE    = $(PIP_BINDIR)/pip_unpie
