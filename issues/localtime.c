@@ -1,21 +1,33 @@
-#include <dlfcn.h>
-#include <err.h>
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
+/* this program was based on the code written by Florian Weimer */
+/* https://sourceware.org/bugzilla/show_bug.cgi?id=11754#c15    */
+
+#include <test.h>
 #include <time.h>
 
 static void
-mylocaltime2 (time_t t)
+mylocaltime (char *tz, time_t t, int dl)
 {
-  struct tm *tm = localtime (&t);
-  printf ("tm_isdst (from main program): %d\n", tm->tm_isdst);
-  printf ("daylight (from main program): %d\n", daylight);
-  printf ("timezone (from main program): %s\n", tzname[0]);
+  struct tm *tm;
+
+  setenv( "TZ", tz, 1 );
+  tzset();
+  tm = localtime (&t);
+
+  printf ("%s\t%d/%d/%d %d:%d:%d\n", tz,
+	  tm->tm_year+1900, tm->tm_mon+1, tm->tm_mday,
+	  tm->tm_hour,      tm->tm_min,   tm->tm_sec );
+  printf ("\ttimezone: %s",   tzname[0]);
+  printf ("\tdaylight: %d\n", daylight);
+
+  CHECK( daylight!=dl, RV, exit(EXIT_FAIL) );
 }
 
 int
 main (void)
 {
-  mylocaltime2 (1555332781);
+  time_t t = 1555332781;	/* 4/15 12:53 in Tokyo */
+
+  mylocaltime ( "Asis/Tokyo",      t, 0 );
+  mylocaltime ( "Europe/Berlin",   t, 1 );
+  mylocaltime ( "America/Chicago", t, 1 );
 }
