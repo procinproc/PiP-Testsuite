@@ -23,9 +23,9 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 # $
 # $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
-# System Software Development Team, 2016-2020
+# System Software Development Team, 2016-2021
 # $
-# $PIP_TESTSUITE: Version 1.0.0$
+# $PIP_TESTSUITE: Version 1.1.0$
 #
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
@@ -110,7 +110,7 @@ prog-nopie : prog.c $(DEPS) Makefile
 
 prog-pie : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-pie
-	if [ $(PIP_VERSION_MAJOR)> 1 ]; then $(PIP_UNPIE) prog-pie; fi
+	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-pie; fi
 
 prog-nordynamic : prog.c Makefile
 	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic

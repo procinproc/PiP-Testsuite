@@ -16,7 +16,7 @@ testclean: \
 veryclean: clean testclean prog-clean post-veryclean-hook
 .PHONY: veryclean
 
-distclean: veryclean \
+distclean: testclean veryclean \
 	prog-distclean \
 	distclean-here post-distclean-hook
 .PHONY: distclean

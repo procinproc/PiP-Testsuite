@@ -1,18 +1,18 @@
-kill 19497 HUP
-kill 19498 HUP
-kill 19501 HUP
-kill 19502 HUP
-kill 19503 HUP
-kill 19504 HUP
-kill 19505 HUP
-kill 19506 HUP
-kill 19507 HUP
-kill 19508 HUP
-kill 19509 HUP
-kill 19510 HUP
-kill 19511 HUP
-kill 19512 HUP
-kill 19513 HUP
-kill 19514 HUP
-kill 19515 HUP
-kill 19516 HUP
+pip-tgkill 23440 0|~a~ HUP
+pip-tgkill 23441 1|~a~ HUP
+pip-tgkill 23443 2|~a~ HUP
+pip-tgkill 23444 3|~a~ HUP
+pip-tgkill 23448 4|~a~ HUP
+pip-tgkill 23442 0.~b~ HUP
+pip-tgkill 23445 0;~c~ HUP
+pip-tgkill 23446 1.~b~ HUP
+pip-tgkill 23447 1;~c~ HUP
+pip-tgkill 23449 2.~b~ HUP
+pip-tgkill 23450 2;~c~ HUP
+pip-tgkill 23451 0:~d~ HUP
+pip-tgkill 23452 3.~b~ HUP
+pip-tgkill 23453 1:~d~ HUP
+pip-tgkill 23435 R.pip-exec HUP
+pip-tgkill 23436 R|pip-exec HUP
+pip-tgkill 23438 R;pip-exec HUP
+pip-tgkill 23439 R:pip-exec HUP

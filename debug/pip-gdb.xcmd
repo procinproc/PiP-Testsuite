@@ -1,0 +1,11 @@
+info inferiors
+up
+up
+up
+up
+up
+backtrace
+list
+break main
+continue
+quit

@@ -1,36 +1,18 @@
-PIPS: kill -s INT 19497
-kill 19497 INT
-PIPS: kill -s INT 19498
-kill 19498 INT
-PIPS: kill -s INT 19501
-kill 19501 INT
-PIPS: kill -s INT 19502
-kill 19502 INT
-PIPS: kill -s INT 19503
-kill 19503 INT
-PIPS: kill -s INT 19504
-kill 19504 INT
-PIPS: kill -s INT 19505
-kill 19505 INT
-PIPS: kill -s INT 19506
-kill 19506 INT
-PIPS: kill -s INT 19507
-kill 19507 INT
-PIPS: kill -s INT 19508
-kill 19508 INT
-PIPS: kill -s INT 19509
-kill 19509 INT
-PIPS: kill -s INT 19510
-kill 19510 INT
-PIPS: kill -s INT 19511
-kill 19511 INT
-PIPS: kill -s INT 19512
-kill 19512 INT
-PIPS: kill -s INT 19513
-kill 19513 INT
-PIPS: kill -s INT 19514
-kill 19514 INT
-PIPS: kill -s INT 19515
-kill 19515 INT
-PIPS: kill -s INT 19516
-kill 19516 INT
+pip-tgkill 23440 0|~a~ INT
+pip-tgkill 23441 1|~a~ INT
+pip-tgkill 23443 2|~a~ INT
+pip-tgkill 23444 3|~a~ INT
+pip-tgkill 23448 4|~a~ INT
+pip-tgkill 23442 0.~b~ INT
+pip-tgkill 23445 0;~c~ INT
+pip-tgkill 23446 1.~b~ INT
+pip-tgkill 23447 1;~c~ INT
+pip-tgkill 23449 2.~b~ INT
+pip-tgkill 23450 2;~c~ INT
+pip-tgkill 23451 0:~d~ INT
+pip-tgkill 23452 3.~b~ INT
+pip-tgkill 23453 1:~d~ INT
+pip-tgkill 23435 R.pip-exec INT
+pip-tgkill 23436 R|pip-exec INT
+pip-tgkill 23438 R;pip-exec INT
+pip-tgkill 23439 R:pip-exec INT

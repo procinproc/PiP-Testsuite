@@ -8,3 +8,5 @@
 %include cxx/test-v2.list
 %include fortran/test-v2.list
 %include prog/test-v2.list
+%include pips/test-v2.list
+%include debug/test-v2.list

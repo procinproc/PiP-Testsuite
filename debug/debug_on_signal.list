@@ -1,0 +1,8 @@
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 0
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 1
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 2
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 3
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 4
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 5
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 6
+skip T UNSUPPORTED timer 10 ./debug_on_signal.sh 7

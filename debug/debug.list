@@ -1,0 +1,2 @@
+%include stop_on_start.list
+%include debug_on_signal.list

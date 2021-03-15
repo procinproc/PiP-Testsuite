@@ -24,9 +24,9 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 # $
 # $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
-# System Software Development Team, 2016-2020
+# System Software Development Team, 2016-2021
 # $
-# $PIP_TESTSUITE: Version 1.0.0$
+# $PIP_TESTSUITE: Version 1.1.0$
 #
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
@@ -330,19 +330,6 @@ else
 fi
 
 if [ x"$SUMMARY_FILE" = x ]; then
-    paths=`echo ${PATH} | sed -e 's/:/ /g'`
-    npaths=4
-    echo -n "PATH: "
-    n=0
-    for path in $paths; do
-	if [ ${n} -lt $npaths ] ; then
-	    echo -n "[${n}] ${path} "
-	    n=$((n+1))
-	    continue;
-	fi
-	echo "...";
-	break;
-    done
     echo "--with-pip=$PIP_DIR"
     echo "libpip.so -- DEBUG:" $debug
     echo "LD_PRELOAD=$PIP_PRELOAD"

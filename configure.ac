@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([PiP-Testsuite], [1.0.0], [pip@ml.riken.jp], [pip-testsuite],
+AC_INIT([PiP-Testsuite], [1.1.0], [pip@ml.riken.jp], [pip-testsuite],
 	[https://github.com/RIKEN-SysSoft/PiP-Testsuite])
 AC_CONFIG_SRCDIR([RELEASE_NOTE])
 AC_CONFIG_AUX_DIR([build])

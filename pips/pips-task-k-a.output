@@ -1,5 +1,5 @@
-kill 19503 TERM
-kill 19507 TERM
-kill 19509 TERM
-kill 19513 TERM
-kill 19516 TERM
+pip-tgkill 23440 0|~a~ TERM
+pip-tgkill 23441 1|~a~ TERM
+pip-tgkill 23443 2|~a~ TERM
+pip-tgkill 23444 3|~a~ TERM
+pip-tgkill 23448 4|~a~ TERM

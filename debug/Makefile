@@ -1,4 +1,3 @@
-
 # $PIP_license: <Simplified BSD License>
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -23,9 +22,9 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 # $
 # $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
-# System Software Development Team, 2016-2020
+# System Software Development Team, 2016-2021
 # $
-# $PIP_TESTSUITE: Version 1.0.0$
+# $PIP_TESTSUITE: Version 1.1.0$
 #
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
@@ -35,4 +34,26 @@ top_srcdir = $(top_builddir)
 srcdir = .
 
 include $(top_srcdir)/build/var.mk
+
+PROGRAMS = xx xy
+SRCS = xx.c xy.c
+
 include $(top_srcdir)/build/rule.mk
+
+all: $(PROGRAMS)
+
+check: test
+
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
+
+test: all
+	../test.sh $(TEST_LIST)
+
+xx: xx.c $(DEPS) Makefile
+	$(PIPCC) -g $(CPPFLAGS) $(CFLAGS) $< -o $@
+
+xy: xy.c $(DEPS) Makefile
+	$(PIPCC) -g $(CPPFLAGS) $(CFLAGS) $< -o $@
+
+post-clean-hook:
+	rm -f *.data *.data.old

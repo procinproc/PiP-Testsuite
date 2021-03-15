@@ -9,3 +9,5 @@
 %include fortran/test-v3.list
 %include blt/test-v3.list
 %include prog/test-v3.list
+%include pips/test-v3.list
+%include debug/test-v2.list

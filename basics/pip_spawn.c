@@ -23,9 +23,9 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
  * $
  * $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
- * System Software Development Team, 2016-2020
+ * System Software Development Team, 2016-2021
  * $
- * $PIP_TESTSUITE: Version 1.0.0$
+ * $PIP_TESTSUITE: Version 1.1.0$
  *
  * $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
  * $
@@ -46,7 +46,7 @@ int main( int argc, char **argv ) {
 
   ntasks = NTASKS;
   if( ( env = getenv( "NTASKS" ) ) != NULL ) {
-    ntenv = strtol( env, NULL, 10 );
+    ntenv  = strtol( env, NULL, 10 );
     ntasks = ( ntasks > ntenv ) ? ntenv : ntasks;
   }
   CHECK( pip_init( &pipid, &ntasks, NULL, 0 ), RV, return(EXIT_FAIL) );

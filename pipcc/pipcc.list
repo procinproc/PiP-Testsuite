@@ -1,7 +1,7 @@
-./pip-check.sh
-./pip-mode.sh
-./pipcc-0.sh
-./pipcc-1.sh
-./pipcc-misc.sh
-./pipfc-0.sh
-./pipfc-misc.sh
+timer 3 ./pip-check.sh
+timer 3 ./pip-mode.sh
+timer 3 ./pipcc-0.sh
+timer 3 ./pipcc-1.sh
+timer 3 ./pipcc-misc.sh
+timer 3 ./pipfc-0.sh
+timer 3 ./pipfc-misc.sh

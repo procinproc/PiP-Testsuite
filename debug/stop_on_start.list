@@ -1,0 +1,19 @@
+timer 10 ./stop_on_start.sh sigcont.cmd false
+timer 10 ./stop_on_start.sh sigcont.cmd@0 false
+timer 10 ./stop_on_start.sh sigcont.cmd@-1 false
+timer 10 ./stop_on_start.sh pip-gdb.cmd true
+timer 10 ./stop_on_start.sh pip-gdb.cmd@1 true
+timer 10 ./stop_on_start.sh pip-gdb.cmd@-1 true
+timer 10 ./stop_on_start.sh nopip-gdb.cmd false
+timer 10 ./stop_on_start.sh nopip-gdb.cmd@1 false
+timer 10 ./stop_on_start.sh nopip-gdb.cmd@-1 false
+#### ltrace does not work with PiP
+#timer 10 ./stop_on_start.sh ltrace.cmd false
+#timer 10 ./stop_on_start.sh ltrace.cmd@2 false
+#timer 10 ./stop_on_start.sh ltrace.cmd@-1 false
+timer 10 ./stop_on_start.sh strace.cmd false
+timer 10 ./stop_on_start.sh strace.cmd@3 false
+timer 10 ./stop_on_start.sh strace.cmd@-1 false
+timer 10 ./stop_on_start.sh perf.cmd false
+timer 10 ./stop_on_start.sh perf.cmd@0 false
+timer 10 ./stop_on_start.sh perf.cmd@-1 false

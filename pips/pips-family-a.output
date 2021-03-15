@@ -1,7 +1,8 @@
-PID   TID   TT       TIME     PIP COMMAND  
-19498 19498 pts/2    00:00:00 RT  pip-exec 
-19498 19503 pts/2    00:00:00 0T  ~a~      
-19498 19507 pts/2    00:00:00 1T  ~a~      
-19498 19509 pts/2    00:00:00 2T  ~a~      
-19498 19513 pts/2    00:00:00 3T  ~a~      
-19498 19516 pts/2    00:00:00 4T  ~a~      
+PID   TID   TT       STAT TIME     PIP COMMAND  
+23436 23436 pts/1    Sl+  00:00:00 RT  pip-exec 
+23436 23436 pts/1    Sl+  00:00:00 RT  pip-exec 
+23436 23440 pts/1    Sl+  00:00:00 0T  ~a~      
+23436 23441 pts/1    Sl+  00:00:00 1T  ~a~      
+23436 23443 pts/1    Sl+  00:00:00 2T  ~a~      
+23436 23444 pts/1    Sl+  00:00:00 3T  ~a~      
+23436 23448 pts/1    Sl+  00:00:00 4T  ~a~      

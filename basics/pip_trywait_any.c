@@ -1,8 +1,8 @@
 /*
  * $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
- * System Software Development Team, 2016-2020
+ * System Software Development Team, 2016-2021
  * $
- * $PIP_TEST_VERSION: Version 1.0.0$
+ * $PIP_VERSION: Version 1.1.0$
  * $PIP_license: <Simplified BSD License>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are

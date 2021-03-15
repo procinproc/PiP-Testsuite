@@ -23,9 +23,9 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 # $
 # $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
-# System Software Development Team, 2016-2020
+# System Software Development Team, 2016-2021
 # $
-# $PIP_TESTSUITE: Version 1.0.0$
+# $PIP_TESTSUITE: Version 1.1.0$
 #
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
@@ -36,16 +36,15 @@ srcdir = .
 
 include $(top_srcdir)/build/var.mk
 
-SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx issues
+SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx issues pips debug
 
 SUBDIRS_V1 = $(SUBDIRS_COMMON) prog compat
 SUBDIRS_V2 = $(SUBDIRS_COMMON) fortran prog compat 
 SUBDIRS_V3 = $(SUBDIRS_COMMON) fortran prog compat blt
 
 SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
-	prog compat blt \
-	build include release \
-	pipgdb porting
+	fortran prog compat blt \
+	build include release porting
 
 include $(top_srcdir)/build/rule.mk
 

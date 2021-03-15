@@ -1,4 +1,3 @@
-
 # $PIP_license: <Simplified BSD License>
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -23,9 +22,9 @@
 # THE POSSIBILITY OF SUCH DAMAGE.
 # $
 # $RIKEN_copyright: Riken Center for Computational Sceience (R-CCS),
-# System Software Development Team, 2016-2020
+# System Software Development Team, 2016-2021
 # $
-# $PIP_TESTSUITE: Version 1.0.0$
+# $PIP_TESTSUITE: Version 1.1.0$
 #
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
@@ -41,9 +40,18 @@ SRCS = a.c
 
 include $(top_srcdir)/build/rule.mk
 
-all: test
+all: $(PROGRAMS)
 
-check: test
+gen: $(PROGRAMS)
+	${PIPS} -k -f $(PROGRAMS) | true
+	. ../config.sh; \
+	$(PIP_MODE) -T $(PIP_EXEC) -n 5 ./~a~ 30 & \
+	$(PIP_MODE) -G $(PIP_EXEC) -n 4 ./~b~ 30 & \
+	$(PIP_MODE) -C $(PIP_EXEC) -n 3 ./~c~ 30 & \
+	$(PIP_MODE) -L $(PIP_EXEC) -n 2 ./~d~ 30 &
+	$(RM) *.input *.output
+	./pips-test.sh gen
+	${PIPS} -k -f $(PROGRAMS) | true
 
 ~a~: a.c $(DEPS) Makefile
 	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
@@ -57,18 +65,10 @@ check: test
 ~d~: a.c $(DEPS) Makefile
 	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@
 
-test: clean
-	./pips-test.sh
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 
-gen: $(PROGRAMS)
-	. ../config.sh; \
-	$(PIP_MODE) -T $(PIP_EXEC) -n 5 ./~a~ 30 & \
-	$(PIP_MODE) -G $(PIP_EXEC) -n 4 ./~b~ 30 & \
-	$(PIP_MODE) -C $(PIP_EXEC) -n 3 ./~c~ 30 & \
-	$(PIP_MODE) -L $(PIP_EXEC) -n 2 ./~d~ 30 &
-	$(RM) *.input *.output
-	./pips-test.sh gen
-	${PIPS} -k -f $(PROGRAMS)
+test: all
+	../test.sh $(TEST_LIST)
 
 post-clean-hook:
 	$(RM) $(PROGRAMS)

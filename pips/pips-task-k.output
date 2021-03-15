@@ -1,14 +1,14 @@
-kill 19503 TERM
-kill 19504 TERM
-kill 19505 TERM
-kill 19506 TERM
-kill 19507 TERM
-kill 19508 TERM
-kill 19509 TERM
-kill 19510 TERM
-kill 19511 TERM
-kill 19512 TERM
-kill 19513 TERM
-kill 19514 TERM
-kill 19515 TERM
-kill 19516 TERM
+pip-tgkill 23440 0|~a~ TERM
+pip-tgkill 23441 1|~a~ TERM
+pip-tgkill 23443 2|~a~ TERM
+pip-tgkill 23444 3|~a~ TERM
+pip-tgkill 23448 4|~a~ TERM
+pip-tgkill 23442 0.~b~ TERM
+pip-tgkill 23445 0;~c~ TERM
+pip-tgkill 23446 1.~b~ TERM
+pip-tgkill 23447 1;~c~ TERM
+pip-tgkill 23449 2.~b~ TERM
+pip-tgkill 23450 2;~c~ TERM
+pip-tgkill 23451 0:~d~ TERM
+pip-tgkill 23452 3.~b~ TERM
+pip-tgkill 23453 1:~d~ TERM
