@@ -1,1 +1,1 @@
-timer 10 skip -T skip -L skip -C skip -G ./pips-test.sh
+%include pips-test.list

@@ -36,33 +36,37 @@ cmd=`basename $0`
 . ${dir}/../config.sh
 . ${dir}/../exit_code.sh.inc
 
-ONSTART=$1
-flag_pipgdb=$2
-
-if [ $flag_pipgdb == true ]; then
-    if [ -x ${PIP_GDB_PATH} ]; then
-	PIPGDB=${PIP_GDB_PATH}
-    elif [ -x ${PIP_BINDIR}/pip-gdb ]; then
-	PIPGDB=${PIP_BINDIR}/pip-gdb
-    fi
-    if [ x"${PIPGDB}" == x ] || ! [ -x ${PIPGDB} ]; then
-	echo "$cmd: pip-gdb not found"
-	exit ${EXIT_UNTESTED}
-    fi
-    export PIP_GDB_PATH=${PIPGDB}
-fi
-
 pipmode=`${PIP_MODE_CMD}`
 case ${pipmode} in
     pthread) exit ${EXIT_UNSUPPORTED};;
 esac
 
+ONSTART=$1
+flag_pipgdb=$2
+
+if [ $flag_pipgdb == true ]; then
+    if [ x"${PIP_GDB}" != x ]; then
+	PIP_GDB_PATH=${PIP_GDB}
+    elif [ -x ${PIP_GDB_PATH} ]; then
+	:
+    elif [ -x ${PIP_BINDIR}/pip-gdb ]; then
+	PIP_GDB_PATH=${PIP_BINDIR}/pip-gdb
+    fi
+    if [ x"${PIP_GDB_PATH}" == x ] || ! [ -x ${PIP_GDB_PATH} ]; then
+	echo "$cmd: pip-gdb not found"
+	exit ${EXIT_UNTESTED}
+    fi
+    export PIP_GDB_PATH
+fi
+
 testprog=./xx
 
-#PIPS_DEBUG="--debug"
 PIPS_DEBUG=
+#PIPS_DEBUG="--debug"
 
-echo "PIP_STOP_ON_START=$ONSTART ${PIP_EXEC} -n 4 $testprog"
+set -x
+set -e
+
 PIP_STOP_ON_START=$ONSTART ${PIP_EXEC} -n 4 $testprog &
 wait %1
 extval=$?

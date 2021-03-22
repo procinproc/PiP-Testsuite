@@ -31,11 +31,18 @@
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
 
+#set -x
+
 tst=$1
 
 dir=`dirname $0`
 . ${dir}/../config.sh
 . ${dir}/../exit_code.sh.inc
+
+pipmode=`${PIP_MODE_CMD}`
+case ${pipmode} in
+    pthread) exit ${EXIT_UNSUPPORTED};;
+esac
 
 SIGHUP=1
 SIGSEGV=11
@@ -65,27 +72,29 @@ export PIP_GDB_PATH=${PIPGDB}
 
 testprog=./xy
 
+set -x
+
 case $tst in
-    0) {PIP_EXEC} -n 4 $testprog;
+    0) ${PIP_EXEC} -n 4 $testprog;
 	extval=$?;;
-    1) env PIP_GDB_COMMAND=./gdb_cmd ${PIP_EXEC} -n 4 $testprog;
+    1) env PIP_GDB_COMMAND=./gdb_cmd ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
-    2) env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog -1 $SIGHUP;
+    2) env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog 1 $SIGHUP;
 	extval=$?;;
-    3) env PIP_GDB_SIGNALS=HUP+PIPE ${PIP_EXEC} -n 4 $testprog -1 $SIGPIPE;
+    3) env PIP_GDB_SIGNALS=HUP+PIPE ${PIP_EXEC} -n 4 $testprog 2 $SIGPIPE;
 	extval=$?;;
-    4) env PIP_GDB_SIGNALS=ALL-PIPE ${PIP_EXEC} -n 4 $testprog -1 $SIGPIPE;
+    4) env PIP_GDB_SIGNALS=ALL-PIPE ${PIP_EXEC} -n 4 $testprog 3 $SIGPIPE;
 	extval=$?;;
-    5) env PIP_SHOW_PIPS=on ${PIP_EXEC} -n 4 $testprog;
+    5) env PIP_SHOW_PIPS=on ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
-    6) env PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog;
+    6) env PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 1;
 	extval=$?;;
-    7) env PIP_SHOW_PIPS=on PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog;
+    7) env PIP_SHOW_PIPS=on PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 2;
 	extval=$?;;
-    *) echo "Unknown test No."; exit ${EXIT_FAIL};;
+    *) echo "Unknown test No. $tst"; exit ${EXIT_FAIL};;
 esac
 
-if [ $extval == 0 ]; then
+if [ $extval -eq 0 ]; then
     exit ${EXIT_FAIL}
 fi
 exit ${EXIT_PASS}

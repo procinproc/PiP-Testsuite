@@ -31,6 +31,8 @@
  * $
  */
 
+#define DEBUG
+
 #include <test.h>
 #include <limits.h>
 #include <libgen.h>
@@ -69,7 +71,7 @@ static void list_fds( void ) {
 #ifdef DEBUG
   DIR *dir;
   struct dirent *direntp;
-  int fd, i=0;
+  int fd;
 
   if( ( dir = opendir( PROCFD_PATH ) ) != NULL ) {
     int fd_dir = dirfd( dir );
@@ -78,11 +80,11 @@ static void list_fds( void ) {
 	  ( fd = strtol( direntp->d_name, NULL, 10 ) ) >= 0 &&
 	  fd != fd_dir ) {
 	if( get_coe_flag( fd ) ) {
-	  fprintf( stderr, "[%d:%d] FD:%d (%s:%ld) -- COE\n",
-		   getpid(), i++, fd, direntp->d_name, direntp->d_ino );
+	  fprintf( stderr, "[%d] FD:%d (%s:%ld) -- COE\n",
+		   getpid(), fd, direntp->d_name, direntp->d_ino );
 	} else {
-	  fprintf( stderr, "[%d:%d] FD:%d (%s:%ld)\n",
-		   getpid(), i++, fd, direntp->d_name, direntp->d_ino );
+	  fprintf( stderr, "[%d] FD:%d (%s:%ld)\n",
+		   getpid(), fd, direntp->d_name, direntp->d_ino );
 	}
       }
     }
@@ -94,17 +96,20 @@ static void list_fds( void ) {
 static int bhook( void *hook_arg ) {
   int *pipes = (int*) hook_arg;
   //fprintf( stderr, "pipe={%d,%d}\n", pipes[0], pipes[1] );
+  //list_fds();
   list_fds();
 #ifdef DEBUG
   fprintf( stderr, "[%d] pipes[0]:%d pipes[1]:%d\n",
 	   getpid(), pipes[0], pipes[1] );
 #endif
-  CHECK( close( 0 ),           RV,   return(errno) );
-  CHECK( dup2(  pipes[0], 0 ), RV<0, return(errno) );
-  CHECK( close( pipes[0] ),    RV,   return(errno) );
-  CHECK( close( 1 ),           RV,   return(errno) );
-  CHECK( dup2(  pipes[1], 1 ), RV<0, return(errno) );
-  CHECK( close( pipes[1] ),    RV,   return(errno) );
+  if( pipes[0] != 0 ) {
+    CHECK( dup2(  pipes[0], 0 ), RV<0, return(errno) );
+    CHECK( close( pipes[0] ),    RV,   return(errno) );
+  }
+  if( pipes[1] != 1 ) {
+    CHECK( dup2(  pipes[1], 1 ), RV<0, return(errno) );
+    CHECK( close( pipes[1] ),    RV,   return(errno) );
+  }
   list_fds();
   return 0;
 }

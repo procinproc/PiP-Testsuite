@@ -41,9 +41,9 @@
 
 #define DEBUG_SCALE	(3)
 
-static pid_t pid        = 0;
 static char *prog       = NULL;
 static char *target     = NULL;
+static pid_t pid        = 0;
 static int timer_count  = 0;
 static int timedout     = 0;
 static int timer_period = 0;
@@ -53,7 +53,9 @@ static float fnc        = 1.0;
 
 static void cleanup( void ) {
   char *sysstr;
+
   if( pid > 0 ) {
+    fprintf( stderr, "[%s] killing test program(s) ...\n", prog );
     (void) kill( pid, SIGHUP );
     sleep( 1 );
     asprintf( &sysstr, "%s -s KILL -f %d", PIPS, pid );
@@ -92,7 +94,6 @@ static void unset_timer( void ) {
   sigact.sa_handler = SIG_IGN;
   if( sigaction( SIGALRM, &sigact, NULL ) != 0 ) {
     fprintf( stderr, "[%s] sigaction(): %d\n", prog, errno );
-    cleanup();
   }
 }
 
@@ -148,8 +149,8 @@ static void usage( void ) {
 }
 
 int main( int argc, char **argv ) {
-  int 	time, status, flag_debug = 0;
   char	*pip_test_timer_scale = getenv("PIP_TEST_TIMER_SCALE");
+  int 	time, status, flag_debug = 0;
 
   set_sigint_watcher();
 

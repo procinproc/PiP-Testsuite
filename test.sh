@@ -133,7 +133,6 @@ cleanup()
 {
     echo;
     echo "cleaning up ..."
-    ${PIPS} -s KILL -v
     rm -f $sum_file;
     exit 1;
 }

@@ -36,7 +36,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int pipid  = -1;
+int pipid  = 0;
 int target = 0;
 int signo  = SIGSEGV;
 

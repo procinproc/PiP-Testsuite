@@ -2,8 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT([PiP-Testsuite], [1.1.0], [pip@ml.riken.jp], [pip-testsuite],
-	[https://github.com/RIKEN-SysSoft/PiP-Testsuite])
+AC_INIT([PiP-Testsuite], 
+	[1.1.0], 
+	[procinproc-info@googlegroups.com], 
+	[pip-testsuite],
+	[https://github.com/procinproc/PiP-Testsuite])
 AC_CONFIG_SRCDIR([RELEASE_NOTE])
 AC_CONFIG_AUX_DIR([build])
 
@@ -33,7 +36,7 @@ AC_SUBST(srcdir_top)
 
 AC_MSG_CHECKING([for pip installation])
 AC_ARG_WITH([pip],
-  [AS_HELP_STRING([--with-pip=DIR], [PiP installed directory])])
+  [AS_HELP_STRING([--with-pip=PIPDIR], [PiP installed directory])])
 
 case "${with_pip}" in
 ""|yes|no)   AC_MSG_ERROR([--with-pip is a mandatory option]);;
@@ -67,9 +70,21 @@ if test -d "${with_pip}/include" \
 else
    AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
 fi
-
 AC_MSG_RESULT([${with_pip}])
 AC_MSG_RESULT([PIP_VERSION_MAJOR=${pip_version_major}])
+
+AC_ARG_WITH([pipgdb],
+  [AS_HELP_STRING([--with-pipgdb=PIPGDB_PATH], [Path to pip-gdb])])
+case "${with_pipgdb}" in
+""|yes|no)   
+	if test -x "${with_pip}/bin/pip-gdb"; then
+	   with_pipgdb=${with_pip}/bin/pip-gdb
+        fi;;
+*)	if ! test -x "${with_pipgdb}"; then
+  	   AC_MSG_ERROR([--with-pipgdb doesn't seem to be a path to pip-gdb]);
+	fi;;
+esac
+AC_MSG_RESULT([${with_pipgdb}])
 
 AC_SUBST(with_pip)
 AC_SUBST(pip_version)
@@ -77,6 +92,7 @@ AC_SUBST(pip_version_major)
 AC_SUBST(pip_version_minor)
 AC_SUBST(pip_version_subminor)
 AC_SUBST(PIP_LIBDIR)
+AC_SUBST(with_pipgdb)
 
 # Checks for programs.
 AC_PROG_CC()

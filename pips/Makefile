@@ -44,11 +44,6 @@ all: $(PROGRAMS)
 
 gen: $(PROGRAMS)
 	${PIPS} -k -f $(PROGRAMS) | true
-	. ../config.sh; \
-	$(PIP_MODE) -T $(PIP_EXEC) -n 5 ./~a~ 30 & \
-	$(PIP_MODE) -G $(PIP_EXEC) -n 4 ./~b~ 30 & \
-	$(PIP_MODE) -C $(PIP_EXEC) -n 3 ./~c~ 30 & \
-	$(PIP_MODE) -L $(PIP_EXEC) -n 2 ./~d~ 30 &
 	$(RM) *.input *.output
 	./pips-test.sh gen
 	${PIPS} -k -f $(PROGRAMS) | true

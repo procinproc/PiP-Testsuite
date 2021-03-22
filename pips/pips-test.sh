@@ -35,9 +35,11 @@
 
 pips_log="pips-test"
 flag_gen=false
+flag_check=false
+flag_cleanup=false
 flag_error=false
 
-echo -n > $pips_log
+duration=100
 
 check() {
     flag=$1
@@ -87,7 +89,7 @@ do_test() {
     shift
     unset PIP_CHECK_GEN
     unset PIP_CHECK_OUT
-    if $flag_gen; then
+    if ! $flag_check; then
 	echo -n "pips $@"
 	echo "pips $@" >> $pips_log
 	PIPS_CHECK_GEN=${pips_file} ${PIPS} $@ >> $pips_log 2>&1
@@ -105,7 +107,7 @@ do_test() {
 	fi
     else
 	echo -n "pips $@"
-	echo ">>>> pips $@" >> $pips_log
+	echo " >>>> pips $@" >> $pips_log
 	nofile=false
 	if ! [ -f ${pips_file}.input ]; then
 	    flag_error=true
@@ -126,21 +128,39 @@ do_test() {
 		flag_error=true
 		echo "${pips_file}.check is missing"
 		echo "${pips_file}.check is missing" >> $pips_log
-	    else
+	    elif $flag_check; then
 		check $flag $extval ${pips_file}
 	    fi
 	fi
     fi
 }
 
-if [ x"$1" == x ]; then
-    pips_log=${pips_log}-chk.log
-    echo "CHECKING ..."
-else
-    flag_gen=true
-    pips_log=${pips_log}-gen.log
-    echo "GENERATING ..."
-fi
+function run_test_progs () {
+    ${PIP_MODE_CMD} -T ${PIP_EXEC} -n 5 ./~a~ ${duration} > /dev/null 2>&1 &
+    ${PIP_MODE_CMD} -G ${PIP_EXEC} -n 4 ./~b~ ${duration} > /dev/null 2>&1 &
+    ${PIP_MODE_CMD} -C ${PIP_EXEC} -n 3 ./~c~ ${duration} > /dev/null 2>&1 &
+    ${PIP_MODE_CMD} -L ${PIP_EXEC} -n 2 ./~d~ ${duration} > /dev/null 2>&1 &
+}
+
+case $1 in
+    check) 
+	flag_check=true;
+	pips_log=${pips_log}-chk.log;
+	echo "CHECKING ...";;
+    gen*)
+	flag_gen=true;
+	flag_cleanup=true;
+	pips_log=${pips_log}-gen.log;
+	run_test_progs;
+	echo "GENERATING ...";;
+    *)
+	flag_cleanup=true;
+	pips_log=/dev/stdout;
+	run_test_progs;
+	echo "DEBUGGING ...";;
+esac
+
+echo -n > $pips_log
 
 do_test true  pips-noop
 do_test true  pips-noop-  -
@@ -195,6 +215,18 @@ do_test true  pips-ps-l      --ps l
 do_test true  pips-P-l       -P l
 do_test true  pips-ps-l-a    --ps l - ~a~
 do_test true  pips-P-l-b-c   -P l -- ~b~ ~c~
+
+do_test true  pips-m-P        -m P
+do_test true  pips-mode-T     --mode T
+do_test true  pips-m-G        -m G
+do_test true  pips-mode-L     --mode L
+do_test true  pips-m-C        -m C
+do_test true  pips-mode-plglc --mode plglc
+
+echo Cleanup
+if $flag_cleanup; then
+    ${PIPS} -k ~a~ ~b~ ~c~ ~d~
+fi
 
 if $flag_error; then
     echo "FAILED"

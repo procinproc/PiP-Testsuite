@@ -1,3 +1,4 @@
+%include libpip/test-v3.list
 %include utils/test-v3.list
 %include pipcc/test-v3.list
 %include basics/test-v3.list

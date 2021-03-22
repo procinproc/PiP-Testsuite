@@ -1,0 +1,5 @@
+PID   TID   TT       STAT TIME     PIP COMMAND  
+14393 14393 pts/4    S+   00:00:00 RC  pip-exec 
+14396 14396 pts/4    S+   00:00:00 0C  ~c~      
+14400 14400 pts/4    S+   00:00:00 1C  ~c~      
+14402 14402 pts/4    S+   00:00:00 2C  ~c~      

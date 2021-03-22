@@ -17,6 +17,8 @@ export PIPS=${PIP_BINDIR}/pips
 export PRINTPIPMODE=${PIP_BINDIR}/printpipmode
 export PIP_EXEC=${PIP_BINDIR}/pip-exec
 
+export PIP_GDB=@with_pipgdb@
+
 export LIBPIPSO=${PIP_LIBDIR}/libpip.so
 
 if test -f ${PIP_DIR}/preload/pip_preload.so; then
