@@ -43,10 +43,8 @@ include $(top_srcdir)/build/rule.mk
 all: $(PROGRAMS)
 
 gen: $(PROGRAMS)
-	${PIPS} -k -f $(PROGRAMS) | true
 	$(RM) *.input *.output
 	./pips-test.sh gen
-	${PIPS} -k -f $(PROGRAMS) | true
 
 ~a~: a.c $(DEPS) Makefile
 	$(PIPCC) $(CPPFLAGS) $(CFLAGS) a.c -o $@

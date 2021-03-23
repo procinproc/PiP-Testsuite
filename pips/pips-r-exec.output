@@ -1,9 +1,8 @@
 PID   TID   TT       STAT TIME     PIP COMMAND  
-11670 11670 pts/4    S    00:00:00 RT  pip-exec 
-11851 11851 pts/4    S    00:00:00 RT  pip-exec 
-11991 11991 pts/4    S    00:00:00 RT  pip-exec 
-13522 13522 pts/4    S    00:00:00 RT  pip-exec 
-14391 14391 pts/4    Sl+  00:00:00 RT  pip-exec 
-14392 14392 pts/4    S+   00:00:00 RG  pip-exec 
-14393 14393 pts/4    S+   00:00:00 RC  pip-exec 
-14394 14394 pts/4    S+   00:00:00 RL  pip-exec 
+15201 15201 pts/1    S    00:00:00 RT  pip-exec 
+15443 15443 pts/1    S    00:00:00 RT  pip-exec 
+20420 20420 pts/1    S    00:00:00 RT  pip-exec 
+22565 22565 pts/1    S+   00:00:00 RG  pip-exec 
+22567 22567 pts/1    S+   00:00:00 RC  pip-exec 
+22568 22568 pts/1    Sl+  00:00:00 RT  pip-exec 
+22569 22569 pts/1    S+   00:00:00 RL  pip-exec 

@@ -142,6 +142,17 @@ function run_test_progs () {
     ${PIP_MODE_CMD} -L ${PIP_EXEC} -n 2 ./~d~ ${duration} > /dev/null 2>&1 &
 }
 
+function cleanup () {
+    echo Cleanup
+    if $flag_cleanup; then
+	if ! ${PIPS} ~a~ ~b~ ~c~ ~d~ > /dev/null 2>&1; then
+	    ${PIPS} -k ~a~ ~b~ ~c~ ~d~ > /dev/null 2>&1
+	fi
+    fi
+}
+
+cleanup
+
 case $1 in
     check) 
 	flag_check=true;
@@ -203,7 +214,7 @@ do_test true  pips-s-hup         -s hup
 do_test true  pips-signal-sighup --signal SIGhup
 do_test true  pips-s-2-verbose   -s 2 --verbose
 do_test true  pips-t-s-2-v       -t -s 2 -v
-do_test false pips-signal-nosuch -signal nosuchsig
+do_test false pips-signal-nosuch --signal nosuchsig
 do_test false pips-s-nosuch      -s nosuchsig
 
 do_test true  pips-ps        --ps
@@ -223,10 +234,7 @@ do_test true  pips-mode-L     --mode L
 do_test true  pips-m-C        -m C
 do_test true  pips-mode-plglc --mode plglc
 
-echo Cleanup
-if $flag_cleanup; then
-    ${PIPS} -k ~a~ ~b~ ~c~ ~d~
-fi
+cleanup
 
 if $flag_error; then
     echo "FAILED"
