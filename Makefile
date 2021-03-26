@@ -39,8 +39,8 @@ include $(top_srcdir)/build/var.mk
 SUBDIRS_COMMON = bin pipcc utils basics pthread openmp cxx issues pips debug
 
 SUBDIRS_V1 = $(SUBDIRS_COMMON) prog compat
-SUBDIRS_V2 = $(SUBDIRS_COMMON) fortran prog compat 
-SUBDIRS_V3 = $(SUBDIRS_COMMON) fortran prog compat blt
+SUBDIRS_V2 = $(SUBDIRS_COMMON) fortran prog compat libpip
+SUBDIRS_V3 = $(SUBDIRS_COMMON) fortran prog compat blt libpip
 
 SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
 	fortran prog compat blt \
@@ -72,15 +72,15 @@ subdir-clean subdir-testclean subdir-veryclean :
 	done
 
 all: subdir-all
-	echo ${PIP_VERSION} > .build_version
+	echo ${PIP_VERSION} > .pip_version
 
 clean: subdir-clean
-	$(RM) .build_version
+	$(RM) .pip_version
 
 testclean: subdir-testclean
 
 post-veryclean-hook:
-	$(RM) config.log config.status .build_version
+	$(RM) config.log config.status
 	$(RM) -r autom4te.cache
 	$(RM) config.sh build/config.mk
 

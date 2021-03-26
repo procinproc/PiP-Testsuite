@@ -90,7 +90,7 @@ if ! [ -f ${dir_real}/config.sh ]; then
 fi
 . $dir_real/config.sh
 
-BUILD_VERSION_FILE="${dir_real}/.build_version"
+BUILD_VERSION_FILE="${dir_real}/.pip_version"
 if ! [ -f ${BUILD_VERSION_FILE} ]; then
     echo "Not yet built"
     exit 1
