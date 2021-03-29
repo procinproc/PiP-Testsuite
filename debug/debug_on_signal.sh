@@ -58,17 +58,14 @@ case ${pipmode} in
     pthread) exit ${EXIT_SUPPORETD};;
 esac
 
-if [ -x ${PIP_GDB_PATH} ]; then
-    PIPGDB=${PIP_GDB_PATH}
-elif [ -x ${PIP_BINDIR}/pip-gdb ]; then
-    PIPGDB=${PIP_BINDIR}/bin/pip-gdb
+if [ x"${PIP_GDB_PATH}" == x ] || ! [ -x ${PIP_GDB_PATH} ]; then
+    if [ -x ${PIP_BINDIR}/pip-gdb ]; then
+	export PIP_GDB_PATH=${PIP_BINDIR}/pip-gdb
+    else
+	echo "Unable to find PiP-gdb"
+	exit ${EXIT_UNTESTED}
+    fi
 fi
-
-if ! [ -x ${PIPGDB} ]; then
-    echo "Unable to find PiP-gdb"
-    exit ${EXIT_UNTESTED}
-fi
-export PIP_GDB_PATH=${PIPGDB} 
 
 testprog=./xy
 
@@ -77,7 +74,7 @@ set -x
 case $tst in
     0) ${PIP_EXEC} -n 4 $testprog;
 	extval=$?;;
-    1) env PIP_GDB_COMMAND=./gdb_cmd ${PIP_EXEC} -n 4 $testprog 0;
+    1) env PIP_GDB_COMMAND=./pip-gdb.cmd ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
     2) env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog 1 $SIGHUP;
 	extval=$?;;
