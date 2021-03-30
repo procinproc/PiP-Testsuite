@@ -44,19 +44,8 @@ esac
 ONSTART=$1
 flag_pipgdb=$2
 
-if [ $flag_pipgdb == true ]; then
-    if [ x"${PIP_GDB}" != x ]; then
-	PIP_GDB_PATH=${PIP_GDB}
-    elif [ -x ${PIP_GDB_PATH} ]; then
-	:
-    elif [ -x ${PIP_BINDIR}/pip-gdb ]; then
-	PIP_GDB_PATH=${PIP_BINDIR}/pip-gdb
-    fi
-    if [ x"${PIP_GDB_PATH}" == x ] || ! [ -x ${PIP_GDB_PATH} ]; then
-	echo "$cmd: pip-gdb not found"
-	exit ${EXIT_UNTESTED}
-    fi
-    export PIP_GDB_PATH
+if $flag_pipgdb; then
+    . ./check_gdb.sh.inc
 fi
 
 testprog=./xx
