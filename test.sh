@@ -303,7 +303,7 @@ case $# in
 	exit 2;;
 esac
 
-if [ x"$TEST_LIST" == x ]; then
+if [ x"$TEST_LIST" = x ]; then
     print_usage;
 fi
 if [ ! -e "$TEST_LIST" ]; then
@@ -344,7 +344,7 @@ run_test_L=''
 run_test_G=''
 run_test_C=''
 run_test_T=''
-if [ x"${SUMMARY_FILE}" == x ]; then
+if [ x"${SUMMARY_FILE}" = x ]; then
     for pip_mode in $pip_mode_list; do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
 	mode_actual=`${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null`
@@ -606,7 +606,7 @@ if [ $n_FAIL -eq 0 -a $n_UNRESOLVED -eq 0 -a $n_PASS -gt 0 ]; then
     exit $EXIT_PASS
 fi
 
-if [ x"${SUMMARY_FILE}" == x ]; then
+if [ x"${SUMMARY_FILE}" = x ]; then
     if [ x"${PIP_TEST_THRESHOLD}" != x ]; then
 	nerr=`expr $n_FAIL + $n_UNRESOLVED`
 	if [ $nerr -lt ${PIP_TEST_THRESHOLD} ]; then

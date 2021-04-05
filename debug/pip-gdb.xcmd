@@ -8,4 +8,7 @@ backtrace
 list
 break main
 continue
+backtrace
+list
+detach inferiors
 quit

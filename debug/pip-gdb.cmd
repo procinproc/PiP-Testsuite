@@ -3,17 +3,16 @@
 cmd=$0
 PID=$1
 
-pip_gdb=
-if [ -x ${PIP_GDB_PATH} ]; then
-    pip_gdb="${PIP_GDB_PATH}"
-elif [ -x ${PIP_BINDIR}/pip-gdb ]; then
-    pip_gdb="${PIP_BINDIR}/pip-gdb"
-fi
+pip_gdb="${PIP_GDB_PATH}"
+bindir=`dirname $pip_gdb`
+pips=${bindir}/pips
 
-if [ x"${pip_gdb}" != x ]; then
-    ${pip_gdb} -p $PID -x ./pip-gdb.xcmd -q -batch &
+if [ -x ${pip_gdb} ]; then
+    ${pip_gdb} -p $PID -x ./pip-gdb.xcmd -q -n &
     sleep 1
     kill -CONT $PID
+    sleep 1
+    ${pips} -s CONT -f $PPID
     wait
 else
     echo "$cmd: pip-gdb not found"
