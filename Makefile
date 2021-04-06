@@ -43,7 +43,7 @@ SUBDIRS_V2 = $(SUBDIRS_COMMON) fortran prog compat libpip
 SUBDIRS_V3 = $(SUBDIRS_COMMON) fortran prog compat blt libpip
 
 SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
-	fortran prog compat blt \
+	fortran prog compat blt libpip \
 	build include release porting
 
 include $(top_srcdir)/build/rule.mk
