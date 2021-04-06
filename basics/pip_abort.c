@@ -61,8 +61,6 @@ int main( int argc, char **argv ) {
   if( argc > 2 ) {
     target = strtol( argv[2], NULL, 10 );
   }
-  target = ( target > ntasks ) ? ntasks - 1 : target;
-
   expp = &exp;
 
   if( !pip_is_initialized() ) {
@@ -107,7 +105,7 @@ int main( int argc, char **argv ) {
     CHECK( pthread_barrier_wait( &expp->barr ),
 	   (RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD), return(EXIT_FAIL) );
       
-    if( pipid == target ) {
+    if( pipid == target || target > ntasks) {
       fprintf( stderr, "TAKS[%d]: pip_abort()\n", pipid );
       pip_abort();
     }
