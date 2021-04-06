@@ -7,7 +7,4 @@ up
 up
 backtrace
 list
-break main
-continue
-backtrace
 quit

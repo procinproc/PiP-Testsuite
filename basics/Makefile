@@ -66,7 +66,8 @@ SRCS_V2 = $(SRCS_V1) \
 	  seek.c \
 	  pip_kill.c \
 	  pip_namexp.c \
-	  pip_aux.c
+	  pip_aux.c \
+	  pip_abort.c
 
 PROG_V2 = $(PROG_V1) \
 	  pip_wait_any \
@@ -82,7 +83,8 @@ PROG_V2 = $(PROG_V1) \
 	  seek \
 	  pip_kill \
 	  pip_namexp \
-	  pip_aux
+	  pip_aux \
+	  pip_abort
 
 SRCS_V3 = $(SRCS_V2)
 PROG_V3 = $(PROG_V2)
@@ -125,3 +127,4 @@ test: all
 
 post-clean-hook:
 	$(RM) $(PROG_ALL)
+	$(RM) seek-file.text

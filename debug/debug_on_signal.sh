@@ -35,6 +35,7 @@
 
 tst=$1
 
+cmd=`basename $0`
 dir=`dirname $0`
 . ${dir}/../config.sh
 . ${dir}/../exit_code.sh.inc
@@ -49,7 +50,7 @@ SIGSEGV=11
 SIGPIPE=13
 
 if [ x"$tst" = x ]; then
-    echo "No test number"
+    echo "$cmd: No test number"
     exit ${EXIT_UNTESTED}
 fi
 
@@ -62,12 +63,12 @@ esac
 
 testprog=./xy
 
-set -x
+unset PIP_GDB_COMMAND PIP_GDB_SIGNALS PIP_SHOW_MAPS PIP_SHOW_PIPS
 
 case $tst in
     0) ${PIP_EXEC} -n 4 $testprog;
 	extval=$?;;
-    1) env PIP_GDB_COMMAND=./pip-gdb.cmd ${PIP_EXEC} -n 4 $testprog 0;
+    1) env PIP_GDB_COMMAND=./pip-gdb-sig.xcmd ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
     2) env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog 1 $SIGHUP;
 	extval=$?;;
@@ -81,7 +82,7 @@ case $tst in
 	extval=$?;;
     7) env PIP_SHOW_PIPS=on PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 2;
 	extval=$?;;
-    *) echo "Unknown test No. $tst"; exit ${EXIT_FAIL};;
+    *) echo "$cmd: Unknown test No. $tst"; exit ${EXIT_FAIL};;
 esac
 
 if [ $extval -eq 0 ]; then

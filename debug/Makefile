@@ -56,4 +56,4 @@ xy: xy.c $(DEPS) Makefile
 	$(PIPCC) -g $(CPPFLAGS) $(CFLAGS) $< -o $@
 
 post-clean-hook:
-	rm -f *.data *.data.old
+	rm -f *.data *.data.old core-*.*

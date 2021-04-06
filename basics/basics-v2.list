@@ -22,3 +22,5 @@ timer 1 ./pip_aux  2
 timer 1 ./pip_aux  8
 timer 1 ./pip_kill 1
 timer 1 ./pip_kill 8
+timer 2 ./pip_abort 8 1
+timer 2 ./pip_abort 8 -1

@@ -43,3 +43,4 @@ if [ x"${PIP_GDB_PATH}" = x ] || ! [ -x ${PIP_GDB_PATH} ]; then
     exit ${EXIT_UNTESTED}
 fi
 export PIP_GDB_PATH
+echo $PIP_GDB_PATH

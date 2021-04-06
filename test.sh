@@ -92,27 +92,27 @@ fi
 
 BUILD_VERSION_FILE="${dir_real}/.pip_version"
 if ! [ -f ${BUILD_VERSION_FILE} ]; then
-    echo "Not yet built"
+    echo "$base: Not yet built"
     exit 1
 fi
 BUILD_VERSION=`cat ${BUILD_VERSION_FILE} | cut -d '.' -f 1`
 if [ ${PIP_VERSION_MAJOR} -gt 1 ]; then
     if ! [ -x ${LIBPIPSO} ]; then
-	echo "Unable to find ${LIBPIPSO}"
+	echo "$base: Unable to find ${LIBPIPSO}"
 	exit 1
     fi
     CONFIG_VERSION=`${LIBPIPSO} --version | cut -d '.' -f 1`
 else
     PIP_CONFIG_HEADER=${PIP_DIR}/include/pip_config.h
     if ! [ -f ${PIP_CONFIG_HEADER} ]; then
-	echo "Unable to find ${PIP_CONFIG_HEADER}"
+	echo "$base: Unable to find ${PIP_CONFIG_HEADER}"
 	exit 1
     fi
     CONFIG_VERSION=`grep PACKAGE_VERSION ${PIP_CONFIG_HEADER} 2> /dev/null | \
 	 	    cut -d ' ' -f 3 | cut -d '"' -f 2 | cut -d '.' -f 1`
 fi
 if [ "${BUILD_VERSION}" != "${CONFIG_VERSION}" ]; then
-    echo "Version miss-match: build=${BUILD_VERSION} configure=${CONFIG_VERSION}"
+    echo "$base: Version miss-match: build=${BUILD_VERSION} configure=${CONFIG_VERSION}"
     exit 1
 fi
 
@@ -126,11 +126,10 @@ fi
 
 unset PIP_MODE
 check_command "pip_mode_check"
-check_command "dlmopen_count"
-check_command "ompnumthread"
+##check_command "dlmopen_count"
+##check_command "ompnumthread"
 
-cleanup()
-{
+cleanup() {
     echo;
     echo "cleaning up ..."
     rm -f $sum_file;
@@ -163,7 +162,7 @@ fi
 debug=`${LIBPIPSO} --debug`
 
 if ! [ -f ${PIP_PRELOAD} ]; then
-    echo "Unable to find pip_preload.so";
+    echo "$base: Unable to find pip_preload.so";
     exit 1;
 fi
 
@@ -298,7 +297,7 @@ esac
 case $# in
 0)	;;
 1)	TEST_LIST=$1;;
-*)	echo >&2 "`basename $cmd`: unknown argument '$*'"
+*)	echo >&2 "$base: unknown argument '$*'"
 	print_usage
 	exit 2;;
 esac
@@ -412,7 +411,7 @@ pip_mode_list="$run_test_L $run_test_G $run_test_C $run_test_T"
 
 pml=`echo ${pip_mode_list} | tr -d ' '`
 if [ -z "$pml" ]; then
-    echo "No PIP_MODE to test"
+    echo "$base: No PIP_MODE to test"
     exit 1
 fi
 
@@ -420,6 +419,7 @@ if [ x"$SUMMARY_FILE" = x ]; then
     echo;
 fi
 
+options=
 if [ x"$run_test_L" = x"L" ]; then
     options="-L $options";
 fi
@@ -459,7 +459,7 @@ while read line; do
 		    echo "<<< $ifile"
 		    . $sum_file;
 		else
-		    echo >&2 "### inlcude file ($ifile) not found ###";
+		    echo >&2 $base: "### inlcude file ($ifile) not found ###";
 		fi
 		continue;;
 	esac

@@ -35,9 +35,9 @@ distclean-here:
 testclean-here:
 	$(RM) *.log.xml
 	$(RM) test.log test.log.* test.out.* .test-sum-*.sh
-	$(RM) loop-*.log loop-*.log~ .loop-*.log \#loop-*.log\# .\#loop-*.log
-	$(RM) core.*
 	$(RM) seek-file.text
+	$(RM) loop-*.log loop-*.log~ .loop-*.log \#loop-*.log\# .\#loop-*.log
+	$(RM) core.* core-*.*
 .PHONY: testclean-here
 
 ### prog rules
