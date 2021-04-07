@@ -331,10 +331,13 @@ if [ x"$SUMMARY_FILE" = x ]; then
     echo "--with-pip=$PIP_DIR"
     echo "libpip.so -- DEBUG:" $debug
     echo "LD_PRELOAD=$PIP_PRELOAD"
-    echo 'NTASKS:  ' ${NTASKS}
-    echo 'NTHREADS:' ${OMP_NUM_THREADS}
+    echo "NTASKS:  " ${NTASKS}
+    echo "NTHREADS:" ${OMP_NUM_THREADS}
     if [ x"$MCEXEC" != x ]; then
-	echo 'MCEXEC: ' $MCEXEC
+	echo "MCEXEC: " $MCEXEC
+    fi
+    if [ x"${PIP_TEST_THRESHOLD}" != x ]; then
+	echo "PIP_TEST_THRESHOLD: $PIP_TEST_THRESHOLD"
     fi
 fi
 
