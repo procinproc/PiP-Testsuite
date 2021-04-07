@@ -147,13 +147,13 @@ fi
 
 . $dir/exit_code.sh.inc
 
-##export NTASKS=`$MCEXEC dlmopen_count -p`
+export NTASKS=`$MCEXEC dlmopen_count -p`
 ##if [ $NTASKS -lt 8 ]; then
 ##    echo "dlmopen_count:$NTASKS is not enough"
 ##    exit 1;
 ##fi
 
-##export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
+export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
 ##if [ $OMP_NUM_THREADS -lt 4 ]; then
 ##    echo "ompnumthread:$OMP_NUM_THREADS is not enough"
 ##    exit 1;
