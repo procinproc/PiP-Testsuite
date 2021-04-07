@@ -36,12 +36,28 @@ unset LANG LC_ALL
 
 TEST_TRAP_SIGS='1 2 14 15';
 
+check_command() {
+    prog=$@;
+    if ! $@ > /dev/null 2>&1; then
+	echo "[$prog] does not work properly";
+	exit 2;
+    fi
+}
+
+check_command "dirname ."
+check_command "basename ."
+
+dir=`dirname $0`;
+dir_real=`cd $dir && pwd`
+base=`basename $0`;
+myself=$dir_real/$base;
+
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
 print_usage()
 {
-    echo >&2 "Usage: `basename $cmd` [-APLGCT] [-thread] [-process[:preload|:got|:pipclone]] [<test_list_file>]";
+    echo >&2 "Usage: $base [-APLGCT] [-thread] [-process[:preload|:got|:pipclone]] [<test_list_file>]";
     exit 2;
 }
 
@@ -63,26 +79,10 @@ set_term_width() {
 # not to print any debug messages
 export PIP_NODEBUG=1;
 
-check_command() {
-    prog=$@;
-    if ! $@ > /dev/null 2>&1; then
-	echo "[$prog] does not work properly";
-	exit 2;
-    fi
-}
-
 rprocs=`ps rux | wc -l`;
 if [ $rprocs -gt 3 ]; then
     echo >&2 "WARNING: some other processes seem to be running ... ($rprocs)"
 fi
-
-check_command "dirname ."
-check_command "basename ."
-
-dir=`dirname $0`;
-dir_real=`cd $dir && pwd`
-base=`basename $0`;
-myself=$dir_real/$base;
 
 if ! [ -f ${dir_real}/config.sh ]; then
     ${dir_real}/configure --help
