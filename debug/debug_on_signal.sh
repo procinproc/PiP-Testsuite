@@ -65,22 +65,27 @@ testprog=./xy
 
 unset PIP_GDB_COMMAND PIP_GDB_SIGNALS PIP_SHOW_MAPS PIP_SHOW_PIPS
 
+echo_and_do () {
+    echo $@
+    $@
+}
+
 case $tst in
-    0) ${PIP_EXEC} -n 4 $testprog;
+    0) echo_and_do ${PIP_EXEC} -n 4 $testprog;
 	extval=$?;;
-    1) env PIP_GDB_COMMAND=./pip-gdb-sig.xcmd ${PIP_EXEC} -n 4 $testprog 0;
+    1) echo_and_do env PIP_GDB_COMMAND=./pip-gdb-sig.xcmd ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
-    2) env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog 1 $SIGHUP;
+    2) echo_and_do env PIP_GDB_SIGNALS=HUP ${PIP_EXEC} -n 4 $testprog 1 $SIGHUP;
 	extval=$?;;
-    3) env PIP_GDB_SIGNALS=HUP+PIPE ${PIP_EXEC} -n 4 $testprog 2 $SIGPIPE;
+    3) echo_and_do env PIP_GDB_SIGNALS=HUP+PIPE ${PIP_EXEC} -n 4 $testprog 2 $SIGPIPE;
 	extval=$?;;
-    4) env PIP_GDB_SIGNALS=ALL-PIPE ${PIP_EXEC} -n 4 $testprog 3 $SIGPIPE;
+    4) echo_and_do env PIP_GDB_SIGNALS=ALL-PIPE ${PIP_EXEC} -n 4 $testprog 3 $SIGPIPE;
 	extval=$?;;
-    5) env PIP_SHOW_PIPS=on ${PIP_EXEC} -n 4 $testprog 0;
+    5) echo_and_do env PIP_SHOW_PIPS=on ${PIP_EXEC} -n 4 $testprog 0;
 	extval=$?;;
-    6) env PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 1;
+    6) echo_and_do env PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 1;
 	extval=$?;;
-    7) env PIP_SHOW_PIPS=on PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 2;
+    7) echo_and_do env PIP_SHOW_PIPS=on PIP_SHOW_MAPS=on ${PIP_EXEC} -n 4 $testprog 2;
 	extval=$?;;
     *) echo "$cmd: Unknown test No. $tst"; exit ${EXIT_FAIL};;
 esac

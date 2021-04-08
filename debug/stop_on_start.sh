@@ -56,6 +56,7 @@ PIPS_DEBUG=
 set -x
 set -e
 
+echo PIP_STOP_ON_START=$ONSTART ${PIP_EXEC} -n 4 $testprog 
 PIP_STOP_ON_START=$ONSTART ${PIP_EXEC} -n 4 $testprog &
 wait %1
 extval=$?
