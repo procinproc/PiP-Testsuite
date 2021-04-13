@@ -60,7 +60,7 @@ int main( int argc, char **argv) {
   }
   if( argc > 2 ) {
     signo = strtol( argv[2], NULL, 10 );
-    if( signo <= 0 ) signo = SIGSEGV;
+    if( signo <= 0 || signo >= NSIG ) signo = SIGSEGV;
   }
   pip_get_pipid( &pipid );
   yy( 10 );

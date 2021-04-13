@@ -227,39 +227,6 @@ INLINE void set_signal_watcher( int signal ) {
   CHECK( sigaction( signal, &sigact, NULL ), RV, abend(EXIT_UNTESTED) );
 }
 
-INLINE void ignore_signal( int signal ) {
-  struct sigaction sigact;
-  memset( (void*) &sigact, 0, sizeof( sigact ) );
-  sigact.sa_handler = SIG_IGN;
-  CHECK( sigaction( signal, &sigact, NULL ), RV, abend(EXIT_UNTESTED) );
-}
-
-INLINE void watch_sigchld( void ) {
-  set_signal_watcher( SIGCHLD );
-}
-
-INLINE void watch_anysignal( void ) {
-  set_signal_watcher( SIGHUP  );
-  set_signal_watcher( SIGINT  );
-  set_signal_watcher( SIGQUIT );
-  set_signal_watcher( SIGILL  );
-  set_signal_watcher( SIGABRT );
-  set_signal_watcher( SIGFPE  );
-  //set_signal_watcher( SIGKILL );
-  set_signal_watcher( SIGSEGV );
-  set_signal_watcher( SIGPIPE );
-  set_signal_watcher( SIGALRM );
-  set_signal_watcher( SIGTERM );
-  set_signal_watcher( SIGUSR1 );
-  set_signal_watcher( SIGUSR2 );
-  set_signal_watcher( SIGCHLD );
-  set_signal_watcher( SIGCONT );
-  //set_signal_watcher( SIGSTOP );
-  set_signal_watcher( SIGTSTP );
-  set_signal_watcher( SIGTTIN );
-  set_signal_watcher( SIGTTOU );
-}
-
 INLINE int set_signal_handler( int signal, void(*handler)(int, siginfo_t*, void*) ) {
   struct sigaction sigact;
   memset( (void*) &sigact, 0, sizeof( sigact ) );
@@ -268,28 +235,6 @@ INLINE int set_signal_handler( int signal, void(*handler)(int, siginfo_t*, void*
   errno = 0;
   (void) sigaction( signal, &sigact, NULL );
   return errno;
-}
-
-INLINE void ignore_anysignal( void ) {
-  ignore_signal( SIGHUP  );
-  ignore_signal( SIGINT  );
-  ignore_signal( SIGQUIT );
-  ignore_signal( SIGILL  );
-  ignore_signal( SIGABRT );
-  ignore_signal( SIGFPE  );
-  //ignore_signal( SIGKILL );
-  ignore_signal( SIGSEGV );
-  ignore_signal( SIGPIPE );
-  ignore_signal( SIGALRM );
-  ignore_signal( SIGTERM );
-  ignore_signal( SIGUSR1 );
-  ignore_signal( SIGUSR2 );
-  ignore_signal( SIGCHLD );
-  ignore_signal( SIGCONT );
-  //ignore_signal( SIGSTOP );
-  ignore_signal( SIGTSTP );
-  ignore_signal( SIGTTIN );
-  ignore_signal( SIGTTOU );
 }
 
 static void sigint_watcher( int sig, siginfo_t *info, void* extra ) {
