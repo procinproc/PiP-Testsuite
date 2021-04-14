@@ -46,6 +46,8 @@ void xx( int x ) {
     yy( x );
   } else if( pipid == target ) {
     kill( getpid(), signo );
+    /* the above kill() may return */
+    kill( getpid(), signo );
   }
 }
 
