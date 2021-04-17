@@ -41,11 +41,11 @@ CWD = $(shell pwd)
 CPPFLAGS += -I../include -DCWD=\"$(CWD)\" -DPIPS=\"$(PIPS)\"
 
 SRCS_V1 = dlmopen_count.c ompnumthread.c timer.c inf.c \
-	pip_mode_check.c pip_task.c
+	pip_mode_check.c pip_task.c check_ptrace.c
 SRCS_V2 = $(SRCS_V1)
 SRCS_V3 = $(SRCS_V2) pip_blt.c
 
-PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check pip_task
+PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check pip_task check_ptrace
 PROG_V2 = $(PROG_V1)
 PROG_V3 = $(PROG_V2) pip_blt
 

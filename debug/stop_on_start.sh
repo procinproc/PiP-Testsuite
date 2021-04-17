@@ -36,22 +36,26 @@ cmd=`basename $0`
 . ${dir}/../config.sh
 . ${dir}/../exit_code.sh.inc
 
+ONSTART=$1
+flag_pipgdb=$2
+flag_ptrace=$3
+
 pipmode=`${PIP_MODE_CMD}`
 case ${pipmode} in
     pthread) exit ${EXIT_UNSUPPORTED};;
 esac
 
-ONSTART=$1
-flag_pipgdb=$2
 
+if $flag_pipgdb || $flag_ptrace; then
+    if ! ${dir}/../utils/check_ptrace; then
+	exit ${EXIT_UNTESTED}
+    fi
+fi
 if $flag_pipgdb; then
     . ./check_gdb.sh.inc
 fi
 
 testprog=./xx
-
-PIPS_DEBUG=
-#PIPS_DEBUG="--debug"
 
 set -x
 set -e

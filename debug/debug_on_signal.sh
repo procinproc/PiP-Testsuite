@@ -33,6 +33,10 @@
 
 #set -x
 
+if ! $PTRACE_ENABLED; then
+    exit $EXIT_UNTESTED
+fi
+
 tst=$1
 
 cmd=`basename $0`
@@ -51,6 +55,10 @@ SIGPIPE=13
 
 if [ x"$tst" = x ]; then
     echo "$cmd: No test number"
+    exit ${EXIT_UNTESTED}
+fi
+
+if ! ${dir}/../utils/check_ptrace; then
     exit ${EXIT_UNTESTED}
 fi
 
