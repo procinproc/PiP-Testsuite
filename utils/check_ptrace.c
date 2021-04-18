@@ -32,6 +32,7 @@
  */
 
 #include <sys/ptrace.h>
+#include <stdio.h> 		/* for NULL */
 #include <errno.h>
 
 int main() {
