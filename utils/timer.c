@@ -55,8 +55,8 @@ static void cleanup( void ) {
   char *sysstr;
 
   if( pid > 0 ) {
-    fprintf( stderr, "[%s] killing test program(s) ...\n", prog );
-    (void) kill( pid, SIGHUP );
+    fprintf( stderr, "[%s] killing test program ...\n", prog );
+    asprintf( &sysstr, "%s x -k -d %d", PIPS, pid );
     sleep( 1 );
     asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
     system( sysstr );
