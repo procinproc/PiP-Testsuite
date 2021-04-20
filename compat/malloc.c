@@ -35,7 +35,7 @@
 
 #define NITERS		(10)
 
-#define FREEMEM_THRESHOLD	(512*1024*1024) /* 0.5 GiB */
+#define FREEMEM_THRESHOLD	(400*1024*1024) /* 0.4 GiB */
 #define VARIATION	(0.33)
 #define MALLOC_AVEMIN	(1024)
 

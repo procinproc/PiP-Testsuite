@@ -56,16 +56,16 @@ static void cleanup( void ) {
 
   if( pid > 0 ) {
     fprintf( stderr, "[%s] killing test program ...\n", prog );
+    /* delicer SIGTERM to all PiP tasks and root */
     asprintf( &sysstr, "%s x -k -d %d", PIPS, pid );
     system( sysstr );
     free( sysstr );
     usleep( 100 * 10000 );	/* 10 msec */
-    if( kill( pid, 0 ) == 0 || errno != ESRCH ) {
-    usleep( 100 * 10000 );	/* 10 msec */
-    if( kill( pid, SIGTERM ) < 0 && errno != ESRCH ) {
-      asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
-      system( sysstr );
-      free( sysstr );
+    asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
+    system( sysstr );
+    free( sysstr );
+    if( kill( pid, SIGTERM ) == 0 || errno != ESRCH ) {
+      usleep( 100 * 10000 );	/* 10 msec */
       (void) kill( pid, SIGKILL );
     }
   }
