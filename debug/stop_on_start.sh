@@ -38,13 +38,21 @@ cmd=`basename $0`
 
 ONSTART=$1
 flag_pipgdb=$2
-flag_ptrace=$3
+command=$3
 
 pipmode=`${PIP_MODE_CMD}`
 case ${pipmode} in
     pthread) exit ${EXIT_UNSUPPORTED};;
 esac
 
+if ! type -P $command; then
+    exit ${EXIT_UNTESTED}
+fi
+
+flag_ptrace=false
+case $command in
+    pip-gdb|ltrace|strace|perf) flag_ptrace=true
+esac
 
 if $flag_pipgdb || $flag_ptrace; then
     if ! ${dir}/../utils/check_ptrace; then
