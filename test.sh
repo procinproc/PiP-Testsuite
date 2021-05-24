@@ -52,6 +52,8 @@ dir_real=`cd $dir && pwd`
 base=`basename $0`;
 myself=$dir_real/$base;
 
+ERR_LOG_FILE=error.log;
+
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
@@ -581,17 +583,56 @@ while read line; do
 			printf "@:= %s %s\n" $CMD "$msg"
 		) >>$TEST_LOG_FILE
 
-		rm -f $TEST_OUT_STDOUT $TEST_OUT_STDERR $TEST_OUT_TIME
-
 		case $status in
-		FAIL)		msg="$msg :-O";;
+		FAIL)		msg="$msg :-O";
+			        echo '-------------------------------------------' \
+				    >> $ERR_LOG_FILE;
+			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+				    >> $ERR_LOG_FILE;
+				if [ -s $TEST_OUT_STDOUT ]; then
+				    echo "---- stdout ----" >> $ERR_LOG_FILE;
+				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
+				fi
+				if [ -s $TEST_OUT_STDERR ]; then
+				    echo "---- stderr ----";
+				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
+				fi
+				:;;
 		XPASS)		msg="$msg :-D";;
-		XFAIL)		msg="$msg :-?";;
-		UNRESOLVED)	msg="$msg :-O";;
+		XFAIL)		msg="$msg :-?";
+			        echo '-------------------------------------------' \
+				    >> $ERR_LOG_FILE;
+			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+				    >> $ERR_LOG_FILE;
+				if [ -s $TEST_OUT_STDOUT ]; then
+				    echo "---- stdout ----" >> $ERR_LOG_FILE;
+				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
+				fi
+				if [ -s $TEST_OUT_STDERR ]; then
+				    echo "---- stderr ----";
+				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
+				fi
+				:;;
+		UNRESOLVED)	msg="$msg :-O";
+			        echo '-------------------------------------------' \
+				    >> $ERR_LOG_FILE;
+			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+				    >> $ERR_LOG_FILE;
+				if [ -s $TEST_OUT_STDOUT ]; then
+				    echo "---- stdout ----" >> $ERR_LOG_FILE;
+				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
+				fi
+				if [ -s $TEST_OUT_STDERR ]; then
+				    echo "---- stderr ----";
+				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
+				fi
+				:;;
 		UNTESTED)	msg="$msg :-|";;
 		UNSUPPORTED)	msg="$msg";;
 		KILLED)		msg="$msg ^C?";;
 		esac
+
+		rm -f $TEST_OUT_STDOUT $TEST_OUT_STDERR $TEST_OUT_TIME
 
 		echo " $msg"
 
@@ -633,6 +674,11 @@ if [ x"${SUMMARY_FILE}" = x ]; then
 	    exit $EXIT_PASS
 	fi
     fi
+    if [ -s $ERR_LOG_FILE ]; then
+	echo 'xxxxxxx ERROR OUTPUT xxxxxxx'
+	cat $ERR_LOG_FILE
+    fi
+    rm -f $ERR_LOG_FILE;
 fi
 
 exit $EXIT_FAIL
