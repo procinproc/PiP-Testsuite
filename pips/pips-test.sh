@@ -39,6 +39,8 @@ flag_check=false
 flag_cleanup=false
 flag_error=false
 
+timer=../util/timer
+
 duration=100
 
 check() {
@@ -205,18 +207,6 @@ do_test true  pips-family-a --family ~a~
 do_test true  pips-f-a-c    -f ~a~ ~c~
 do_test false pips-f-nosuch -f nosuchpip
 
-do_test true  pips-test-kill      --kill
-do_test true  pips-task-k        --task -k
-do_test true  pips-task-k-a      --task -k ~a~
-do_test false pips-signal        --signal
-do_test false pips-r-s           -r -s
-do_test true  pips-s-hup         -s hup
-do_test true  pips-signal-sighup --signal SIGhup
-do_test true  pips-s-2-verbose   -s 2 --verbose
-do_test true  pips-t-s-2-v       -t -s 2 -v
-do_test false pips-signal-nosuch --signal nosuchsig
-do_test false pips-s-nosuch      -s nosuchsig
-
 do_test true  pips-ps        --ps
 do_test false pips-ps-nosuch --ps - nosuchpip
 do_test true  pips-P         -P
@@ -233,6 +223,18 @@ do_test true  pips-m-G        -m G
 do_test true  pips-mode-L     --mode L
 do_test true  pips-m-C        -m C
 do_test true  pips-mode-plglc --mode plglc
+
+do_test true  pips-test-kill      --kill
+do_test true  pips-task-k        --task -k
+do_test true  pips-task-k-a      --task -k ~a~
+do_test false pips-signal        --signal
+do_test false pips-r-s           -r -s
+do_test true  pips-s-hup         -s hup
+do_test true  pips-signal-sighup --signal SIGhup
+do_test true  pips-s-2-verbose   -s 2 --verbose
+do_test true  pips-t-s-2-v       -t -s 2 -v
+do_test false pips-signal-nosuch --signal nosuchsig
+do_test false pips-s-nosuch      -s nosuchsig
 
 cleanup
 

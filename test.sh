@@ -55,6 +55,13 @@ myself=$dir_real/$base;
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
+PTRACE_ENABLE=false
+if ${dir}/utils/check_ptrace; then
+    :
+#    PTRACE_ENABLE=true
+fi
+export PTRACE_ENABLE
+
 print_usage()
 {
     echo >&2 "Usage: $base [-APLGCT] [-thread] [-process[:preload|:got|:pipclone]] [<test_list_file>]";
@@ -64,9 +71,12 @@ print_usage()
 set_term_width() {
     if [ "x$COLUMNS" != "x" ]; then
 	termwidth=${COLUMNS};
-    elif [ "x$TERM" != "xdumb" ]; then
-	termwidth=`tput cols`;
+    elif [ "x$TERM" == "xdumb" ]; then
+	termwidth=80;
     else
+	termwidth=`tput cols`;
+    fi
+    if [ x"${termwidth}" = x ]; then
 	termwidth=80;
     fi
     lmsglen=${#longestmsg};
@@ -339,6 +349,10 @@ if [ x"$SUMMARY_FILE" = x ]; then
     if [ x"${PIP_TEST_THRESHOLD}" != x ]; then
 	echo "PIP_TEST_THRESHOLD: $PIP_TEST_THRESHOLD"
     fi
+    if ! $PTRACE_ENABLE; then
+	echo "PTRACE: disabled"
+    fi
+    echo
 fi
 
 # check whether each $PIP_MODE is testable or not

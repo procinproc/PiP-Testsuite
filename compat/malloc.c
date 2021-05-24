@@ -35,7 +35,7 @@
 
 #define NITERS		(10)
 
-#define FREEMEM_THRESHOLD	(512*1024*1024) /* 0.5 GiB */
+#define FREEMEM_THRESHOLD	(400*1024*1024) /* 0.4 GiB */
 #define VARIATION	(0.33)
 #define MALLOC_AVEMIN	(1024)
 
@@ -83,7 +83,6 @@ char *my_malloc( size_t min, size_t max, int pipid ) {
 
   rd = random() % ( max - min );
   sz = rd + min;
-
   if( ( p = (char*) malloc( (size_t) sz ) ) != NULL ) {
     for( i=0; i<sz; i++ ) p[i] = (char) pipid;
   }
@@ -92,6 +91,7 @@ char *my_malloc( size_t min, size_t max, int pipid ) {
 
 void my_free( char *alloc, size_t min, int pipid ) {
   int i;
+
   for( i=0; i<min; i++ ) {
     if( alloc[i] != (char) pipid ) pip_exit( EXIT_FAIL );
   }
@@ -108,7 +108,7 @@ int malloc_loop( int niters, int pipid, int ntasks ) {
     fm = FREEMEM_THRESHOLD;
   } else if( fmall < FREEMEM_THRESHOLD ) {
     fprintf( stderr, "Not enough memory for malloc test (%d MB)\n", fm/1024 );
-    pip_exit( EXIT_UNTESTED );
+    return EXIT_UNTESTED;
   }
   fm  = ( fm > FREEMEM_THRESHOLD )? FREEMEM_THRESHOLD : fm;
   fm  = ((float)fm) * ( 1.0 - VARIATION );
@@ -121,18 +121,18 @@ int malloc_loop( int niters, int pipid, int ntasks ) {
 
   fprintf( stderr, "[%d] FREE:%7lu  AVE:%7lu  MIN:%7lu  MAX:%7lu [KB] iters:%d\n",
 	   pipid, fmall/1024, ave1/1024, min/1024, max/1024, niters );
-  CHECK( ( prev = my_malloc(min,max,pipid) ), RV==0, return(ENOMEM) );
+  CHECK( ( prev = my_malloc(min,max,pipid) ), RV==0, return(EXIT_FAIL) );
   for( i=0; i<niters; i++ ) {
 #if PIP_VERSION_MAJOR > 1
     CHECK( pip_yield(PIP_YIELD_USER), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
 #endif
-    CHECK( ( p = my_malloc(min,max,pipid) ), RV==0, return(ENOMEM) );
+    CHECK( ( p = my_malloc(min,max,pipid) ), RV==0, return(EXIT_FAIL) );
     my_free( prev, min, pipid );
     prev = p;
   }
   if( fp != NULL ) fclose( fp );
   my_free( prev, min, pipid );
-  return 0;
+  return EXIT_PASS;
 }
 
 int main( int argc, char **argv ) {
@@ -145,6 +145,6 @@ int main( int argc, char **argv ) {
   niters = ( niters <= 0 ) ? NITERS : niters;
 
   CHECK( pip_init( &pipid, &ntasks, NULL, 0 ), RV, return(EXIT_FAIL) );
-  CHECK( malloc_loop( niters, pipid, ntasks ), RV, return(EXIT_FAIL) );
-  return 0;
+  CHECK( malloc_loop( niters, pipid, ntasks ), RV, return(RV) );
+  return EXIT_PASS;
 }

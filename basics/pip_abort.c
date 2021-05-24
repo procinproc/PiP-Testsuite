@@ -32,6 +32,7 @@
  */
 
 #include <test.h>
+#include <sys/wait.h>
 
 static struct my_exp	*expp;
 static int 		ntasks, pipid, target;

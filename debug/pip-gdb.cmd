@@ -12,7 +12,7 @@ if [ -x ${pip_gdb} ]; then
     sleep 1
     kill -CONT $PID
     sleep 1
-    ${pips} -s CONT -f $PPID
+    ${pips} x -s CONT -f $PPID
     wait
 else
     echo "$cmd: pip-gdb not found"

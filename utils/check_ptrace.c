@@ -31,41 +31,12 @@
  * $
  */
 
-#include <pip/pip.h>
-#include <signal.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stdio.h>
+#include <sys/ptrace.h>
+#include <stdio.h> 		/* for NULL */
+#include <errno.h>
 
-int pipid  = 0;
-int target = 0;
-int signo  = SIGSEGV;
-
-void yy( int );
-void xx( int x ) {
-  if( x > 0 ) {
-    yy( x );
-  } else if( pipid == target ) {
-    kill( getpid(), signo );
-    /* the above kill() may return */
-    kill( getpid(), signo );
-  }
-}
-
-void yy( int y ) {
-  xx( y - 1 );
-}
-
-int main( int argc, char **argv) {
-  if( argc > 1 ) {
-    target = strtol( argv[1], NULL, 10 );
-    if( target < 0 ) target = 0;
-  }
-  if( argc > 2 ) {
-    signo = strtol( argv[2], NULL, 10 );
-    if( signo <= 0 || signo >= NSIG ) signo = SIGSEGV;
-  }
-  pip_get_pipid( &pipid );
-  yy( 10 );
+int main() {
+  if( ptrace( PTRACE_TRACEME, 0, NULL, NULL ) < 0 &&
+      errno == ENOSYS ) return 1;
   return 0;
 }
