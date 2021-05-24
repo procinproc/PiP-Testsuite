@@ -74,11 +74,11 @@ static void cleanup( void ) {
 
 static int get_load() {
   FILE *fp;
-  int	nc;
+  int	inv_nc;
   float load = 0.0;
 
   if( ncores <= 0 ) {
-    if( ( ncores = getconf( _SC_NPROCESSORS_ONLN ) ) < 0 ) {
+    if( ( ncores = sysconf( _SC_NPROCESSORS_ONLN ) ) < 0 ) {
       if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) != NULL ) {
 	fscanf( fp, "%d", &ncores );
 	fclose( fp );
