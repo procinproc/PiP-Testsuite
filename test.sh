@@ -567,6 +567,8 @@ while read line; do
 			printf "@:= %s %s\n" $CMD "$msg"
 		) >>$TEST_LOG_FILE
 
+		rm -f $TEST_OUT_STDOUT $TEST_OUT_STDERR $TEST_OUT_TIME
+
 		case $status in
 		FAIL)		msg="$msg :-O";;
 		XPASS)		msg="$msg :-D";;

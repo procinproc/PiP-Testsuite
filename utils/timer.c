@@ -38,6 +38,7 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define DEBUG_SCALE	(3)
 
@@ -69,21 +70,20 @@ static int get_load() {
   int	nc;
   float load = 0.0;
 
-  if( ncores == 0 ) {
-    if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) != NULL ) {
-      fscanf( fp, "%d", &ncores );
-      fclose( fp );
-      nc = ncores / 2;
-      nc = ( nc > 0 ) ? nc : 1;
-      fnc = 1.0 / (float) nc;
+  if( ncores <= 0 ) {
+    if( ( ncores = getconf( _SC_NPROCESSORS_ONLN ) ) < 0 ) {
+      if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) != NULL ) {
+	fscanf( fp, "%d", &ncores );
+	fclose( fp );
+	return 0.0;
+      }
     }
   }
-  if( ncores > 0 ) {
-    if( ( fp = fopen( "/proc/loadavg", "r" ) ) != NULL ) {
-      fscanf( fp, "%f", &load );
-      fclose( fp );
-      load *= fnc;
-    }
+  inv_nc = 1.0 / (float) ncores;
+  if( ( fp = fopen( "/proc/loadavg", "r" ) ) != NULL ) {
+    fscanf( fp, "%f", &load );
+    fclose( fp );
+    load *= inv_nc;
   }
   return (int)load;
 }
