@@ -661,8 +661,8 @@ if [ x"$SUMMARY_FILE" = x ] && [ -s $ERR_LOG_FILE ]; then
     echo 'vvvvvvvvvvvvvvvvvvvvvvvv ERROR MESSAGES vvvvvvvvvvvvvvvvvvvvvvvv'
     cat $ERR_LOG_FILE
     echo '^^^^^^^^^^^^^^^^^^^^^^^^ ERROR MESSAGES ^^^^^^^^^^^^^^^^^^^^^^^^'
+    rm -f $ERR_LOG_FILE;
 fi
-rm -f $ERR_LOG_FILE;
 
 print_summary
 
