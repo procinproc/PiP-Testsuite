@@ -3,5 +3,5 @@ timer 3 ./pip-mode.sh
 timer 3 ./pipcc-0.sh
 timer 3 ./pipcc-1.sh
 timer 3 ./pipcc-misc.sh
-timer 3 ./pipfc-0.sh
+timer 5 ./pipfc-0.sh
 timer 3 ./pipfc-misc.sh
