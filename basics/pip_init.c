@@ -105,7 +105,7 @@ static int test_pip_init_got( char **argv ) {
   int pipid, ntasks;
   void *exp;
 
-  if( clone_ready == NULL ) return(EXIT_UNTESTED);
+  if( clone_ready == NULL ) return(EXIT_UNSUPPORTED);
 
   ntasks = NTASKS;
   exp = NULL;

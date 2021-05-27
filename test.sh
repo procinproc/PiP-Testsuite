@@ -615,21 +615,7 @@ while read line; do
 				fi
 				:;;
 		XPASS)		msg="$msg :-D";;
-		XFAIL)		msg="$msg :-?";
-			        echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-' \
-				    >> $ERR_LOG_FILE;
-			        echo -n ${pip_mode} ${MCEXEC} ${cmd} \
-				    >> $ERR_LOG_FILE;
-				echo ": XPASS/XFAIL" >> $ERR_LOG_FILE
-				if [ -s $TEST_OUT_STDOUT ]; then
-				    echo "---- stdout ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
-				fi
-				if [ -s $TEST_OUT_STDERR ]; then
-				    echo "---- stderr ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
-				fi
-				:;;
+		XFAIL)		msg="$msg :-?";;
 		UNRESOLVED)	msg="$msg :-O";
 			        echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-' \
 				    >> $ERR_LOG_FILE;

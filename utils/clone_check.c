@@ -18,5 +18,5 @@ main() {
   while( 1 ) {
     if( wait( NULL ) == pid || errno != EINTR ) break;
   }
-  return 1;
+  return 0;
 }

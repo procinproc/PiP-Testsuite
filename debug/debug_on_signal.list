@@ -1,4 +1,3 @@
-timer 20 ./debug_on_signal.sh 10
 timer 20 ./debug_on_signal.sh 0
 timer 20 ./debug_on_signal.sh 1
 timer 20 ./debug_on_signal.sh 2
