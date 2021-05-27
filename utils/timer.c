@@ -56,13 +56,13 @@ static void cleanup( void ) {
   char *sysstr;
 
   if( pid > 0 ) {
-    fprintf( stderr, "[%s] killing test program ...\n", prog );
-    /* delicer SIGTERM to all PiP tasks and root */
-    asprintf( &sysstr, "%s x -k -d %d", PIPS, pid );
+    /* deliver SIGTERM to all PiP tasks and root */
+    asprintf( &sysstr, "%s x -k -d %d 2> /dev/null", PIPS, pid );
     system( sysstr );
     free( sysstr );
     usleep( 100 * 10000 );	/* 10 msec */
-    asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
+    /* deliver SIGKILL to make sure */
+    asprintf( &sysstr, "%s x -s KILL -d %d 2> /dev/null", PIPS, pid );
     system( sysstr );
     free( sysstr );
     if( kill( pid, SIGTERM ) == 0 || errno != ESRCH ) {
@@ -112,8 +112,8 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   timer_actual ++;
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
-      timedout = 1;
       unset_timer();
+      timedout = 1;
       cleanup();
     }
   }
@@ -204,7 +204,6 @@ int main( int argc, char **argv ) {
     } else if( WIFSIGNALED( status ) ) {
       if( timedout ) {
 	fprintf( stderr, "\nTimer expired (%d/%d sec) !!\n\n", timer_period, timer_actual );
-	cleanup();
       } else {
 	int sig = WTERMSIG( status );
 	fprintf( stderr, "'%s' terminated due to signal (%s)\n", target, strsignal(sig) );

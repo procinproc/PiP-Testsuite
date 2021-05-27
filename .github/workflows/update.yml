@@ -1,0 +1,19 @@
+name: PiP-Testsuite update handler
+
+on: [push, pull_request]
+
+jobs:
+
+  dispatch:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: dispatch event
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.PIP_BUILD_TOKEN }}
+          repository: ${{ github.repository_owner }}/PiP
+          event-type: pip-testsuite-update
+          client-payload: '{ "distros": [ "centos7", "centos8" ], "archs": [ "amd64", "arm64" ], "pip_versions": ["2", "3"], "pip_ref": "", "pip_testsuite_ref": "${{ github.ref }}", "dispatch": false }'

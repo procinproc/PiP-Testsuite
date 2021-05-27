@@ -52,7 +52,7 @@ dir_real=`cd $dir && pwd`
 base=`basename $0`;
 myself=$dir_real/$base;
 
-ERR_LOG_FILE=error.log;
+ERR_LOG_FILE=$dir_real/.error.log;
 
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
@@ -600,10 +600,11 @@ while read line; do
 
 		case $status in
 		FAIL)		msg="$msg :-O";
-			        echo '-------------------------------------------' \
+			        echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-' \
 				    >> $ERR_LOG_FILE;
-			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+			        echo -n ${pip_mode} ${MCEXEC} ${cmd} \
 				    >> $ERR_LOG_FILE;
+				echo ": FAIL" >> $ERR_LOG_FILE
 				if [ -s $TEST_OUT_STDOUT ]; then
 				    echo "---- stdout ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
@@ -615,10 +616,11 @@ while read line; do
 				:;;
 		XPASS)		msg="$msg :-D";;
 		XFAIL)		msg="$msg :-?";
-			        echo '-------------------------------------------' \
+			        echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-' \
 				    >> $ERR_LOG_FILE;
-			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+			        echo -n ${pip_mode} ${MCEXEC} ${cmd} \
 				    >> $ERR_LOG_FILE;
+				echo ": XPASS/XFAIL" >> $ERR_LOG_FILE
 				if [ -s $TEST_OUT_STDOUT ]; then
 				    echo "---- stdout ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
@@ -629,10 +631,11 @@ while read line; do
 				fi
 				:;;
 		UNRESOLVED)	msg="$msg :-O";
-			        echo '-------------------------------------------' \
+			        echo '-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-' \
 				    >> $ERR_LOG_FILE;
-			        echo ${pip_mode} ${MCEXEC} ${cmd} \
+			        echo -n ${pip_mode} ${MCEXEC} ${cmd} \
 				    >> $ERR_LOG_FILE;
+				echo ": UNRESOLVED" >> $ERR_LOG_FILE
 				if [ -s $TEST_OUT_STDOUT ]; then
 				    echo "---- stdout ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
@@ -658,7 +661,7 @@ while read line; do
 done < `basename $TEST_LIST`
 
 if [ x"$SUMMARY_FILE" = x ]; then
-    echo "</testsuite>" >>$TEST_LOG_XML
+    echo "</testsuite>" >> $TEST_LOG_XML
 else
     file_summary;
 fi
@@ -667,6 +670,14 @@ fi
 	echo $LOG_BEG
 	print_summary
 ) >>$TEST_LOG_FILE
+
+if [ x"$SUMMARY_FILE" = x ] && [ -s $ERR_LOG_FILE ]; then
+    echo
+    echo 'vvvvvvvvvvvvvvvvvvvvvvvv ERROR MESSAGES vvvvvvvvvvvvvvvvvvvvvvvv'
+    cat $ERR_LOG_FILE
+    echo '^^^^^^^^^^^^^^^^^^^^^^^^ ERROR MESSAGES ^^^^^^^^^^^^^^^^^^^^^^^^'
+    rm -f $ERR_LOG_FILE;
+fi
 
 print_summary
 
@@ -689,11 +700,6 @@ if [ x"${SUMMARY_FILE}" = x ]; then
 	    exit $EXIT_PASS
 	fi
     fi
-    if [ -s $ERR_LOG_FILE ]; then
-	echo 'xxxxxxx ERROR OUTPUT xxxxxxx'
-	cat $ERR_LOG_FILE
-    fi
-    rm -f $ERR_LOG_FILE;
 fi
 
 exit $EXIT_FAIL
