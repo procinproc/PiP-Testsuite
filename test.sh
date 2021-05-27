@@ -57,10 +57,20 @@ ERR_LOG_FILE=error.log;
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
+unset CLONE_READY
+CLONE_READY=false
+if $MCEXEC ${dir}/utils/clone_check; then
+    export CLONE_READY=true
+else
+    if [ x"$SUMMARY_FILE" = x ]; then
+	echo -n "WARNING: "
+	echo "clone() is not ready for PiP and only (p)thread mode can be tested"
+    fi
+fi
+
 PTRACE_ENABLE=false
-if ${dir}/utils/check_ptrace; then
-    :
-#    PTRACE_ENABLE=true
+if $MCEXEC ${dir}/utils/check_ptrace; then
+    PTRACE_ENABLE=true
 fi
 export PTRACE_ENABLE
 
@@ -91,7 +101,7 @@ set_term_width() {
 # not to print any debug messages
 export PIP_NODEBUG=1;
 
-rprocs=`ps rux | wc -l`;
+rprocs=`$MCEXEC ps rux | wc -l`;
 if [ $rprocs -gt 3 ]; then
     echo >&2 "WARNING: some other processes seem to be running ... ($rprocs)"
 fi
@@ -113,7 +123,7 @@ if [ ${PIP_VERSION_MAJOR} -gt 1 ]; then
 	echo "$base: Unable to find ${LIBPIPSO}"
 	exit 1
     fi
-    CONFIG_VERSION=`${LIBPIPSO} --version | cut -d '.' -f 1`
+    CONFIG_VERSION=`${MCEXEC} ${LIBPIPSO} --version | cut -d '.' -f 1`
 else
     PIP_CONFIG_HEADER=${PIP_DIR}/include/pip_config.h
     if ! [ -f ${PIP_CONFIG_HEADER} ]; then
@@ -171,7 +181,7 @@ export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
 ##    exit 1;
 ##fi
 
-debug=`${LIBPIPSO} --debug`
+debug=`${MCEXEC} ${LIBPIPSO} --debug`
 
 if ! [ -f ${PIP_PRELOAD} ]; then
     echo "$base: Unable to find pip_preload.so";
@@ -299,9 +309,17 @@ case $# in
 		shift
 	done
 	if [ X"${run_test_L}${run_test_G}${run_test_C}${run_test_T}" = X ]; then
-	    pip_mode_list="L G C T";
+	    if ${CLONE_READY}; then
+		pip_mode_list="L G C T";
+	    else
+		pip_mode_list="T";
+	    fi
 	else
-	    pip_mode_list="$run_test_L $run_test_G $run_test_C $run_test_T"
+	    if ${CLONE_READY}; then
+		pip_mode_list="$run_test_L $run_test_G $run_test_C $run_test_T"
+	    else
+		pip_mode_list="$run_test_T"
+	    fi
 	fi
 	;;
 esac
@@ -322,6 +340,7 @@ if [ ! -e "$TEST_LIST" ]; then
 fi
 
 if [ -z "$pip_mode_list" ]; then
+    echo "3"
     print_usage;
 fi
 
@@ -332,12 +351,6 @@ else
 fi
 
 [ -f ${TEST_LOG_FILE} ] && mv -f ${TEST_LOG_FILE} ${TEST_LOG_FILE}.bak
-
-if [ -n "$MCEXEC" ]; then
-    pip_mode_list_all='T';
-else
-    pip_mode_list_all='L G C T';
-fi
 
 if [ x"$SUMMARY_FILE" = x ]; then
     echo "--with-pip=$PIP_DIR"
@@ -365,7 +378,8 @@ run_test_T=''
 if [ x"${SUMMARY_FILE}" = x ]; then
     for pip_mode in $pip_mode_list; do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	mode_actual=`${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null`
+	mode_actual=`${MCEXEC} ${PIP_MODE_CMD} -${pip_mode} pip_mode_check \
+		2>/dev/null`
 	case $pip_mode in
 	    L)
 		case $mode_actual in
@@ -400,7 +414,8 @@ if [ x"${SUMMARY_FILE}" = x ]; then
 else
     for pip_mode in $pip_mode_list; do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	mode_actual=`${PIP_MODE_CMD} -${pip_mode} pip_mode_check 2>/dev/null`
+	mode_actual=`${MCEXEC} ${PIP_MODE_CMD} -${pip_mode} pip_mode_check \
+		2>/dev/null`
 	case $pip_mode in
 	    L)
 		case $mode_actual in
@@ -594,7 +609,7 @@ while read line; do
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
 				fi
 				if [ -s $TEST_OUT_STDERR ]; then
-				    echo "---- stderr ----";
+				    echo "---- stderr ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
 				fi
 				:;;
@@ -609,7 +624,7 @@ while read line; do
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
 				fi
 				if [ -s $TEST_OUT_STDERR ]; then
-				    echo "---- stderr ----";
+				    echo "---- stderr ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
 				fi
 				:;;
@@ -623,7 +638,7 @@ while read line; do
 				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
 				fi
 				if [ -s $TEST_OUT_STDERR ]; then
-				    echo "---- stderr ----";
+				    echo "---- stderr ----" >> $ERR_LOG_FILE;
 				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
 				fi
 				:;;

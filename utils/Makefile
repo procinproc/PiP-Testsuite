@@ -41,11 +41,12 @@ CWD = $(shell pwd)
 CPPFLAGS += -I../include -DCWD=\"$(CWD)\" -DPIPS=\"$(PIPS)\"
 
 SRCS_V1 = dlmopen_count.c ompnumthread.c timer.c inf.c \
-	pip_mode_check.c pip_task.c check_ptrace.c
+	pip_mode_check.c pip_task.c check_ptrace.c clone_check.c
 SRCS_V2 = $(SRCS_V1)
 SRCS_V3 = $(SRCS_V2) pip_blt.c
 
-PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check pip_task check_ptrace
+PROG_V1 = dlmopen_count ompnumthread timer inf \
+	pip_mode_check pip_task check_ptrace clone_check
 PROG_V2 = $(PROG_V1)
 PROG_V3 = $(PROG_V2) pip_blt
 
@@ -58,8 +59,11 @@ include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
+clone_check: clone_check.c $(DEPS)
+	$(CC) $(CPPFLAGS) $< -o $@
+
 dlmopen_count: dlmopen_count.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS)  $< -o $@
+	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
 
 ompnumthread: ompnumthread.c $(DEPS)
 	$(CC) -fopenmp -openmp $< -o $@

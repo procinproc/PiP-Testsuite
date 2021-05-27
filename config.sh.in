@@ -9,6 +9,10 @@ export PIP_VERSION_SUBMINOR=@pip_version_subminor@
 export PIP_BINDIR=${PIP_DIR}/bin
 export PIP_LIBDIR=@PIP_LIBDIR@
 
+export CC=@CC@
+export CXX=@CXX@
+export FC=@FC@
+
 export PIPCC=${PIP_BINDIR}/pipcc
 export PIPFC=${PIP_BINDIR}/pipfc
 export PIP_CHECK=${PIP_BINDIR}/pip-check

@@ -33,7 +33,7 @@
 
 #set -x
 
-if ! $PTRACE_ENABLED; then
+if ! $PTRACE_ENABLE; then
     exit $EXIT_UNTESTED
 fi
 

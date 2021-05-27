@@ -100,9 +100,12 @@ static int test_pip_init_preload( char **argv ) {
 
 #ifdef PIP_MODE_PROCESS_GOT
 static int test_pip_init_got( char **argv ) {
+  char *clone_ready = getenv( "CLONE_READY" );
   char *env = getenv( PIP_ENV_MODE );
   int pipid, ntasks;
   void *exp;
+
+  if( clone_ready == NULL ) return(EXIT_UNTESTED);
 
   ntasks = NTASKS;
   exp = NULL;
