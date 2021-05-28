@@ -112,7 +112,7 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   timer_actual ++;
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
-      fprintf( stderr, "Timer expired (%d/%d sec) !!", 
+      fprintf( stderr, "Timer expired (%d/%d sec) !!\n", 
 	       timer_period, timer_actual );
       unset_timer();
       timedout = 1;
