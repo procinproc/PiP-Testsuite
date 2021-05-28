@@ -60,7 +60,7 @@ include $(top_srcdir)/build/rule.mk
 all: $(PROGRAMS)
 
 clone_check: clone_check.c $(DEPS)
-	$(CC) $(CPPFLAGS) $< -o $@
+	$(CC) $(CPPFLAGS) -I$(PIP_DIR)/include $< -o $@
 
 dlmopen_count: dlmopen_count.c $(DEPS)
 	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
