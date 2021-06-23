@@ -1,0 +1,6 @@
+timer 2  pip_blt 1 1 ./malloc-x
+timer 20 pip_blt 8 8 ./malloc-x
+timer 2  pip_blt 1 1 ./realloc-x
+timer 20 pip_blt 8 8 ./realloc-x
+timer 2  pip_blt 1 1 ./memalign-x
+timer 20 pip_blt 8 8 ./memalign-x

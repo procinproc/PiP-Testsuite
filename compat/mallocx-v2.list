@@ -1,0 +1,3 @@
+timer 20 pip_task 8 ./malloc-x
+timer 20 pip_task 8 ./realloc-x
+timer 20 pip_task 8 ./memalign-x
