@@ -82,7 +82,7 @@ print_usage() {
     echo >&2 "    -t <SEC>: time limit of one loop [seconds]";
     echo >&2 "    -s: show stdout/stderr";
     echo >&2 "    -k: clean loop-*.log files before running test proram";
-    echo >&2 "    -d: Supress debug output (may affects timing)";
+    echo >&2 "    -d: Suppress debug output (may affects timing)";
     echo >&2 "    -i: ignore error";
     echo >&2 "    -S: Silent mode";
     exit 2;

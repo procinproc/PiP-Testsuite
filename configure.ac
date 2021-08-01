@@ -52,14 +52,6 @@ if test -d "${with_pip}/include" \
    else
        AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
    fi
-   pver_str=`grep PACKAGE_VERSION ${pipincdir}/pip_config.h 2> /dev/null`
-   if test -z "${pver_str}"; then
-       AC_MSG_ERROR([pip_config.h ???])
-   fi
-   pip_version=`echo ${pver_str} | cut -d ' ' -f 3 | cut -d '"' -f 2`
-   pip_version_major=`echo ${pip_version} | cut -d '.' -f 1`
-   pip_version_minor=`echo ${pip_version} | cut -d '.' -f 2`
-   pip_version_subminor=`echo ${pip_version} | cut -d '.' -f 3`
    if test -d "${with_pip}/lib64" -a -x "${with_pip}/lib64/libpip.so"; then
      PIP_LIBDIR="${with_pip}/lib64"
    elif test -d "${with_pip}/lib" -a -x "${with_pip}/lib/libpip.so"; then
@@ -67,6 +59,13 @@ if test -d "${with_pip}/include" \
    else
      AC_MSG_ERROR([cannot determine PIP_LIBDIR])
    fi
+   pip_version=`${PIP_LIBDIR}/libpip.so -version`
+   if test -z "${pip_version}"; then
+       AC_MSG_ERROR([Unable to get PiP version (libpip.so)])
+   fi
+   pip_version_major=`echo ${pip_version} | cut -d '.' -f 1`
+   pip_version_minor=`echo ${pip_version} | cut -d '.' -f 2`
+   pip_version_subminor=`echo ${pip_version} | cut -d '.' -f 3`
 else
    AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
 fi
