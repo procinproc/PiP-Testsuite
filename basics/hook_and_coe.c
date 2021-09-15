@@ -31,8 +31,6 @@
  * $
  */
 
-#define DEBUG
-
 #include <test.h>
 #include <limits.h>
 #include <libgen.h>

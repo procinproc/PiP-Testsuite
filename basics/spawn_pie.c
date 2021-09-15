@@ -50,12 +50,13 @@ static int wait_termination( void ) {
 int main( int argc, char **argv ) {
   char *dir;
   char *nargv[2] = { NULL, NULL };
-  int err;
+  int ntasks, err;
 
   dir = dirname( argv[0] );
   chdir( dir );
 
-  CHECK( pip_init( NULL, NULL, NULL, 0 ), RV, return(EXIT_FAIL) );
+  ntasks = 1;
+  CHECK( pip_init( NULL, &ntasks, NULL, 0 ), RV, return(EXIT_FAIL) );
 
   nargv[0] = "./prog-noexec";
   CHECK( pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,

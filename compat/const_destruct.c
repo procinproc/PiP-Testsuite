@@ -45,6 +45,7 @@ void init_func( void ) {
 
   CHECK( (env=getenv(PIP_TEST_PIPID_ENV)), RV==0, _exit(EXIT_FAIL) );
   pipid = strtol( env, NULL, 10 );
+
   fprintf( stderr, "[%d] constructor is called\n", pipid );
   for( i=0; i<SZ; i++ ) {
     array[i] = i + pipid;
@@ -59,8 +60,9 @@ void dest_func( void ) {
 int main( int argc, char **argv ) {
   int i;
 
+  fprintf( stderr, "main is called\n" );
   for( i=0; i<SZ; i++ ) {
     CHECK( array[i]!=i+pipid, RV, return(EXIT_FAIL) );
   }
-  return 0;
+  pip_exit( 0 );
 }

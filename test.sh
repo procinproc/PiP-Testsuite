@@ -57,10 +57,9 @@ ERR_LOG_FILE=$dir_real/.error.log;
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
-unset CLONE_READY
 CLONE_READY=false
 if $MCEXEC ${dir}/utils/clone_check; then
-    export CLONE_READY=true
+    CLONE_READY=true
 else
     if [ x"$SUMMARY_FILE" = x ]; then
 	echo -n "WARNING: "
@@ -76,7 +75,7 @@ export PTRACE_ENABLE
 
 print_usage()
 {
-    echo >&2 "Usage: $base [-APLGCT] [-thread] [-process[:preload|:got|:pipclone]] [<test_list_file>]";
+    echo >&2 "Usage: $base [-APLGCT] [-thread|-process[:preload|:got|:pipclone]] [<test_list_file>]";
     exit 2;
 }
 
@@ -112,30 +111,16 @@ if ! [ -f ${dir_real}/config.sh ]; then
 fi
 . $dir_real/config.sh
 
-BUILD_VERSION_FILE="${dir_real}/.pip_version"
-if ! [ -f ${BUILD_VERSION_FILE} ]; then
-    echo "$base: Not yet built"
-    exit 1
-fi
-BUILD_VERSION=`cat ${BUILD_VERSION_FILE} | cut -d '.' -f 1`
 if [ ${PIP_VERSION_MAJOR} -gt 1 ]; then
     if ! [ -x ${LIBPIPSO} ]; then
 	echo "$base: Unable to find ${LIBPIPSO}"
 	exit 1
     fi
-    CONFIG_VERSION=`${MCEXEC} ${LIBPIPSO} --version | cut -d '.' -f 1`
-else
-    PIP_CONFIG_HEADER=${PIP_DIR}/include/pip_config.h
-    if ! [ -f ${PIP_CONFIG_HEADER} ]; then
-	echo "$base: Unable to find ${PIP_CONFIG_HEADER}"
+    LIBPIP_VERSION=`${MCEXEC} ${LIBPIPSO} --version`
+    if [ "${LIBPIP_VERSION}" != "${PIP_VERSION}" ]; then
+	echo "$base: Version miss-match: libpip.so=${LIBPIP_VERSION} configure=${PIP_VERSION}"
 	exit 1
     fi
-    CONFIG_VERSION=`grep PACKAGE_VERSION ${PIP_CONFIG_HEADER} 2> /dev/null | \
-	 	    cut -d ' ' -f 3 | cut -d '"' -f 2 | cut -d '.' -f 1`
-fi
-if [ "${BUILD_VERSION}" != "${CONFIG_VERSION}" ]; then
-    echo "$base: Version miss-match: build=${BUILD_VERSION} configure=${CONFIG_VERSION}"
-    exit 1
 fi
 
 path=.:${dir_real}/utils:${dir_real}/basics:${PIP_DIR}/bin
@@ -340,7 +325,6 @@ if [ ! -e "$TEST_LIST" ]; then
 fi
 
 if [ -z "$pip_mode_list" ]; then
-    echo "3"
     print_usage;
 fi
 
@@ -353,14 +337,15 @@ fi
 [ -f ${TEST_LOG_FILE} ] && mv -f ${TEST_LOG_FILE} ${TEST_LOG_FILE}.bak
 
 if [ x"$SUMMARY_FILE" = x ]; then
+    echo "Testing PiP Version:" ${PIP_VERSION}
     echo "--with-pip=$PIP_DIR"
-    echo "libpip.so -- DEBUG:" $debug
     echo "LD_PRELOAD=$PIP_PRELOAD"
     echo "NTASKS:  " ${NTASKS}
     echo "NTHREADS:" ${OMP_NUM_THREADS}
     if [ x"$MCEXEC" != x ]; then
 	echo "MCEXEC: " $MCEXEC
     fi
+    echo "libpip.so -- DEBUG:" $debug
     if [ x"${PIP_TEST_THRESHOLD}" != x ]; then
 	echo "PIP_TEST_THRESHOLD: $PIP_TEST_THRESHOLD"
     fi
@@ -659,9 +644,9 @@ fi
 
 if [ x"$SUMMARY_FILE" = x ] && [ -s $ERR_LOG_FILE ]; then
     echo
-    echo 'vvvvvvvvvvvvvvvvvvvvvvvv ERROR MESSAGES vvvvvvvvvvvvvvvvvvvvvvvv'
+    echo 'vvvvvvvvvvvvvvvvvvvvvvvv ERROR LOG vvvvvvvvvvvvvvvvvvvvvvvv'
     cat $ERR_LOG_FILE
-    echo '^^^^^^^^^^^^^^^^^^^^^^^^ ERROR MESSAGES ^^^^^^^^^^^^^^^^^^^^^^^^'
+    echo '^^^^^^^^^^^^^^^^^^^^^^^^ ERROR LOG ^^^^^^^^^^^^^^^^^^^^^^^^'
     rm -f $ERR_LOG_FILE;
 fi
 

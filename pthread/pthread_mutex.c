@@ -31,12 +31,15 @@
  * $
  */
 
+#define DEBUG
+
 #include <test.h>
 
-#define NTIMES		(100)
+#define NTIMES		(1000)
 
 struct task_comm {
-  pthread_mutex_t	mutex[2];
+  pthread_barrier_t	barr;
+  pthread_mutex_t	mutex;
   int			count;
 };
 
@@ -45,39 +48,56 @@ int main( int argc, char **argv ) {
   struct task_comm 	*tcp = &tc;
   void 		*exp;
   int 		pipid  = 999;
-  int 		ntasks = 1, i;
+  int 		ntasks, i;
 
+  if( argc > 1 ) {
+    ntasks = strtol( argv[1], NULL, 10 );
+    ntasks = ( ntasks == 0 ) ? 1 : ntasks;
+  } else {
+    ntasks = 1;
+  }
   exp = (void*) tcp;
-  CHECK( pip_init( &pipid, &ntasks, &exp, 0 ),         RV, return(EXIT_FAIL) );
+  CHECK( pip_init( &pipid, &ntasks, &exp, 0 ), RV, return(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
-    CHECK( pthread_mutex_init( &tcp->mutex[0], NULL ), RV, return(EXIT_FAIL) );
-    CHECK( pthread_mutex_init( &tcp->mutex[1], NULL ), RV, return(EXIT_FAIL) );
-    CHECK( pthread_mutex_lock( &tcp->mutex[0] ),       RV, return(EXIT_FAIL) );
-    CHECK( pthread_mutex_lock( &tcp->mutex[1] ),       RV, return(EXIT_FAIL) );
-    tc.count = 0;
+    printf( "sizeof(pthread_mutex_t) = %d\n", sizeof(pthread_mutex_t) );
+    CHECK( pthread_barrier_init( &tcp->barr, NULL, ntasks+1 ), RV, return(EXIT_FAIL) );
+    CHECK( pthread_mutex_init( &tcp->mutex, NULL ), RV, return(EXIT_FAIL) );
+    tcp->count = 0;
 
-    pipid = 0;
-    CHECK( pip_spawn( argv[0], argv, NULL, PIP_CPUCORE_ASIS, &pipid,
-		      NULL, NULL, NULL ),
-	   RV,
-	   return(EXIT_FAIL) );
+    for( i=0; i<ntasks; i++ ) {
+      pipid = i;
+      CHECK( pip_spawn( argv[0], argv, NULL, PIP_CPUCORE_ASIS, &pipid,
+			NULL, NULL, NULL ),
+	     RV,
+	     return(EXIT_FAIL) );
+    }
+    CHECK( pthread_barrier_wait( &tcp->barr ),   
+	   RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD,  return(EXIT_FAIL) );
 
     for( i=0; i<NTIMES; i++ ) {
-      CHECK( pthread_mutex_lock(   &tc.mutex[0] ), RV, return(EXIT_FAIL) );
-      CHECK( pthread_mutex_unlock( &tc.mutex[1] ), RV, return(EXIT_FAIL) );
+      CHECK( pthread_mutex_lock(   &tcp->mutex ), RV, return(EXIT_FAIL) );
+      tcp->count ++;
+      CHECK( pthread_mutex_unlock( &tcp->mutex ), RV, return(EXIT_FAIL) );
     }
-    CHECK( pthread_mutex_unlock( &tc.mutex[0] ),   RV, return(EXIT_FAIL) );
 
-    CHECK( pip_wait( 0, NULL ), RV, return(EXIT_FAIL) );
+    for( i=0; i<ntasks; i++ ) {
+      CHECK( pip_wait( i, NULL ), RV, return(EXIT_FAIL) );
+    }
+
+    printf( "count:%d (%d) ntasks:%d\n", tcp->count, NTIMES*(ntasks+1), ntasks );
+    CHECK( tcp->count != NTIMES * ( ntasks + 1 ), RV, return(EXIT_FAIL) );
 
   } else {
     tcp = (struct task_comm*) exp;
 
+    CHECK( pthread_barrier_wait( &tcp->barr ),   
+	   RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD,  return(EXIT_FAIL) );
+
     for( i=0; i<NTIMES; i++ ) {
-      CHECK( pthread_mutex_unlock( &tcp->mutex[0] ), RV, return(EXIT_FAIL) );
-      CHECK( pthread_mutex_lock(   &tcp->mutex[1] ), RV, return(EXIT_FAIL) );
+      CHECK( pthread_mutex_lock( &tcp->mutex ),   RV, exit(EXIT_FAIL) );
+      tcp->count ++;
+      CHECK( pthread_mutex_unlock( &tcp->mutex ), RV, exit(EXIT_FAIL) );
     }
-    CHECK( pthread_mutex_unlock( &tcp->mutex[1] ),   RV, return(EXIT_FAIL) );
   }
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return 0;

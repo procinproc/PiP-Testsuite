@@ -111,7 +111,7 @@ prog-nopie : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 prog.c -o prog-nopie
 
 prog-pie : prog.c $(DEPS) Makefile
-	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-pie
+	$(PIPCC) -g -O2 prog.c -o prog-pie
 	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-pie; fi
 
 prog-nordynamic : prog.c $(DEPS) Makefile

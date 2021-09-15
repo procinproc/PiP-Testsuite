@@ -43,7 +43,6 @@ int pipid, ntasks = 4;
 int main( int argc, char **argv ) {
   pip_init( &pipid, &ntasks, NULL, 0 );
   if( pipid == PIP_PIPID_ROOT ) { // PIP Root process
-    ntasks = 8;
     pipid = PIP_PIPID_ANY;
     printf( "<R> &pipid: %p\n", &pipid );
     pip_spawn( argv[0], argv, NULL, PIP_CPUCORE_ASIS, &pipid,
@@ -51,8 +50,7 @@ int main( int argc, char **argv ) {
     pip_wait( pipid, NULL );
 
   } else {			// PIP child task
-    printf( "<%d> &pipid: %p\n", pipid, &pipid );
-    printf( "<%d> Hello, I am fine !!\n", pipid );
+    printf( "<%d> Helllo !! ( &pipid: %p)\n", pipid, &pipid );
   }
   pip_fin();
   return 0;

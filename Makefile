@@ -48,6 +48,8 @@ SUBDIRS_CLEAN = $(SUBDIRS_COMMON) \
 
 include $(top_srcdir)/build/rule.mk
 
+all: subdir-all
+
 subdir-all subdir-debug :
 	@target=`expr $@ : 'subdir-\(.*\)'`; \
 	. $(top_srcdir)/config.sh; \
@@ -71,11 +73,8 @@ subdir-clean subdir-testclean subdir-veryclean :
 		make -C $${dir} $${target}; \
 	done
 
-all: subdir-all
-	echo ${PIP_VERSION} > .pip_version
-
 clean: subdir-clean
-	$(RM) .pip_version
+	$(RM) core-*.* .pip_version
 
 testclean: subdir-testclean
 

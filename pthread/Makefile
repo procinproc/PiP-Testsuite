@@ -44,5 +44,7 @@ include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
+TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
+
 test: all
-	../test.sh test.list
+	../test.sh $(TEST_LIST)

@@ -37,7 +37,7 @@ static int nth_core( int nth, cpu_set_t *cpuset ) {
   int i, j, ncores;
   ncores = CPU_COUNT( cpuset );
   nth %= ncores;
-  for( i=0, j=0; i<ncores; i++ ) {
+  for( i=0, j=0; i<CPU_SETSIZE; i++ ) {
     if( CPU_ISSET( i, cpuset ) ) {
       if( j++ == nth ) return i;
     }

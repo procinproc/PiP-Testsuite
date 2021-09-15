@@ -72,14 +72,8 @@ int my_getaddrinfo( char *hostname ) {
   hints.ai_socktype = SOCK_STREAM;
   hints.ai_family   = AF_INET;
 
-#ifndef PTHREADS
-  pip_glibc_lock();
-#endif
   rv = getaddrinfo( hostname, NULL, &hints, &res );
   if( rv == 0 && res != NULL ) freeaddrinfo( res );
-#ifndef PTHREADS
-  pip_glibc_unlock();
-#endif
   return rv;
 }
 
