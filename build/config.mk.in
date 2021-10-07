@@ -7,6 +7,8 @@ PIP_VERSION_SUBMINOR = @pip_version_subminor@
 PIP_DIR = @with_pip@
 PIP_LIBDIR = @PIP_LIBDIR@
 
+PIP_GDBPATH = @with_pipgdb@
+
 CC  = @CC@
 CXX = @CXX@
 FC  = @FC@

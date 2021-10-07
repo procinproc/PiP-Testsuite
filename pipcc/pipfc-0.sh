@@ -39,7 +39,7 @@ dir=`dirname $0`
 hello="fhello";
 
 check () {
-    echo "Testing ..$@"
+    echo "Testing $@"
     $@;
     if [ $? -ne 0 ]; then
 	exit $EXIT_FAIL

@@ -5,7 +5,7 @@ timer 1 pip_task 8 ./fork
 skip T UNSUPPORTED timer 1 pip_task 1 ./pip_dlopen
 skip T UNSUPPORTED timer 1 pip_task 8 ./pip_dlopen
 timer  5 pip_task 1 ./getaddrinfo
-timer 20 pip_task 8 ./getaddrinfo
+timer 60 pip_task 8 ./getaddrinfo
 ##%include mallocx-v2.list
 ##timer 1 ./sigchld 1
 ##timer 1 ./sigchld 8

@@ -43,6 +43,11 @@
 
 FILE *fp = NULL;
 
+static void myprint( char *str ) {
+  size_t len = strlen( str ) + 1;
+  write( 1, str, len );
+}
+
 ssize_t freemem( void ) {
   char name[32] = { 0 };
   char unit[4]  = { 0 };

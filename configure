@@ -2018,6 +2018,8 @@ $as_echo "${with_pip}" >&6; }
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: PIP_VERSION_MAJOR=${pip_version_major}" >&5
 $as_echo "PIP_VERSION_MAJOR=${pip_version_major}" >&6; }
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for pip-gdb installation" >&5
+$as_echo_n "checking for pip-gdb installation... " >&6; }
 
 # Check whether --with-pipgdb was given.
 if test "${with_pipgdb+set}" = set; then :

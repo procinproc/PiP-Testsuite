@@ -72,6 +72,7 @@ fi
 AC_MSG_RESULT([${with_pip}])
 AC_MSG_RESULT([PIP_VERSION_MAJOR=${pip_version_major}])
 
+AC_MSG_CHECKING([for pip-gdb installation])
 AC_ARG_WITH([pipgdb],
   [AS_HELP_STRING([--with-pipgdb=PIPGDB_PATH], [Path to pip-gdb])])
 case "${with_pipgdb}" in
