@@ -140,6 +140,7 @@ cleanup() {
     echo;
     echo "cleaning up ..."
     rm -f $sum_file;
+    rm -f $ERR_LOG_FILE;
     exit 1;
 }
 
