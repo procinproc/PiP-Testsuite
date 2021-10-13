@@ -33,11 +33,6 @@
 
 dir=`dirname $0`;
 . $dir/../exit_code.sh.inc
-pip_is_debug_build;
-$dir/../util/pip_is_debug_build;
-#if [ $? -ne 0 ] ; then
-#    exit $EXIT_UNTESTED;
-#fi
 
 ntasks=$1;
 niters=10

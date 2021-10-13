@@ -60,7 +60,7 @@ prog-distclean:
 prog-testclean:
 	$(RM) *.log *.log.xml
 	$(RM) test.log test.log.* test.out.*
-	$(RM) .test-sum-*.sh
+	$(RM) .test-sum-*.sh .error.log
 	$(RM) loop-*.log .loop-*.log
 	$(RM) seek-file.text
 .PHONY: prog-testclean
