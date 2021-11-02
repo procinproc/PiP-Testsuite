@@ -46,10 +46,10 @@ static int nth_core( int nth, cpu_set_t *cpuset ) {
 }
 
 int main( int argc, char **argv ) {
-  cpu_set_t	init_set, *init_setp;
+  cpu_set_t	init_set, *init_setp, cpuset;
   void		*exp;
   char		*env;
-  int 		ntasks, ntenv, pipid;
+  int 		ntasks, hntasks, ntenv, pipid;
   int		core, i, extval = 0;
 
   ntasks = 0;
@@ -63,19 +63,34 @@ int main( int argc, char **argv ) {
   } else {
     if( ntasks > NTASKS ) return(EXIT_UNTESTED);
   }
+  hntasks = ntasks / 2;
+  hntasks = ( hntasks < 1 ) ? 1 : hntasks;
 
-  exp = &init_set;
+  init_setp = &init_set;
+  exp = init_setp;
   CHECK( pip_init(&pipid,&ntasks,(void**)&exp,0), RV, return(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
-    CPU_ZERO( &init_set );
-    CHECK( sched_getaffinity( 0, sizeof(init_set), &init_set ),
+    CHECK( sched_getaffinity( 0, sizeof(init_set), init_setp ),
 	   RV,
 	   return(EXIT_UNRESOLVED) );
-    for( i=0; i<ntasks; i++ ) {
-      core = nth_core( i, &init_set );
+    for( i=0; i<hntasks; i++ ) {
+      core = nth_core( i, init_setp );
       pipid = i;
       printf( ">> PIPID:%d core:%d\n", pipid, core );
       CHECK( pip_spawn(argv[0],argv,NULL,core,&pipid,NULL,NULL,NULL),
+	     RV,
+	     return(EXIT_FAIL) );
+    }
+    for( i=hntasks; i<ntasks; i++ ) {
+      core = nth_core( i, init_setp );
+      CPU_ZERO( &cpuset );
+      CPU_SET( core, &cpuset );
+      CHECK( sched_setaffinity( 0, sizeof(cpuset), &cpuset ),
+	     RV,
+	     return(EXIT_UNRESOLVED) );
+      pipid = i;
+      printf( ">> PIPID:%d core:%d ++\n", pipid, core );
+      CHECK( pip_spawn(argv[0],argv,NULL,PIP_CPUCORE_ASIS,&pipid,NULL,NULL,NULL),
 	     RV,
 	     return(EXIT_FAIL) );
     }
@@ -95,7 +110,10 @@ int main( int argc, char **argv ) {
   } else {
     init_setp = (cpu_set_t*) exp;
     core = nth_core( pipid, init_setp );
-    CHECK( CPU_ISSET( core, init_setp ),
+    CHECK( sched_getaffinity( 0, sizeof(cpuset), &cpuset ),
+	   RV,
+	   return(EXIT_FAIL) );
+    CHECK( CPU_ISSET( core, &cpuset ),
 	   !RV,
 	   return(EXIT_FAIL) );
     printf( "<< PIPID:%d core:%d\n", pipid, core );

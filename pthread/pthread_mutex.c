@@ -31,8 +31,6 @@
  * $
  */
 
-#define DEBUG
-
 #include <test.h>
 
 #define NTIMES		(1000)

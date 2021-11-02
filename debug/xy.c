@@ -56,6 +56,8 @@ void yy( int y ) {
   xx( y - 1 );
 }
 
+#include <mcheck.h>
+
 int main( int argc, char **argv) {
   if( argc > 1 ) {
     target = strtol( argv[1], NULL, 10 );
