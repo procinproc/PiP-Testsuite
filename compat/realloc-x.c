@@ -76,15 +76,15 @@ int main( int argc, char **argv ) {
     }
     count = nt - 1;
     countp = &count;
-    CHECK( pip_named_export( (void*) countp, "COUNT" ),       RV, return(EXIT_FAIL) );
-    CHECK( pip_named_export( (void*) slots, "SLOTS" ),        RV, return(EXIT_FAIL) );
+    CHECK( pip_named_export( (void*) countp, "COUNT" ),        RV, return(EXIT_FAIL) );
+    CHECK( pip_named_export( (void*) slots,  "SLOTS" ),        RV, return(EXIT_FAIL) );
     barrp = &barrier;
     CHECK( pip_barrier_init( barrp, nt ), RV, return(EXIT_FAIL) );
-    CHECK( pip_named_export( (void*) barrp, "BARRIER" ),      RV, return(EXIT_FAIL) );
+    CHECK( pip_named_export( (void*) barrp,  "BARRIER" ),      RV, return(EXIT_FAIL) );
   } else {
-    CHECK( pip_named_import( 0, (void**) &countp, "COUNT" ),  RV, return(EXIT_FAIL) );
-    CHECK( pip_named_import( 0, (void**) &slots, "SLOTS" ),   RV, return(EXIT_FAIL) );
-    CHECK( pip_named_import( 0, (void**) &barrp, "BARRIER" ), RV, return(EXIT_FAIL) );
+    CHECK( pip_named_import( 0, (void**) &countp, "COUNT" ),   RV, return(EXIT_FAIL) );
+    CHECK( pip_named_import( 0, (void**) &slots,  "SLOTS" ),   RV, return(EXIT_FAIL) );
+    CHECK( pip_named_import( 0, (void**) &barrp,  "BARRIER" ), RV, return(EXIT_FAIL) );
   }
   slots[pipid].region = malloc( 1024 );
 #ifdef DEBUG

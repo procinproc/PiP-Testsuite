@@ -593,11 +593,11 @@ while read line; do
 				echo ": FAIL" >> $ERR_LOG_FILE
 				if [ -s $TEST_OUT_STDOUT ]; then
 				    echo "---- stdout ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
+				    tail -n 100 $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
 				fi
 				if [ -s $TEST_OUT_STDERR ]; then
 				    echo "---- stderr ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
+				    tail -n 100 $TEST_OUT_STDERR >> $ERR_LOG_FILE;
 				fi
 				:;;
 		XPASS)		msg="$msg :-D";;
@@ -610,11 +610,11 @@ while read line; do
 				echo ": UNRESOLVED" >> $ERR_LOG_FILE
 				if [ -s $TEST_OUT_STDOUT ]; then
 				    echo "---- stdout ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
+				    tail -n 100 $TEST_OUT_STDOUT >> $ERR_LOG_FILE;
 				fi
 				if [ -s $TEST_OUT_STDERR ]; then
 				    echo "---- stderr ----" >> $ERR_LOG_FILE;
-				    cat $TEST_OUT_STDERR >> $ERR_LOG_FILE;
+				    tail -n 100 $TEST_OUT_STDERR >> $ERR_LOG_FILE;
 				fi
 				:;;
 		UNTESTED)	msg="$msg :-|";;
