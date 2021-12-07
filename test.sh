@@ -58,7 +58,7 @@ longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
 CLONE_READY=false
-if $MCEXEC ${dir}/utils/clone_check; then
+if ${MCEXEC} ${dir}/utils/clone_check; then
     CLONE_READY=true
 else
     if [ x"$SUMMARY_FILE" = x ]; then
@@ -68,7 +68,7 @@ else
 fi
 
 PTRACE_ENABLE=false
-if $MCEXEC ${dir}/utils/check_ptrace; then
+if ${MCEXEC} ${dir}/utils/check_ptrace; then
     PTRACE_ENABLE=true
 fi
 export PTRACE_ENABLE
@@ -100,7 +100,7 @@ set_term_width() {
 # not to print any debug messages
 export PIP_NODEBUG=1;
 
-rprocs=`$MCEXEC ps rux | wc -l`;
+rprocs=`${MCEXEC} ps rux | wc -l`;
 if [ $rprocs -gt 3 ]; then
     echo >&2 "WARNING: some other processes seem to be running ... ($rprocs)"
 fi
@@ -113,12 +113,15 @@ fi
 
 if [ ${PIP_VERSION_MAJOR} -gt 1 ]; then
     if ! [ -x ${LIBPIPSO} ]; then
-	echo "$base: Unable to find ${LIBPIPSO}"
+	echo "$base: Unable to exec ${LIBPIPSO}"
 	exit 1
     fi
     LIBPIP_VERSION=`${MCEXEC} ${LIBPIPSO} --version`
-    if [ "${LIBPIP_VERSION}" != "${PIP_VERSION}" ]; then
-	echo "$base: Version miss-match: libpip.so=${LIBPIP_VERSION} configure=${PIP_VERSION}"
+    if [ x"${LIBPIP_VERSION}" == x ]; then
+	echo "$base: Failed to exec ${MCEXEC} ${LIBPIPSO}"
+	exit 1
+    elif [ "${LIBPIP_VERSION}" != "${PIP_VERSION}" ]; then
+	echo "$base: Version miss-match: libpip.so:${LIBPIP_VERSION} configure:${PIP_VERSION}"
 	exit 1
     fi
 fi
@@ -155,13 +158,13 @@ fi
 
 . $dir/exit_code.sh.inc
 
-export NTASKS=`$MCEXEC dlmopen_count -p`
+export NTASKS=`${MCEXEC} dlmopen_count -p`
 ##if [ $NTASKS -lt 8 ]; then
 ##    echo "dlmopen_count:$NTASKS is not enough"
 ##    exit 1;
 ##fi
 
-export OMP_NUM_THREADS=`$MCEXEC ompnumthread`;
+export OMP_NUM_THREADS=`${MCEXEC} ompnumthread`;
 ##if [ $OMP_NUM_THREADS -lt 4 ]; then
 ##    echo "ompnumthread:$OMP_NUM_THREADS is not enough"
 ##    exit 1;
@@ -343,8 +346,8 @@ if [ x"$SUMMARY_FILE" = x ]; then
     echo "LD_PRELOAD=$PIP_PRELOAD"
     echo "NTASKS:  " ${NTASKS}
     echo "NTHREADS:" ${OMP_NUM_THREADS}
-    if [ x"$MCEXEC" != x ]; then
-	echo "MCEXEC: " $MCEXEC
+    if [ x"${MCEXEC}" != x ]; then
+	echo "MCEXEC: " ${MCEXEC}
     fi
     echo "libpip.so -- DEBUG:" $debug
     if [ x"${PIP_TEST_THRESHOLD}" != x ]; then

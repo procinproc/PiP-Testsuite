@@ -38,6 +38,16 @@
 int array[SZ] = { 0 };
 int pipid;
 
+static char *is_initialized( void ) {
+  char *inited;
+  if( pip_is_initialized() ) {
+    inited = "initialized";
+  } else {
+    inited = "not initilized";
+  }
+  return inited;
+}
+
 void init_func( void ) __attribute__ ((constructor));
 void init_func( void ) {
   char *env;
@@ -46,7 +56,8 @@ void init_func( void ) {
   CHECK( (env=getenv(PIP_TEST_PIPID_ENV)), RV==0, _exit(EXIT_FAIL) );
   pipid = strtol( env, NULL, 10 );
 
-  fprintf( stderr, "[%d] constructor is called\n", pipid );
+  fprintf( stderr, "[%d:%d] constructor is called (%s)\n", 
+	   pip_gettid(), pipid, is_initialized() );
   for( i=0; i<SZ; i++ ) {
     array[i] = i + pipid;
   }
@@ -54,13 +65,16 @@ void init_func( void ) {
 
 void dest_func( void ) __attribute__ ((destructor));
 void dest_func( void ) {
-  fprintf( stderr, "[%d] destructor is called\n", pipid );
+  fprintf( stderr, "[%d:%d] destructor is called (%s)\n", 
+	   pip_gettid(), pipid, is_initialized() );
 }
 
 int main( int argc, char **argv ) {
-  int i;
+  int i, id;
 
-  fprintf( stderr, "main is called\n" );
+  CHECK( pip_get_pipid( &id ), RV, return(EXIT_FAIL) );
+  fprintf( stderr, "[%d:%d] PiP task main (%s)\n", 
+	   pip_gettid(), id, is_initialized() );
   for( i=0; i<SZ; i++ ) {
     CHECK( array[i]!=i+pipid, RV, return(EXIT_FAIL) );
   }

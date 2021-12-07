@@ -39,10 +39,12 @@
 #define _GNU_SOURCE
 #endif
 
+#ifndef NO_PIP
 #if PIP_VERSION_MAJOR==1
 #include <pip.h>
 #else
 #include <pip/pip.h>
+#endif
 #endif
 
 #include <sys/syscall.h>
@@ -52,6 +54,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <string.h>
 #include <signal.h>
 #include <fcntl.h>
 #include <dirent.h>
@@ -60,6 +63,7 @@
 #include <elf.h>
 #include <time.h>
 #include <pthread.h>
+#include <errno.h>
 
 #define NTASKS			PIP_NTASKS_MAX
 

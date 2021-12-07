@@ -59,7 +59,7 @@ if test -d "${with_pip}/include" \
    else
      AC_MSG_ERROR([cannot determine PIP_LIBDIR])
    fi
-   pip_version=`${PIP_LIBDIR}/libpip.so -version`
+   pip_version=`${PIP_LIBDIR}/libpip.so --version`
    if test -z "${pip_version}"; then
        AC_MSG_ERROR([Unable to get PiP version (libpip.so)])
    fi
@@ -91,6 +91,7 @@ AC_SUBST(pip_version)
 AC_SUBST(pip_version_major)
 AC_SUBST(pip_version_minor)
 AC_SUBST(pip_version_subminor)
+AC_SUBST(pip_lib_debug)
 AC_SUBST(PIP_LIBDIR)
 AC_SUBST(with_pipgdb)
 

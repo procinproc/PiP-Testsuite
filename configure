@@ -602,6 +602,7 @@ CFLAGS
 CC
 with_pipgdb
 PIP_LIBDIR
+pip_lib_debug
 pip_version_subminor
 pip_version_minor
 pip_version_major
@@ -2003,7 +2004,7 @@ if test -d "${with_pip}/include" \
    else
      as_fn_error $? "cannot determine PIP_LIBDIR" "$LINENO" 5
    fi
-   pip_version=`${PIP_LIBDIR}/libpip.so -version`
+   pip_version=`${PIP_LIBDIR}/libpip.so --version`
    if test -z "${pip_version}"; then
        as_fn_error $? "Unable to get PiP version (libpip.so)" "$LINENO" 5
    fi
@@ -2037,6 +2038,7 @@ case "${with_pipgdb}" in
 esac
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: ${with_pipgdb}" >&5
 $as_echo "${with_pipgdb}" >&6; }
+
 
 
 

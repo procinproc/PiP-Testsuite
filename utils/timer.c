@@ -31,6 +31,8 @@
  * $
  */
 
+#define NO_PIP
+
 #include <test.h>
 
 #include <sys/time.h>
@@ -160,6 +162,8 @@ static void usage( void ) {
 int main( int argc, char **argv ) {
   char	*pip_test_timer_scale = getenv("PIP_TEST_TIMER_SCALE");
   int 	time, status, flag_debug = 0;
+  char	rbuf[16], *yes = "yes";
+  FILE	*fp;
 
   set_sigint_watcher();
 
@@ -176,12 +180,15 @@ int main( int argc, char **argv ) {
   if( pip_test_timer_scale != NULL && isdigit(pip_test_timer_scale[0]) ) {
     time *= strtol( pip_test_timer_scale, NULL, 10 );
   }
-#if PIP_VERSION_MAJOR > 1
-  extern int pip_is_debug_build( void );
-  if( pip_is_debug_build() && !flag_debug ) {
-    time *= DEBUG_SCALE;
+  if( ( fp = popen( PIPLIB " --debug  2>/dev/null", "r" ) ) != NULL ) {
+    if( fread( rbuf, 1, sizeof(rbuf), fp ) > 0 ) {
+      if( strncmp( rbuf, yes, strlen(yes) ) == 0 ) {
+	printf( "DEBUG (%s)\n", rbuf );
+	time *= DEBUG_SCALE;
+      }
+    }
+    pclose( fp );
   }
-#endif
 
   if( ( pid = fork() ) == 0 ) {
     execvp( argv[2], &argv[2] );

@@ -69,7 +69,7 @@ ompnumthread: ompnumthread.c $(DEPS)
 	$(CC) -fopenmp -openmp $< -o $@
 
 timer: timer.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
+	$(CC) -g -O2 $(CPPFLAGS) -DPIPLIB=\"$(PIPLIB)\" $< -o $@
 
 pip_mode_check : pip_mode_check.c $(DEPS)
 	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
