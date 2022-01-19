@@ -44,26 +44,12 @@ static int get_ncpus( void ) {
 }
 #endif
 
-int main( int argc, char **argv ) {
-  int ntasks, ntenv, pipid, status, extval;
+int spawn_tasks( int ntasks, char **argv ) {
+  int pipid, status, extval;
   int i, c, nc, err;
   char env_ntasks[128], env_pipid[128];
   char *env;
 
-  set_sigint_watcher();
-
-  if( argc < 3 ) return EXIT_UNTESTED;
-  CHECK( access( argv[2], X_OK ),     RV, return(EXIT_UNTESTED) );
-#if PIP_VERSION_MAJOR > 1
-  CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
-#endif
-
-  ntasks = strtol( argv[1], NULL, 10 );
-  CHECK( ntasks, RV<=0||RV>NTASKS, return(EXIT_UNTESTED) );
-  if( ( env = getenv( "NTASKS" ) ) != NULL ) {
-    ntenv = strtol( env, NULL, 10 );
-    if( ntasks > ntenv ) return(EXIT_UNTESTED);
-  }
   CHECK( pip_init( &pipid, &ntasks, NULL, 0 ), RV, return(EXIT_UNTESTED) );
   sprintf( env_ntasks, "%s=%d", PIP_TEST_NTASKS_ENV, ntasks );
   putenv( env_ntasks );
@@ -86,7 +72,7 @@ int main( int argc, char **argv ) {
 #endif
     sprintf( env_pipid, "%s=%d", PIP_TEST_PIPID_ENV, pipid );
     putenv( env_pipid );
-    CHECK( pip_spawn( argv[2], &argv[2], NULL, c, &pipid,
+    CHECK( pip_spawn( argv[0], argv, NULL, c, &pipid,
 		      NULL, NULL, NULL ),
 	   RV,
 	   return(EXIT_FAIL) );
@@ -110,4 +96,45 @@ int main( int argc, char **argv ) {
 
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return err;
+}
+
+int main( int argc, char **argv ) {
+  int ntasks, ntenv, status;
+  int i, c, nc, err;
+  pid_t pid;
+  char *prog, *env;
+
+  prog = argv[0];
+
+  set_sigint_watcher();
+
+  if( argc < 3 ) return EXIT_UNTESTED;
+  CHECK( access( argv[2], X_OK ),     RV, return(EXIT_UNTESTED) );
+#if PIP_VERSION_MAJOR > 1
+  CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
+#endif
+
+  ntasks = strtol( argv[1], NULL, 10 );
+  CHECK( ntasks, RV<=0||RV>NTASKS, return(EXIT_UNTESTED) );
+  if( ( env = getenv( "NTASKS" ) ) != NULL ) {
+    ntenv = strtol( env, NULL, 10 );
+    if( ntasks > ntenv ) return(EXIT_UNTESTED);
+  }
+
+  if( ( pid = fork() ) == 0 ) {
+    return spawn_tasks( ntasks, &argv[2] );
+  } else if( pid < 0 ) {
+    fprintf( stderr, "%s: Unable to fork (%d)\n", prog, errno );
+    return EXIT_UNTESTED;
+  } else {
+    while( wait( &status ) != pid );
+    if( WIFEXITED( status ) ) {
+      return WEXITSTATUS( status );
+    } else if( WIFSIGNALED( status ) ) {
+      fprintf( stderr, "%s: signaled (%d)\n", prog, WTERMSIG( status ) );
+      return EXIT_FAIL;
+    }
+  }
+  fprintf( stderr, "%s: ???\n", prog );
+  return EXIT_UNTESTED;
 }

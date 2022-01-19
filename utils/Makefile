@@ -55,30 +55,32 @@ PROG_ALL = $(PROG_V3)
 SRCS = $(SRCS_V$(PIP_VERSION_MAJOR))
 PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR))
 
+OPTS = -g -O2
+
 include $(top_srcdir)/build/rule.mk
 
 all: $(PROGRAMS)
 
-clone_check: clone_check.c $(DEPS)
+clone_check: clone_check.c $(DEPS) Makefile
 	$(CC) $(CPPFLAGS) -I$(PIP_DIR)/include $< -o $@
 
-dlmopen_count: dlmopen_count.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
+dlmopen_count: dlmopen_count.c $(DEPS) Makefile
+	$(PIPCC) $(OPTS) $(CPPFLAGS) $< -o $@
 
-ompnumthread: ompnumthread.c $(DEPS)
-	$(CC) -fopenmp -openmp $< -o $@
+ompnumthread: ompnumthread.c $(DEPS) Makefile
+	$(CC) $(OPTS) -fopenmp -openmp $< -o $@
 
-timer: timer.c $(DEPS)
-	$(CC) -g -O2 $(CPPFLAGS) -DPIPLIB=\"$(PIPLIB)\" $< -o $@
+timer: timer.c $(DEPS) Makefile
+	$(CC) $(OPTS) $(CPPFLAGS) -DPIPLIB=\"$(PIPLIB)\" $< -o $@
 
-pip_mode_check : pip_mode_check.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS) $< -o $@
+pip_mode_check : pip_mode_check.c $(DEPS) Makefile
+	$(PIPCC) $(OPTS) $(CPPFLAGS) $< -o $@
 
-pip_task : pip_task.c $(DEPS)
-	$(PIPCC) -g -O2 $(CPPFLAGS) --piproot $< -o $@
+pip_task : pip_task.c $(DEPS) Makefile
+	$(PIPCC) $(OPTS) $(CPPFLAGS) --piproot $< -o $@
 
-inf : inf.c $(DEPS)
-	$(CC) -g -O2 $(CPPFLAGS) $< -o $@
+inf : inf.c $(DEPS) Makefile
+	$(PIPCC) $(OPTS) $(CPPFLAGS) $< -o $@
 
 TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
 

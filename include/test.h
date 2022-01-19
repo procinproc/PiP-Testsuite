@@ -262,7 +262,7 @@ INLINE int set_signal_handler( int signal, void(*handler)(int, siginfo_t*, void*
 }
 
 static void sigint_watcher( int sig, siginfo_t *info, void* extra ) {
-  fprintf( stderr, "\n(^C?) interrupted by user !!!!!!\n" );
+  fprintf( stderr, "\nInterrupted by user !!!!!!\n" );
   fflush( NULL );
   exit( EXIT_UNRESOLVED );
 }
