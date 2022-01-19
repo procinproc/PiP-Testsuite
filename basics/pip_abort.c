@@ -43,9 +43,8 @@ static struct my_exp {
 
 int main( int argc, char **argv ) {
   char	*env;
-  int	ntenv;
-  int	i, extval = 0;
   pid_t pid;
+  int	ntenv, status, rv, i;
 
   ntasks = 0;
   if( argc > 1 ) {
@@ -65,7 +64,8 @@ int main( int argc, char **argv ) {
   expp = &exp;
 
   if( !pip_is_initialized() ) {
-    /* PiP task is implicitly initialized in v2 or higher */
+    /* PiP tasks are implicitly initialized in v2 or higher */
+    /* so, only root process can reach here */
     if( ( pid = fork() ) == 0 ) {
       CHECK( pip_init(&pipid,&ntasks,(void**)&expp,0), RV, return(EXIT_FAIL) );
       /* Root */
@@ -82,37 +82,53 @@ int main( int argc, char **argv ) {
       CHECK( pthread_barrier_wait( &expp->barr ),
 	     (RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD), return(EXIT_FAIL) );
       
-      sleep( 1 );
-      if( target < 0 ) {
-	fprintf( stderr, "ROOT: pip_abort()\n" );
-	pip_abort();
-      }
-      while( 1 );
+      do {
+	rv = pip_wait_any( &pipid, &status );
+	if( rv == 0 ) {
+	  if( target < 0 ) {
+	    CHECK( ( WIFEXITED(status) && WEXITSTATUS(status) == 0 ),
+		   !RV,
+		   return(EXIT_FAIL) );
+	    fprintf( stderr, "ROOT: pip_abort()\n" );
+	    pip_abort();
+	  } else {
+	    if( pipid == target ) {
+	      CHECK( ( WIFSIGNALED(status) && WTERMSIG(status) == SIGABRT ),
+		     !RV,
+		     return(EXIT_FAIL) );
+	    } else {
+	      CHECK( ( WIFEXITED(status) && WEXITSTATUS(status) == 0 ),
+		     !RV,
+		     return(EXIT_FAIL) );
+	    }
+	  }
+	}
+      } while( rv != ECHILD );
+      /* will be aborted */
+      while( 1 ) sleep( 1 );
 
     } else if( pid < 0 ) {
-      CHECK( pid<0, RV, return(EXIT_FAIL) );
+      CHECK( pid<0, RV, return(EXIT_UNTESTED) );
       
     } else {
-      int status, rv;
       while( 1 ) {
 	if( wait( &status ) == pid ) break;
-	CHECK( rv, ( RV!=0 && errno!=EINTR ), return(EXIT_FAIL) );
       }
-      CHECK( !WIFSIGNALED(status), RV, return(EXIT_FAIL) );
-      return EXIT_PASS;
+      CHECK( ( WIFSIGNALED(status) && WTERMSIG(status) == SIGABRT ), 
+	     !RV, return(EXIT_FAIL) );
     }
   } else {
     CHECK( pip_init(&pipid,&ntasks,(void**)&expp,0), RV, return(EXIT_FAIL) );
     CHECK( pthread_barrier_wait( &expp->barr ),
 	   (RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD), return(EXIT_FAIL) );
       
-    if( pipid == target || target > ntasks) {
+    if( pipid == target || target >= ntasks) {
       fprintf( stderr, "TAKS[%d]: pip_abort()\n", pipid );
       pip_abort();
+      /* never reach here */
+      CHECK( 1, RV, return(EXIT_FAIL) );
     }
-    while( 1 );
-
     CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   }
-  return EXIT_FAIL;
+  return EXIT_PASS;
 }

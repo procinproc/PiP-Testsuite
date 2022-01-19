@@ -36,9 +36,12 @@
 
 #define NFORK 	(10)
 
+#define IDX(P,I)	(((P)*nfork)+(I))
+
 int main( int argc, char **argv ) {
-  pid_t pid;
-  int nfork, i;
+  pid_t ppid, pid, tid, *forked;
+  int nfork, pipid, ntasks, thrd;
+  int sz, i, j, k, n, done, err = 0;
 
   nfork = 0;
   if( argc > 1 ) {
@@ -46,29 +49,96 @@ int main( int argc, char **argv ) {
   }
   nfork = ( nfork == 0 ) ? NFORK : nfork;
 
-  for( i=0; i<nfork; i++ ) {
-    CHECK( ( pid = fork() ),  RV<0, return(EXIT_FAIL) );
-    if( pid == 0 ) {
-      if( i & 1 ) {
-	CHECK( 0, 0, return(EXIT_FAIL) );
-	return 0;
-      } else {
-	CHECK( 1, 0, return(EXIT_FAIL) );
-	exit( 0 );
-      }
-    }
-#if PIP_VERSION_MAJOR > 1
-    CHECK( pip_yield(0), RV!=0&&RV!=EINTR, return(EXIT_FAIL) );
-#endif
+  CHECK( pip_is_threaded(&thrd),  RV, return(EXIT_FAIL) );
+  CHECK( pip_get_pipid(&pipid),   RV, return(EXIT_FAIL) );
+  CHECK( pip_get_ntasks(&ntasks), RV, return(EXIT_FAIL) );
+
+  if( pipid == 0 ) {
+    sz = nfork * ntasks;
+    CHECK( ( forked = (pid_t*) malloc(sizeof(pid_t)*sz) ),
+	   !RV, 
+	   return(EXIT_UNTESTED) );
+    for( i=0; i<sz; i++ ) forked[i] = 0;
+    CHECK( pip_named_export(forked,"FORKED"), 
+	   RV, 
+	   return(EXIT_FAIL) );
+  } else {
+    CHECK( pip_named_import(0,(void**)&forked,"FORKED"), 
+	   RV, 
+	   return(EXIT_FAIL) );
   }
+
+  ppid = getpid();
   for( i=0; i<nfork; i++ ) {
+    CHECK( ( pid = fork() ), RV<0, return(EXIT_UNTESTED) );
+    if( pid == 0 ) {
+      return 0;
+    } else {
+      fprintf( stderr, "[%d] %d forks %d (%d/%d)\n", 
+	       pipid, ppid, pid, i, nfork );
+      forked[IDX(pipid,i)] = pid;
+    }
+  }
+
+  if( pipid == 0 ) {
+    for( i=1; i<ntasks; i++ ) {
+      CHECK( pip_named_import(i,(void**)&done,"forked"), 
+	     RV, 
+	     return(EXIT_FAIL) );
+    }
+    CHECK( pip_named_export((void*)&done,"CHECK"), 
+	   RV, 
+	   return(EXIT_FAIL) );
+  } else {
+    CHECK( pip_named_export((void*)&done,"forked"), 
+	   RV, 
+	   return(EXIT_FAIL) );
+    CHECK( pip_named_import(0,(void**)&done,"CHECK"), 
+	   RV, 
+	   return(EXIT_FAIL) );
+  }
+
+  n = nfork;
+  do {
     while( 1 ) {
-      errno = 0;
       pid = wait( NULL );
-      if( errno == EINTR ) continue;
-      CHECK( pid, RV<0, return(EXIT_FAIL) );
+      if( pid < 0 ) {
+	if( errno == EINTR  ) continue;
+	if( errno == ECHILD ) return EXIT_FAIL;
+      }
+      CHECK( pid<0, errno, return(EXIT_FAIL) );
       break;
     }
+    for( j=0; j<ntasks; j++ ) {
+      if( !thrd && j != pipid ) continue;
+      for( k=0; k<nfork; k++ ) {
+	if( forked[IDX(j,k)] == pid ) {
+	  if( j == pipid ) {
+	    fprintf( stderr, "[%d] %d forks %d -- terminated\n", 
+		     j, ppid, pid );
+	  } else {
+	    /* this may happen with the thread mode */
+	    fprintf( stderr, "[%d] %d forks %d -- TERMINATED (%d)\n", 
+		     j, ppid, pid, pipid );
+	  }
+	  forked[IDX(j,k)] = 0;
+	  n --;
+	  break;
+	}
+      }
+    }
+  } while( n > 0 );
+
+  if( pipid == 0 ) {
+    for( i=1; i<ntasks; i++ ) {
+      CHECK( pip_named_import(i,(void**)&done,"DONE"), 
+	     RV, 
+	     return(EXIT_FAIL) );
+    }
+  } else {
+    CHECK( pip_named_export((void*)&done,"DONE"), 
+	   RV, 
+	   return(EXIT_FAIL) );
   }
-  return 0;
+  return err;
 }

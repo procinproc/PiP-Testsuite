@@ -46,9 +46,9 @@ PROG_V1  = malloc ctype gettimeofday \
 	   atexit on_exit
 
 SRCS_V2  = $(SRCS_V1) fork.c sigchld.c pagefault.c pip_dlopen.c libnull.c \
-	getaddrinfo.c malloc-x.c realloc-x.c memalign-x.c
+	getaddrinfo.c malloc-x.c realloc-x.c memalign-x.c getpwnam.c
 PROG_V2  = $(PROG_V1) fork sigchld pagefault pip_dlopen libnull.so \
-	getaddrinfo malloc-x realloc-x memalign-x
+	getaddrinfo malloc-x realloc-x memalign-x getpwnam
 
 SRCS_V3 = $(SRCS_V2)
 PROG_V3 = $(PROG_V2)

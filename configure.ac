@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([PiP-Testsuite], 
-	[1.1.0], 
+	[1.2.0], 
 	[procinproc-info@googlegroups.com], 
 	[pip-testsuite],
 	[https://github.com/procinproc/PiP-Testsuite])

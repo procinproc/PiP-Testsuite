@@ -39,10 +39,8 @@
 
 
 int main( int argc, char **argv ) {
-#ifdef BARRIER
   pip_barrier_t barrier;
   pip_barrier_t	*barrp;
-#endif
   int 	pipid, ntasks, prev, next;
   int 	niters = 0, i;
   int 	count, *counts, *countp;
@@ -74,7 +72,6 @@ int main( int argc, char **argv ) {
   for( i=0; i<niters; i++ ) {
     counts[i] = i + MAGIC;
   }
-#ifdef BARRIER
   if( pipid == 0 ) {
     barrp = &barrier;
     CHECK( pip_barrier_init( barrp, ntasks ), RV, return(EXIT_FAIL) );
@@ -85,7 +82,6 @@ int main( int argc, char **argv ) {
 	   RV, return(EXIT_FAIL) );
   }
   CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
-#endif
   for( i=0; i<niters; i++ ) {
     if( pipid == 0 ) {
       CHECK( pip_named_export( (void*) &counts[i], "forward:%d", i ),
@@ -111,9 +107,7 @@ int main( int argc, char **argv ) {
       CHECK( *countp!=i+MAGIC, RV, return(EXIT_FAIL) );
     }
   }
-#ifdef BARRIER
   CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
-#endif
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return EXIT_PASS;
 }

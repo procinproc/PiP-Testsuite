@@ -67,7 +67,8 @@ SRCS_V2 = $(SRCS_V1) \
 	  pip_kill.c \
 	  pip_namexp.c \
 	  pip_aux.c \
-	  pip_abort.c
+	  pip_abort.c \
+	  end.c
 
 PROG_V2 = $(PROG_V1) \
 	  pip_wait_any \
@@ -84,7 +85,8 @@ PROG_V2 = $(PROG_V1) \
 	  pip_kill \
 	  pip_namexp \
 	  pip_aux \
-	  pip_abort
+	  pip_abort \
+	  end
 
 SRCS_V3 = $(SRCS_V2)
 PROG_V3 = $(PROG_V2)

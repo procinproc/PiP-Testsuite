@@ -37,8 +37,10 @@
 #include <test.h>
 
 int main( int argc, char **argv ) {
+  sigset_t 	sigset;
+  pip_barrier_t	barr, *barrp = &barr;
   char	*env;
-  int 	ntasks, ntenv, pipid;
+  int 	ntasks, ntenv, pipid, id, thrd;
   int	sig, i, core, status, err;
 
   ntasks = 0;
@@ -55,55 +57,88 @@ int main( int argc, char **argv ) {
 
   sig = 0;
   if( argc > 2 ) {
-    sig = strtol( argv[2], NULL, 10 );
+    sig = signal_number( argv[2] );
+    if( sig < 0 ) {
+      fprintf( stderr, "Unknown signal %d\n", sig );
+      return EXIT_UNTESTED;
+    }
   }
+  sigemptyset( &sigset );
+  sigaddset( &sigset, sig );
 
-  CHECK( pip_init(&pipid,&ntasks,NULL,0), RV, return(EXIT_FAIL) );
+  CHECK( pip_init(&pipid,&ntasks,(void**)&barrp,0), RV, return(EXIT_FAIL) );
+
   if( pipid == PIP_PIPID_ROOT ) {
-    status = 0;
+    int core = PIP_CPUCORE_ASIS;
+
     CHECK( pip_trywait_any(NULL,NULL), RV!=ECHILD, return(EXIT_FAIL) );
 
-    core = PIP_CPUCORE_ASIS;
-    for( i=0; i<ntasks; i++ ) {
-      pipid = i;
-      CHECK( pip_spawn(argv[0],argv,NULL,core,&pipid,NULL,NULL,NULL),
-	     RV,
-	     return(EXIT_FAIL) );
-      while( 1 ) {
-	err = pip_trywait_any( &pipid, &status );
-	if( !err ) break;
-	CHECK( err==ECHILD, !RV, return(EXIT_FAIL) );
-      }
-      CHECK( i==pipid, !RV, return(EXIT_FAIL) );
-      if( sig == 0 ) {
-	CHECK( WIFSIGNALED(status),     RV, return(EXIT_FAIL) );
-	CHECK( WIFEXITED(status),      !RV, return(EXIT_FAIL) );
-	CHECK( (WEXITSTATUS(status)==0),
-	       !RV,
+    CHECK( pip_is_threaded(&thrd), RV, return(EXIT_FAIL) );
+    if( !thrd ) {
+      CHECK( pip_barrier_init( barrp, ntasks ),       RV, return(EXIT_FAIL) );
+      for( i=0; i<ntasks; i++ ) {
+	pipid = i;
+	CHECK( pip_spawn(argv[0],argv,NULL,core,&pipid,NULL,NULL,NULL),
+	       RV,
 	       return(EXIT_FAIL) );
-      } else {
-	CHECK( WIFEXITED(status),        RV, return(EXIT_FAIL) );
-	CHECK( WIFSIGNALED(status),     !RV, return(EXIT_FAIL) );
-	CHECK( (WTERMSIG(status)==sig), !RV, return(EXIT_FAIL) );
       }
-      status = 0;
-      CHECK( pip_wait(pipid,&status),
-	     RV!=ECHILD,
-	     return(EXIT_FAIL) );
+      for( i=0; i<ntasks; i++ ) {
+	status = 0;
+	pipid  = IMPOSSIBLE_PIPID;
+	while(( err = pip_trywait_any( &pipid, &status ) ) == ECHILD );
+	CHECK( err, RV, return(EXIT_FAIL) );
+	CHECK( pipid==IMPOSSIBLE_PIPID,    RV, return(EXIT_FAIL) );
+	if( sig == 0 ) {
+	  CHECK( WIFSIGNALED(status),      RV, return(EXIT_FAIL) );
+	  CHECK( WIFEXITED(status),       !RV, return(EXIT_FAIL) );
+	  CHECK( WEXITSTATUS(status)==0,  !RV, return(EXIT_FAIL) );
+	} else {
+	  CHECK( WIFEXITED(status),        RV, return(EXIT_FAIL) );
+	  CHECK( WIFSIGNALED(status),     !RV, return(EXIT_FAIL) );
+	  CHECK( WTERMSIG(status)==sig,   !RV, return(EXIT_FAIL) );
+	}
+	status = 0;
+      }
+      CHECK( pip_trywait_any(&pipid,&status), RV!=ECHILD, return(EXIT_FAIL) );
+      CHECK( pip_barrier_fin( barrp ),        RV,         return(EXIT_FAIL) );
+
+    } else {
+      CHECK( pip_sigmask( SIG_BLOCK, &sigset, NULL ), RV, return(EXIT_FAIL) );
+      for( i=0; i<ntasks; i++ ) {
+	pipid = i;
+	CHECK( pip_spawn(argv[0],argv,NULL,core,&pipid,NULL,NULL,NULL),
+	       RV,
+	       return(EXIT_FAIL) );
+	status = -1;
+	id     = IMPOSSIBLE_PIPID;
+	while(( err = pip_trywait_any( &id, &status ) ) == ECHILD );
+	CHECK( id != pipid, RV, return(EXIT_FAIL) );
+	if( sig == 0 ) {
+	  CHECK( WIFSIGNALED(status),      RV, return(EXIT_FAIL) );
+	  CHECK( WIFEXITED(status),       !RV, return(EXIT_FAIL) );
+	  CHECK( WEXITSTATUS(status)==0,  !RV, return(EXIT_FAIL) );
+	} else {
+	  CHECK( WIFEXITED(status),        RV, return(EXIT_FAIL) );
+	  CHECK( WIFSIGNALED(status),     !RV, return(EXIT_FAIL) );
+	  CHECK( WTERMSIG(status)==sig,   !RV, return(EXIT_FAIL) );
+	}
+	status = 0;
+      }
+      CHECK( pip_trywait_any(&pipid,&status), RV!=ECHILD, return(EXIT_FAIL) );
+      CHECK( pip_barrier_fin( barrp ),        RV,         return(EXIT_FAIL) );
     }
   } else {
-    struct timespec ts;
-    ts.tv_sec  = 0;
-    ts.tv_nsec = 100 * 1000;	/* 0.1 msec */
-    nanosleep( &ts, NULL );
+    CHECK( pip_is_threaded(&thrd),          RV, return(EXIT_FAIL) );
+    if( !thrd ) {
+      CHECK( pip_barrier_wait( barrp ),     RV,        return(EXIT_FAIL) );
+    }
+    CHECK( pip_trywait_any(&pipid,&status), RV!=EPERM, return(EXIT_FAIL) );
 
-    if( sig > 0 ) {
-      if( sig != SIGSEGV ) {
-	(void) pip_kill( PIP_PIPID_SELF, sig );
-      } else {
-	intptr_t null = 0;
-	printf( "%d", *((int*)null) );
-      }
+    if( sig != SIGSEGV ) {
+      CHECK( pip_kill( PIP_PIPID_SELF, sig ), RV, return(EXIT_FAIL) );
+    } else {
+      intptr_t null = 0;
+      printf( "%d", *((int*)null) );
     }
   }
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );

@@ -38,7 +38,8 @@ int main( int argc, char **argv ) {
   const char *mode_str = NULL;
 
 #if PIP_VERSION_MAJOR > 1
-  /* newer PiP lib. allows to call PiP functions without calling pip_init() */
+  /* newer PiP lib., tasks can call any PiP functions 
+     without calling pip_init() */
   CHECK( pip_is_initialized(), 	    !RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &ntasks ), RV,	        return(EXIT_FAIL) );
   CHECK( pip_get_pipid( NULL ),	    RV, 	return(EXIT_FAIL) );
@@ -49,6 +50,7 @@ int main( int argc, char **argv ) {
 	 RV,
 	 return(EXIT_FAIL) );
 #else
+  CHECK( pip_is_initialized(), 	    !RV, 	return(EXIT_FAIL) );
   CHECK( pip_get_ntasks( &ntasks ), RV!=EPERM,	return(EXIT_FAIL) );
   CHECK( pip_get_pipid( NULL ),	    RV!=EINVAL, return(EXIT_FAIL) );
   CHECK( pip_get_pipid( &pipid ),   RV!=EPERM, 	return(EXIT_FAIL) );

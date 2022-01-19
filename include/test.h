@@ -79,6 +79,8 @@
 #define EXIT_UNSUPPORTED 6 /* not tested, this environment can't test this   */
 #define EXIT_KILLED	7  /* killed by Control-C or something               */
 
+#define IMPOSSIBLE_PIPID	(-123)
+
 #ifndef INLINE
 #define INLINE	static inline
 #endif
@@ -120,7 +122,7 @@ extern char *__progname;
 #ifndef DEBUG
 #define CHECK(F,C,A) \
   do { errno=0; long int RV=(intptr_t)(F);	\
-    if(C) { PRINT_FLE(#F,RV); A; } } while(0)
+    if(C) { PRINT_FLE((#F ":" #C),RV); A; } } while(0)
 #else
 #define CHECK(F,C,A)							\
   do {									\
@@ -174,44 +176,62 @@ INLINE void dump_env( char *tag, char **envv, int nomore ) {
   }
 }
 
-INLINE const char *signal_name( int sig ) {
-  const char *signam_tab[] = {
-    "(signal0)",		/* 0 */
-    "SIGHUP",			/* 1 */
-    "SIGINT",			/* 2 */
-    "SIGQUIT",			/* 3 */
-    "SIGILL",			/* 4 */
-    "SIGTRAP",			/* 5 */
-    "SIGABRT",			/* 6 */
-    "SIGBUS",			/* 7 */
-    "SIGFPE",			/* 8 */
-    "SIGKILL",			/* 9 */
-    "SIGUSR1",			/* 10 */
-    "SIGSEGV",			/* 11 */
-    "SIGUSR2",			/* 12 */
-    "SIGPIPE",			/* 13 */
-    "SIGALRM",			/* 14 */
-    "SIGTERM",			/* 15 */
-    "SIGSTKFLT",		/* 16 */
-    "SIGCHLD",			/* 17 */
-    "SIGCONT",			/* 18 */
-    "SIGSTOP",			/* 19 */
-    "SIGTSTP",			/* 20 */
-    "SIGTTIN",			/* 21 */
-    "SIGTTOU",			/* 22 */
-    "SIGURG",			/* 23 */
-    "SIGXCPU",			/* 24 */
-    "SIGXFSZ",			/* 25 */
-    "SIGVTALRM",		/* 26 */
-    "SIGPROF",			/* 27 */
-    "SIGWINCH",			/* 28 */
-    "SIGIO",			/* 29 */
-    "SIGPWR",			/* 30 */
-    "SIGSYS",			/* 31 */
-    "(not a signal)"
-  };
-  if( sig < 0 || sig > 31 ) return signam_tab[32];
+const char *signam_tab[] = {
+  "(signal0)",		/* 0 */
+  "SIGHUP",		/* 1 */
+  "SIGINT",		/* 2 */
+  "SIGQUIT",		/* 3 */
+  "SIGILL",		/* 4 */
+  "SIGTRAP",		/* 5 */
+  "SIGABRT",		/* 6 */
+  "SIGBUS",		/* 7 */
+  "SIGFPE",		/* 8 */
+  "SIGKILL",		/* 9 */
+  "SIGUSR1",		/* 10 */
+  "SIGSEGV",		/* 11 */
+  "SIGUSR2",		/* 12 */
+  "SIGPIPE",		/* 13 */
+  "SIGALRM",		/* 14 */
+  "SIGTERM",		/* 15 */
+  "SIGSTKFLT",		/* 16 */
+  "SIGCHLD",		/* 17 */
+  "SIGCONT",		/* 18 */
+  "SIGSTOP",		/* 19 */
+  "SIGTSTP",		/* 20 */
+  "SIGTTIN",		/* 21 */
+  "SIGTTOU",		/* 22 */
+  "SIGURG",		/* 23 */
+  "SIGXCPU",		/* 24 */
+  "SIGXFSZ",		/* 25 */
+  "SIGVTALRM",		/* 26 */
+  "SIGPROF",		/* 27 */
+  "SIGWINCH",		/* 28 */
+  "SIGIO",		/* 29 */
+  "SIGPWR",		/* 30 */
+  "SIGSYS",		/* 31 */
+  NULL
+};
+
+static const char *signal_name( int sig ) {
+  if( sig < 0 || sig > 31 ) return  "(not a signal)";
   return signam_tab[sig];
+}
+
+#define SIGNAM_LEN	(16)
+static int signal_number( char *signame ) {
+  char name[SIGNAM_LEN], *p;
+  int i;
+
+  if( strncasecmp( signame, "SIG", 3 ) == 0 ) {
+    strncpy( name, signame, SIGNAM_LEN );
+  } else {
+    p = stpcpy( name, "SIG" );
+    (void) strncpy( p, signame, SIGNAM_LEN-3 );
+  }
+  for( i=0; signam_tab[i]!=NULL; i++ ) {
+    if( strcasecmp( name, signam_tab[i] ) == 0 ) return i;
+  }
+  return -1;
 }
 
 static void signal_watcher( int sig, siginfo_t *siginfo, void *dummy ) {

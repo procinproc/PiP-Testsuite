@@ -76,7 +76,8 @@ int main( int argc, char **argv ) {
   /* before calling pip_init(), following tests must fail */
   pipid = PIP_PIPID_ANY;
   CHECK( pip_task_spawn( NULL, PIP_CPUCORE_ASIS, 0, &pipid, NULL ),
-	 RV!=EPERM,
+	 RV!=EPERM && 		/* PiP version <  2.3 */
+	 RV!=EINVAL,		/* PiP version >= 2.3 */
 	 return(EXIT_FAIL) );
 
   memset( &prog, 0, sizeof(prog) );

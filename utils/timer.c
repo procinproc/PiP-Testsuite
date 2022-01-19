@@ -183,7 +183,6 @@ int main( int argc, char **argv ) {
   if( ( fp = popen( PIPLIB " --debug  2>/dev/null", "r" ) ) != NULL ) {
     if( fread( rbuf, 1, sizeof(rbuf), fp ) > 0 ) {
       if( strncmp( rbuf, yes, strlen(yes) ) == 0 ) {
-	printf( "DEBUG (%s)\n", rbuf );
 	time *= DEBUG_SCALE;
       }
     }

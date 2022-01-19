@@ -114,7 +114,7 @@ int main( int argc, char **argv ) {
 	   RV,
 	   return(EXIT_FAIL) );
 
-    CHECK( pip_wait( -123, &status ),  RV!=EINVAL, return(EXIT_FAIL) );
+    CHECK( pip_wait( -123, &status ),  RV!=ERANGE, return(EXIT_FAIL) );
     CHECK( pip_wait( pipid, &status ), RV,         return(EXIT_FAIL) );
 
     if( WIFEXITED( status ) ) {
