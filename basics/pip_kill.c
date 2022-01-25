@@ -132,8 +132,8 @@ int main( int argc, char **argv ) {
   CHECK( block_sigusrs(), RV, exit(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
     /* illegal cases */
-    CHECK( pip_kill( -1, SIGUSR1 ),     RV!=ERANGE, exit(EXIT_FAIL) );
-    CHECK( pip_kill( ntasks, SIGUSR1 ), RV!=ERANGE, exit(EXIT_FAIL) );
+    CHECK( pip_kill( -1, SIGUSR1 ),     RV!=ERANGE&&RV!=EINVAL, exit(EXIT_FAIL) );
+    CHECK( pip_kill( ntasks, SIGUSR1 ), RV!=ERANGE&&RV!=EINVAL, exit(EXIT_FAIL) );
     CHECK( pip_kill( 0,  SIGUSR1 ),     RV!=ESRCH,  exit(EXIT_FAIL) );
     /* legal case */
     memset( expp, 0, sizeof(exp) );

@@ -114,8 +114,8 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   timer_actual ++;
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
-      fprintf( stderr, "Timer expired (%d/%d sec) !!\n", 
-	       timer_period, timer_actual );
+      fprintf( stderr, "[%s] Timer expired (%d/%d sec) !!\n", 
+	       prog, timer_period, timer_actual );
       unset_timer();
       timedout = 1;
       cleanup();
@@ -206,14 +206,15 @@ int main( int argc, char **argv ) {
     unset_timer();
 
     if( rv == -1 ) {
-      fprintf( stderr, "'%s' failed to wait: %s\n", target, strerror(errno) );
+      fprintf( stderr, "[%s] '%s' failed to wait: %s\n", 
+	       prog, target, strerror(errno) );
     } else if( WIFEXITED( status ) ) {
       exit( WEXITSTATUS( status ) );
     } else if( WIFSIGNALED( status ) ) {
       if( !timedout ) {
 	int sig = WTERMSIG( status );
-	fprintf( stderr, "'%s' terminated due to signal (%s)\n",
-		 target, strsignal(sig) );
+	fprintf( stderr, "[%s] '%s(%d)' terminated due to signal (%s)\n",
+		 prog, target, pid, strsignal(sig) );
       }
     }
     exit( EXIT_UNRESOLVED );
