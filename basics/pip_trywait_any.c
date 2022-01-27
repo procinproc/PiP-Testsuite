@@ -130,6 +130,7 @@ int main( int argc, char **argv ) {
     }
   } else {
     CHECK( pip_is_threaded(&thrd),          RV, return(EXIT_FAIL) );
+    thrd = 0;
     if( !thrd ) {
       CHECK( pip_barrier_wait( barrp ),     RV,        return(EXIT_FAIL) );
     }

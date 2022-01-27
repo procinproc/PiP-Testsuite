@@ -72,6 +72,7 @@ int main( int argc, char **argv ) {
     CHECK( pip_trywait(0,NULL),                 RV!=ECHILD,  return(EXIT_FAIL) );
 
     CHECK( pip_is_threaded(&thrd),              RV, return(EXIT_FAIL) );
+    thrd = 0;
     if( !thrd ) {
       CHECK( pip_barrier_init( barrp, ntasks ), RV, return(EXIT_FAIL) );
       for( i=0; i<ntasks; i++ ) {
@@ -119,6 +120,7 @@ int main( int argc, char **argv ) {
     }
   } else {
     CHECK( pip_is_threaded(&thrd),      RV,      return(EXIT_FAIL) );
+    thrd = 0;
     if( !thrd ) {
       CHECK( pip_barrier_wait( barrp ), RV,      return(EXIT_FAIL) );
     }
