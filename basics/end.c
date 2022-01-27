@@ -69,17 +69,17 @@ int check( struct args *argp, int nt, int test ) {
     case 6:
       if( argp[i].before != 1 || argp[i].after != 1 ) {
 	if( argp[i].before == 0 ) {
-	  fprintf( stderr, "[%d] before was not called", i );
+	  fprintf( stderr, "[%d] before was not called\n", i );
 	  ret = 1;
 	} else if( argp[i].before > 1 ) {
-	  fprintf( stderr, "[%d] before was called more than once", i );
+	  fprintf( stderr, "[%d] before was called more than once\n", i );
 	  ret = 1;
 	}
 	if( argp[i].after == 0 ) {
-	  fprintf( stderr, "[%d] after was not called", i );
+	  fprintf( stderr, "[%d] after was not called\n", i );
 	  ret = 1;
 	} else if( argp[i].after > 1 ) {
-	  fprintf( stderr, "[%d] after was called more than once", i );
+	  fprintf( stderr, "[%d] after was called more than once\n", i );
 	  ret = 1;
 	}
       }
@@ -87,19 +87,19 @@ int check( struct args *argp, int nt, int test ) {
     case 3:			/* _exit */
     case 7:			/* fin-_exit */
       if( argp[i].before == 0 ) {
-	fprintf( stderr, "[%d] before was not called", i );
+	fprintf( stderr, "[%d] before was not called\n", i );
 	ret = 1;
       } else if( argp[i].before > 1 ) {
-	fprintf( stderr, "[%d] before was called more than once", i );
+	fprintf( stderr, "[%d] before was called more than once\n", i );
 	ret = 1;
       }
       if( argp[i].after != 0 ) {
-	fprintf( stderr, "[%d] after ???", i );
+	fprintf( stderr, "[%d] after ???\n", i );
 	ret = 1;
       }
       break;
     default:
-      fprintf( stderr, "[%d] ???", i );
+      fprintf( stderr, "[%d] ???\n", i );
       ret = 1;
       break;
     }
