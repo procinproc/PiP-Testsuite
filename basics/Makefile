@@ -93,8 +93,10 @@ PROG_V3 = $(PROG_V2)
 
 PROG_TEST = prog-noexec \
 	    prog-nopie \
-	    prog-pie \
-	    prog-nordynamic
+	    prog-nordynamic \
+	    prog-nopipcc \
+	    prog-nopthread \
+	    prog-pipcc
 
 PROG_ALL = $(PROG_V3) $(PROG_TEST)
 
@@ -112,12 +114,20 @@ prog-noexec : prog.c $(DEPS) Makefile
 prog-nopie : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 prog.c -o prog-nopie
 
-prog-pie : prog.c $(DEPS) Makefile
-	$(PIPCC) -g -O2 prog.c -o prog-pie
-	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-pie; fi
-
 prog-nordynamic : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic
+	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-nopthread; fi
+
+prog-nopthread : prog.c $(DEPS) Makefile
+	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-nopthread
+	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-nopthread; fi
+
+prog-nopipcc : prog.c $(DEPS) Makefile
+	$(CC) -g -O2 -fpie -pie -rdynamic -pthread prog.c -o prog-nopipcc
+	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-nopipcc; fi
+
+prog-pipcc : prog.c $(DEPS) Makefile
+	$(PIPCC) -g -O2 prog.c -o prog-pipcc
 
 debug :: $(DEPS)
 	CPPFLAGS="-DDEBUG" $(MAKE) all;

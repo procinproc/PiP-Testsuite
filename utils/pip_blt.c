@@ -64,8 +64,8 @@ int main( int argc, char **argv ) {
   set_sigint_watcher();
 
   if( argc < 4 ) return EXIT_UNTESTED;
-  CHECK( access( argv[3], X_OK ),     RV, return(EXIT_UNTESTED) );
-  CHECK( pip_check_pie( argv[3], 1 ), RV, return(EXIT_UNTESTED) );
+  CHECK( access( argv[3], X_OK  ), RV, return(EXIT_UNTESTED) );
+  CHECK( pip_check_pie( argv[3] ), RV, return(EXIT_UNTESTED) );
 
   nacts = strtol( argv[1], NULL, 10 );
   CHECK( nacts,  RV<0||RV>NTASKS,  return(EXIT_UNTESTED) );

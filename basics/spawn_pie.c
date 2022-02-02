@@ -69,7 +69,7 @@ int main( int argc, char **argv ) {
 		   NULL, NULL, NULL );
   /* this MAY succeed depending on system */
   CHECK( RV=err,
-	 (RV!=ELIBEXEC && RV!=0),
+	 !(RV==ELIBEXEC || RV==0),
 	 return(EXIT_FAIL) );
   if( !err ) {
     CHECK( wait_termination(), RV, return(EXIT_FAIL) );
@@ -80,7 +80,7 @@ int main( int argc, char **argv ) {
 		   NULL, NULL, NULL );
   /* this MAY succeed depending on system */
   CHECK( RV=err,
-	 (RV!=ENOEXEC && RV!=0),
+	 !(RV==ENOEXEC || RV==0),
 	 return(EXIT_FAIL) );
   if( !err ) {
     CHECK( wait_termination(), RV, return(EXIT_FAIL) );
@@ -90,13 +90,32 @@ int main( int argc, char **argv ) {
   err = pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
 		   NULL, NULL, NULL );
   CHECK( RV=err,
-	 (RV!=ENOENT && RV!=0),
+	 !(RV==ENOENT || RV==0),
 	 return(EXIT_FAIL) );
   if( !err ) {
     CHECK( wait_termination(), RV, return(EXIT_FAIL) );
   }
 
-  nargv[0] = "./prog-pie";	/* correct one */
+#if PIP_VERSION_MAJOR > 1
+  nargv[0] = "./prog-nopthread";
+  err = pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
+		   NULL, NULL, NULL );
+  CHECK( RV=err,
+	 !(RV==ELIBBAD || RV==0),
+	 return(EXIT_FAIL) );
+  if( !err ) {
+    CHECK( wait_termination(), RV, return(EXIT_FAIL) );
+  }
+
+  nargv[0] = "./prog-nopipcc";
+  CHECK( pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
+		       NULL, NULL, NULL ),
+	 RV,
+	 return(EXIT_FAIL) );
+  CHECK( wait_termination(), RV, return(EXIT_FAIL) );
+#endif
+
+  nargv[0] = "./prog-pipcc";	/* correct one */
   CHECK( pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
 		       NULL, NULL, NULL ),
 	 RV,

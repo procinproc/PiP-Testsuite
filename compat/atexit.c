@@ -33,13 +33,19 @@
 
 #include <test.h>
 
+pid_t pid;
+
 void exit_hook( void ) {
   printf( "[%d] exit_hook is called\n", getpid() );
-  _exit( 0 );
+  CHECK( pid!=getpid(), RV, _exit(EXIT_FAIL) );
 }
 
-int main() {
-  printf( "[%d] main\n", getpid() );
-  atexit( exit_hook );
-  exit( EXIT_FAIL );
+int main( int argc, char **argv ) {
+  pid = getpid();
+  printf( "[%d] main\n", pid );
+  CHECK( atexit( exit_hook ), RV, return( EXIT_FAIL ) );
+  if( argc > 1 && strcasecmp( argv[1], "exit" ) == 0 ) {
+    exit( 0 );
+  }
+  return 0;
 }

@@ -31,6 +31,9 @@
  * $
  */
 
-int main() {
+#include <stdio.h>
+
+int main( int argc, char **argv ) {
+  printf( "[%s] Hello!\n", argv[0] );
   return 0;
 }

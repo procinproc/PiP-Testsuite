@@ -86,7 +86,7 @@ int spawn_tasks( int ntasks, char **argv ) {
     if( WIFEXITED( status ) ) {
       extval = WEXITSTATUS( status );
       if( extval ) {
-	fprintf( stderr, "Task[%d] returns %d\n", i, extval );
+	fprintf( stderr, "%s Task[%d] returns %d\n", argv[0], i, extval );
       }
     } else {
       extval = EXIT_UNRESOLVED;
@@ -109,9 +109,9 @@ int main( int argc, char **argv ) {
   set_sigint_watcher();
 
   if( argc < 3 ) return EXIT_UNTESTED;
-  CHECK( access( argv[2], X_OK ),     RV, return(EXIT_UNTESTED) );
+  CHECK( access( argv[2], X_OK  ), RV, return(EXIT_UNTESTED) );
 #if PIP_VERSION_MAJOR > 1
-  CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
+  CHECK( pip_check_pie( argv[2] ), RV, return(EXIT_UNTESTED) );
 #endif
 
   ntasks = strtol( argv[1], NULL, 10 );
