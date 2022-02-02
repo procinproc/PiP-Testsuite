@@ -65,7 +65,11 @@ int main( int argc, char **argv ) {
 
   if( argc < 4 ) return EXIT_UNTESTED;
   CHECK( access( argv[3], X_OK  ), RV, return(EXIT_UNTESTED) );
-  CHECK( pip_check_pie( argv[3] ), RV, return(EXIT_UNTESTED) );
+#if PIP_VERSION_MAJOR < 3
+  CHECK( pip_check_pie( argv[2] ), RV, return(EXIT_UNTESTED) );
+#else
+  CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
+#endif
 
   nacts = strtol( argv[1], NULL, 10 );
   CHECK( nacts,  RV<0||RV>NTASKS,  return(EXIT_UNTESTED) );
