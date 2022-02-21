@@ -100,7 +100,7 @@ int spawn_tasks( int ntasks, char **argv ) {
 
 int main( int argc, char **argv ) {
   int ntasks, ntenv, status;
-  int i, c, nc, err;
+  int i, c, nc, extval;
   pid_t pid;
   char *prog, *env;
 
@@ -109,12 +109,6 @@ int main( int argc, char **argv ) {
   set_sigint_watcher();
 
   if( argc < 3 ) return EXIT_UNTESTED;
-  CHECK( access( argv[2], X_OK  ), RV, return(EXIT_UNTESTED) );
-#if PIP_VERSION_MAJOR < 3
-  CHECK( pip_check_pie( argv[2] ), RV, return(EXIT_UNTESTED) );
-#else
-  CHECK( pip_check_pie( argv[2], 1 ), RV, return(EXIT_UNTESTED) );
-#endif
 
   ntasks = strtol( argv[1], NULL, 10 );
   CHECK( ntasks, RV<=0||RV>NTASKS, return(EXIT_UNTESTED) );
@@ -124,7 +118,21 @@ int main( int argc, char **argv ) {
   }
 
   if( ( pid = fork() ) == 0 ) {
-    return spawn_tasks( ntasks, &argv[2] );
+    extval = spawn_tasks( ntasks, &argv[2] );
+    switch( extval ) {
+    case EXIT_PASS:
+    case EXIT_FAIL:
+    case EXIT_XPASS:
+    case EXIT_XFAIL:
+    case EXIT_UNRESOLVED:
+    case EXIT_UNTESTED:
+    case EXIT_UNSUPPORTED:
+    case EXIT_KILLED:
+      break;
+    default:
+      extval = EXIT_FAIL;
+    }
+    return extval;
   } else if( pid < 0 ) {
     fprintf( stderr, "%s: Unable to fork (%d)\n", prog, errno );
     return EXIT_UNTESTED;

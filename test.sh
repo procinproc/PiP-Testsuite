@@ -111,21 +111,6 @@ if ! [ -f ${dir_real}/config.sh ]; then
 fi
 . $dir_real/config.sh
 
-if [ ${PIP_VERSION_MAJOR} -gt 1 ]; then
-    if ! [ -x ${LIBPIPSO} ]; then
-	echo "$base: Unable to exec ${LIBPIPSO}"
-	exit 1
-    fi
-    LIBPIP_VERSION=`${MCEXEC} ${LIBPIPSO} --version`
-    if [ x"${LIBPIP_VERSION}" == x ]; then
-	echo "$base: Failed to exec ${MCEXEC} ${LIBPIPSO}"
-	exit 1
-    elif [ "${LIBPIP_VERSION}" != "${PIP_VERSION}" ]; then
-	echo "$base: Version miss-match: libpip.so:${LIBPIP_VERSION} configure:${PIP_VERSION}"
-	exit 1
-    fi
-fi
-
 path=.:${dir_real}/utils:${dir_real}/basics:${PIP_DIR}/bin
 if [ x"$SUMMARY_FILE" = x ]; then
     export PATH=${path}:$PATH
