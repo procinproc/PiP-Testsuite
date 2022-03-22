@@ -98,8 +98,8 @@ static int test_pip_init_preload( char **argv ) {
   return EXIT_PASS;
 }
 
-#ifdef PIP_MODE_PROCESS_GOT
 static int test_pip_init_got( char **argv ) {
+#ifdef PIP_MODE_PROCESS_GOT
   char *env = getenv( PIP_ENV_MODE );
   int pipid, ntasks;
   void *exp;
@@ -115,9 +115,9 @@ static int test_pip_init_got( char **argv ) {
 	   RV,
 	   return(EXIT_FAIL) );
   }
+#endif
   return EXIT_PASS;
 }
-#endif
 
 static int test_twice( char **argv ) {
   int pipid, ntasks;
@@ -229,9 +229,7 @@ int main( int argc, char **argv ) {
   } tab[] = {
     { "null", 			test_pip_init_null },
     { "preload", 		test_pip_init_preload },
-#ifdef PIP_MODE_PROCESS_GOT
     { "got", 			test_pip_init_got },
-#endif
     { "twice", 			test_twice },
     { "ntask_is_zero", 		test_ntask_is_zero },
     { "ntask_too_big", 		test_ntask_too_big },

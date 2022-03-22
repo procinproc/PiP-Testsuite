@@ -33,6 +33,29 @@
 
 #include <test.h>
 
+static void fill_cpuset( cpu_set_t *fullset ) {
+  cpu_set_t zero, save;
+  int i, n;
+
+  CHECK( sched_getaffinity( 0, sizeof(zero), &save ), RV, exit(errno) );
+  CPU_ZERO( fullset );
+  n = sizeof(cpu_set_t) * 8;
+  for( i=0; i<n; i++ ) {
+    CPU_ZERO( &zero );
+    CPU_SET( i, &zero );
+    if( sched_setaffinity( 0, sizeof(zero), &zero ) == 0 ) {
+      CPU_SET( i, fullset );
+    }
+  }
+  n = sizeof(cpu_set_t) / sizeof(int);
+  for( i=0; i<n; i++ ) {
+    unsigned int cpu = ((unsigned int*)(fullset))[i];
+    if( cpu != 0 ) fprintf( stderr, "CPUSET[%d] 0x%x\n", i, cpu );
+  }
+  fprintf( stderr, "CPU count: %d\n", CPU_COUNT( fullset ) );
+  CHECK( sched_setaffinity( 0, sizeof(zero), &save ), RV, exit(errno) );
+}
+
 static int nth_core( int nth, cpu_set_t *cpuset ) {
   int i, j, ncores;
   ncores = CPU_COUNT( cpuset );
@@ -46,11 +69,11 @@ static int nth_core( int nth, cpu_set_t *cpuset ) {
 }
 
 int main( int argc, char **argv ) {
-  cpu_set_t	init_set, *init_setp, cpuset;
+  cpu_set_t	init_set, *init_setp, cpuset, cpufull;
   void		*exp;
   char		*env;
   int 		ntasks, hntasks, ntenv, pipid;
-  int		core, i, extval = 0;
+  int		core, i, n, extval = 0;
 
   ntasks = 0;
   if( argc > 1 ) {
@@ -66,15 +89,14 @@ int main( int argc, char **argv ) {
   hntasks = ntasks / 2;
   hntasks = ( hntasks < 1 ) ? 1 : hntasks;
 
+  fill_cpuset( &cpufull );
+
   init_setp = &init_set;
   exp = init_setp;
   CHECK( pip_init(&pipid,&ntasks,(void**)&exp,0), RV, return(EXIT_FAIL) );
   if( pipid == PIP_PIPID_ROOT ) {
-    CHECK( sched_getaffinity( 0, sizeof(init_set), init_setp ),
-	   RV,
-	   return(EXIT_UNRESOLVED) );
     for( i=0; i<hntasks; i++ ) {
-      core = nth_core( i, init_setp );
+      core = nth_core( i, &cpufull );
       pipid = i;
       printf( ">> PIPID:%d core:%d\n", pipid, core );
       CHECK( pip_spawn(argv[0],argv,NULL,core,&pipid,NULL,NULL,NULL),
@@ -82,14 +104,14 @@ int main( int argc, char **argv ) {
 	     return(EXIT_FAIL) );
     }
     for( i=hntasks; i<ntasks; i++ ) {
-      core = nth_core( i, init_setp );
+      core = nth_core( i, &cpufull );
       CPU_ZERO( &cpuset );
       CPU_SET( core, &cpuset );
       CHECK( sched_setaffinity( 0, sizeof(cpuset), &cpuset ),
 	     RV,
 	     return(EXIT_UNRESOLVED) );
       pipid = i;
-      printf( ">> PIPID:%d core:%d ++\n", pipid, core );
+      printf( ">> PIPID:%d core:%d\n", pipid, core );
       CHECK( pip_spawn(argv[0],argv,NULL,PIP_CPUCORE_ASIS,&pipid,NULL,NULL,NULL),
 	     RV,
 	     return(EXIT_FAIL) );
@@ -109,10 +131,17 @@ int main( int argc, char **argv ) {
 
   } else {
     init_setp = (cpu_set_t*) exp;
-    core = nth_core( pipid, init_setp );
+    core = nth_core( pipid, &cpufull );
     CHECK( sched_getaffinity( 0, sizeof(cpuset), &cpuset ),
 	   RV,
 	   return(EXIT_FAIL) );
+    if( !CPU_ISSET( core, &cpuset ) ) {
+      n = sizeof( cpuset ) / sizeof( int );
+      for( i=0; i<n; i++ ) {
+	unsigned int cpu = ((unsigned int*)(&cpuset))[i];
+	if( cpu != 0 ) fprintf( stderr, "CPUSET[%d] 0x%x (core:%d)\n", i, cpu, core );
+      }
+    }
     CHECK( CPU_ISSET( core, &cpuset ),
 	   !RV,
 	   return(EXIT_FAIL) );

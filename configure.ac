@@ -70,7 +70,7 @@ else
    AC_MSG_ERROR([--with-pip doesn't seem to be a PiP directory])
 fi
 AC_MSG_RESULT([${with_pip}])
-AC_MSG_RESULT([PIP_VERSION_MAJOR=${pip_version_major}])
+AC_MSG_RESULT([PIP_VERSION=${pip_version}])
 
 AC_MSG_CHECKING([for pip-gdb installation])
 AC_ARG_WITH([pipgdb],

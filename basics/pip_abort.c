@@ -117,7 +117,7 @@ int main( int argc, char **argv ) {
       CHECK( ( WIFSIGNALED(status) && WTERMSIG(status) == SIGABRT ), 
 	     !RV, return(EXIT_FAIL) );
     }
-  } else {
+  } else {			/* PiP tasks */
     CHECK( pip_init(&pipid,&ntasks,(void**)&expp,0), RV, return(EXIT_FAIL) );
     CHECK( pthread_barrier_wait( &expp->barr ),
 	   (RV!=0&&RV!=PTHREAD_BARRIER_SERIAL_THREAD), return(EXIT_FAIL) );

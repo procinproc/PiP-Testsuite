@@ -44,7 +44,7 @@ struct args {
 int before_hook( void *args ) {
   struct args *argp = args;
   int pipid;
-  printf( "[%d/%d] Before called\n", getpid(), argp->pipid );
+  fprintf( stderr, "[%d/%d] Before called\n", getpid(), argp->pipid );
   (argp->before) ++;
   return 0;
 }
@@ -52,7 +52,7 @@ int before_hook( void *args ) {
 int after_hook( void *args ) {
   struct args *argp = args;
   int pipid;
-  printf( "[%d/%d] After called\n", getpid(), argp->pipid );
+  fprintf( stderr, "[%d/%d] After called\n", getpid(), argp->pipid );
   (argp->after) ++;
   return 0;
 }
@@ -171,8 +171,8 @@ int main( int argc, char **argv ) {
 		       before_hook,after_hook,&argp[i]),
 	     RV,
 	     return(EXIT_FAIL) );
-    }
-    for( i=0; i<ntasks; i++ ) {
+      //    }
+      //    for( i=0; i<ntasks; i++ ) {
       int status;
       CHECK( pip_wait_any( NULL, &status ), RV, return(EXIT_FAIL) );
       if( WIFEXITED( status ) ) {
@@ -210,7 +210,7 @@ int main( int argc, char **argv ) {
     }
 
   } else {
-    CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
+    //CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
     switch( end_tk ) {
     case 0:
       break;

@@ -116,7 +116,7 @@ prog-nopie : prog.c $(DEPS) Makefile
 
 prog-nordynamic : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 -fpie -pie prog.c -o prog-nordynamic
-	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-nopthread; fi
+	if [ $(PIP_VERSION_MAJOR) -gt 1 ]; then $(PIP_UNPIE) prog-nordynamic; fi
 
 prog-nopthread : prog.c $(DEPS) Makefile
 	$(CC) -g -O2 -fpie -pie -rdynamic prog.c -o prog-nopthread

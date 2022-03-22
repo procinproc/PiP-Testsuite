@@ -83,7 +83,11 @@ int main( int argc, char **argv ) {
 	 !(RV==ENOEXEC || RV==0),
 	 return(EXIT_FAIL) );
   if( !err ) {
+#ifndef PIP_HAVE_LDPIP
     CHECK( wait_termination(), RV, return(EXIT_FAIL) );
+#else
+    CHECK( wait_termination(), RV!=ENOEXEC, return(EXIT_FAIL) );
+#endif
   }
 
   nargv[0] = "prog-pie";	/* not a path (no slash) */
