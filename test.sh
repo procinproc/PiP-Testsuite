@@ -284,7 +284,7 @@ case $# in
 	done
 	if [ X"${run_test_L}${run_test_G}${run_test_C}${run_test_T}" = X ]; then
 	    if ${CLONE_READY}; then
-		pip_mode_list="L G C T";
+		pip_mode_list="L C G T";
 	    else
 		pip_mode_list="T";
 	    fi
@@ -346,8 +346,8 @@ fi
 
 # check whether each $PIP_MODE is testable or not
 run_test_L=''
-run_test_G=''
 run_test_C=''
+run_test_G=''
 run_test_T=''
 if [ x"${SUMMARY_FILE}" = x ]; then
     for pip_mode in $pip_mode_list; do
@@ -362,17 +362,17 @@ if [ x"${SUMMARY_FILE}" = x ]; then
 			echo "testing ${pip_mode} - ${pip_mode_name}";;
 		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
 		esac;;
-	    G)
-		case $mode_actual in
-		    process:got) 
-			run_test_G='G';
-			echo "testing ${pip_mode} - ${pip_mode_name}";;
-		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
-		esac;;
 	    C)
 		case $mode_actual in
 		    process:pipclone) 
 			run_test_C='C';
+			echo "testing ${pip_mode} - ${pip_mode_name}";;
+		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
+		esac;;
+	    G)			# obsolete from v2.4
+		case $mode_actual in
+		    process:got) 
+			run_test_G='G';
 			echo "testing ${pip_mode} - ${pip_mode_name}";;
 		    *)  echo >&2 "WARNING: $pip_mode_name is not testable";;
 		esac;;

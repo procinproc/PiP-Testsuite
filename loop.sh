@@ -74,7 +74,7 @@ print_usage() {
     echo >&2 "    -A: all PiP execution modes (default)";
     echo >&2 "    -P: process modes";
     echo >&2 "    -L: process:preload modes";
-    echo >&2 "    -C: process:clone modes";
+    echo >&2 "    -C: process:pipclone modes";
     echo >&2 "    -G: process:got modes";
     echo >&2 "    -T: pthread modes";
     echo >&2 "    -N: not specifyng execution mode";
