@@ -125,5 +125,6 @@ AC_CONFIG_FILES([
 	release/version.conf
 	build/config.mk
 	config.sh
+	utils/pip_mode_check.sh
 ])
 AC_OUTPUT

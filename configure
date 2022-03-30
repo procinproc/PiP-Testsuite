@@ -3201,7 +3201,7 @@ python=`which ${PYTHON}`
 
 # Checks for library functions.
 
-ac_config_files="$ac_config_files release/version.conf build/config.mk config.sh"
+ac_config_files="$ac_config_files release/version.conf build/config.mk config.sh utils/pip_mode_check.sh"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -3912,6 +3912,7 @@ do
     "release/version.conf") CONFIG_FILES="$CONFIG_FILES release/version.conf" ;;
     "build/config.mk") CONFIG_FILES="$CONFIG_FILES build/config.mk" ;;
     "config.sh") CONFIG_FILES="$CONFIG_FILES config.sh" ;;
+    "utils/pip_mode_check.sh") CONFIG_FILES="$CONFIG_FILES utils/pip_mode_check.sh" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac

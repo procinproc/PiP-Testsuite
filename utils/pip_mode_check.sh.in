@@ -1,3 +1,4 @@
+#!/bin/sh
 
 # $PIP_license: <Simplified BSD License>
 # Redistribution and use in source and binary forms, with or without
@@ -30,64 +31,9 @@
 # $Author: Atsushi Hori (R-CCS) mailto: ahori@riken.jp or ahori@me.com
 # $
 
-top_builddir = ..
-top_srcdir = $(top_builddir)
-srcdir = .
+PIP_DIR=@with_pip@
 
-include $(top_srcdir)/build/var.mk
-include $(top_srcdir)/build/config.mk
+PIP_BINDIR=${PIP_DIR}/bin
 
-CWD = $(shell pwd)
-CPPFLAGS += -I../include -DCWD=\"$(CWD)\" -DPIPS=\"$(PIPS)\"
-
-SRCS_V1 = dlmopen_count.c ompnumthread.c timer.c inf.c \
-	pip_task.c check_ptrace.c clone_check.c
-SRCS_V2 = $(SRCS_V1)
-SRCS_V3 = $(SRCS_V2) pip_blt.c
-
-PROG_V1 = dlmopen_count ompnumthread timer inf pip_mode_check \
-	pip_task check_ptrace clone_check
-
-PROG_V2 = $(PROG_V1)
-PROG_V3 = $(PROG_V2) pip_blt
-
-PROG_ALL = $(PROG_V3)
-
-SRCS = $(SRCS_V$(PIP_VERSION_MAJOR))
-PROGRAMS = $(PROG_V$(PIP_VERSION_MAJOR))
-
-OPTS = -g -O2
-
-include $(top_srcdir)/build/rule.mk
-
-all: $(PROGRAMS)
-
-clone_check: clone_check.c $(DEPS) Makefile
-	$(CC) $(CPPFLAGS) -I$(PIP_DIR)/include $< -o $@
-
-dlmopen_count: dlmopen_count.c $(DEPS) Makefile
-	$(PIPCC) $(OPTS) $(CPPFLAGS) $< -o $@
-
-ompnumthread: ompnumthread.c $(DEPS) Makefile
-	$(CC) $(OPTS) -fopenmp -openmp $< -o $@
-
-timer: timer.c $(DEPS) Makefile
-	$(CC) $(OPTS) $(CPPFLAGS) -DPIPLIB=\"$(PIPLIB)\" $< -o $@
-
-pip_mode_check : pip_mode_check.sh
-	cp $< $@
-	chmod +x $@
-
-pip_task : pip_task.c $(DEPS) Makefile
-	$(PIPCC) $(OPTS) $(CPPFLAGS) --piproot $< -o $@
-
-inf : inf.c $(DEPS) Makefile
-	$(PIPCC) $(OPTS) $(CPPFLAGS) $< -o $@
-
-TEST_LIST = test-v$(PIP_VERSION_MAJOR).list
-
-test: all
-	../test.sh $(TEST_LIST)
-
-post-clean-hook:
-	$(RM) $(PROG_ALL)
+export PIP_NODEBUG=1
+exec ${PIP_BINDIR}/pip-mode $1 ${PIP_BINDIR}/printpipmode 2>/dev/null 
