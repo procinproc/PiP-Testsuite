@@ -352,8 +352,7 @@ run_test_T=''
 if [ x"${SUMMARY_FILE}" = x ]; then
     for pip_mode in $pip_mode_list; do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	mode_actual=`${MCEXEC} ${PIP_MODE_CMD} -${pip_mode} pip_mode_check \
-		2>/dev/null`
+	mode_actual=`${MCEXEC} pip_mode_check -${pip_mode}`
 	case $pip_mode in
 	    L)
 		case $mode_actual in
@@ -388,8 +387,7 @@ if [ x"${SUMMARY_FILE}" = x ]; then
 else
     for pip_mode in $pip_mode_list; do
 	eval 'pip_mode_name=$pip_mode_name_'${pip_mode}
-	mode_actual=`${MCEXEC} ${PIP_MODE_CMD} -${pip_mode} pip_mode_check \
-		2>/dev/null`
+	mode_actual=`${MCEXEC} pip_mode_check -${pip_mode}`
 	case $pip_mode in
 	    L)
 		case $mode_actual in
