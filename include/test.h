@@ -50,6 +50,7 @@
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <sched.h>
 #include <stdlib.h>
 #include <unistd.h>

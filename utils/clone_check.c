@@ -43,7 +43,7 @@ int foo( void *arg ) { return 0; }
 
 char stack[8192];
 
-main() {
+int main() {
   int flags = pip_clone_flags( 0 );
   pid_t pid;
 
