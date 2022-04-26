@@ -54,6 +54,8 @@ myself=$dir_real/$base;
 
 ERR_LOG_FILE=$dir_real/.error.log;
 
+rm -f $ERR_LOG_FILE;
+
 longestmsg=" T -- UNRESOLVED :-O";
 width=60;
 
@@ -128,7 +130,6 @@ cleanup() {
     echo;
     echo "cleaning up ..."
     rm -f $sum_file;
-    rm -f $ERR_LOG_FILE;
     exit 1;
 }
 
@@ -634,7 +635,6 @@ if [ x"$SUMMARY_FILE" = x ] && [ -s $ERR_LOG_FILE ]; then
     echo 'vvvvvvvvvvvvvvvvvvvvvvvv ERROR LOG vvvvvvvvvvvvvvvvvvvvvvvv'
     cat $ERR_LOG_FILE
     echo '^^^^^^^^^^^^^^^^^^^^^^^^ ERROR LOG ^^^^^^^^^^^^^^^^^^^^^^^^'
-    rm -f $ERR_LOG_FILE;
 fi
 
 print_summary

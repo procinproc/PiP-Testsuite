@@ -59,16 +59,16 @@ static void cleanup( void ) {
 
   if( pid > 0 ) {
     /* deliver SIGTERM to all PiP tasks and root */
-    asprintf( &sysstr, "%s x -k -d %d 2> /dev/null", PIPS, pid );
+    asprintf( &sysstr, "%s x -k -d %d", PIPS, pid );
     system( sysstr );
     free( sysstr );
     usleep( 100 * 10000 );	/* 10 msec */
     /* deliver SIGKILL to make sure */
-    asprintf( &sysstr, "%s x -s KILL -d %d 2> /dev/null", PIPS, pid );
+    asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
     system( sysstr );
     free( sysstr );
     if( kill( pid, SIGTERM ) == 0 || errno != ESRCH ) {
-      usleep( 100 * 10000 );	/* 10 msec */
+      usleep( 100 * 1000 );	/* 100 msec */
       (void) kill( pid, SIGKILL );
     }
   }
@@ -84,9 +84,9 @@ static int get_load() {
       if( ( fp = popen( "getconf _NPROCESSORS_ONLN", "r" ) ) != NULL ) {
 	fscanf( fp, "%d", &ncores );
 	fclose( fp );
-	return 0.0;
       }
     }
+    if( ncores <= 0 ) ncores = 2;
   }
   inv_nc = 1.0 / (float) ncores;
   if( ( fp = fopen( "/proc/loadavg", "r" ) ) != NULL ) {
@@ -114,8 +114,10 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   timer_actual ++;
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
-      fprintf( stderr, "[%s] Timer expired (%d/%d sec) !!\n", 
+      fflush( NULL );
+      fprintf( stderr, "\n*** [%s] Timer expired (%d/%d sec) ***\n\n", 
 	       prog, timer_period, timer_actual );
+      fflush( NULL );
       unset_timer();
       timedout = 1;
       cleanup();
@@ -221,8 +223,6 @@ int main( int argc, char **argv ) {
 
   } else {
     fprintf( stderr, "[%s] fork(): %d\n", prog, errno );
-    unset_timer();
-    exit( EXIT_UNTESTED );
   }
   exit( EXIT_UNTESTED );
 }

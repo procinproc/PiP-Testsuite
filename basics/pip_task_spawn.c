@@ -120,7 +120,7 @@ int main( int argc, char **argv ) {
   CHECK( pip_task_spawn( &prog, PIP_CPUCORE_ASIS, 0, &pipid, NULL ),
 	 RV,
 	 return(EXIT_FAIL) );
-  CHECK( pip_wait( pipid, &status ), RV, return(EXIT_FAIL) );
+  CHECK( pip_wait( pipid, &status ), RV||status==0, return(EXIT_FAIL) );
 #else
   CHECK( pip_task_spawn( &prog, PIP_CPUCORE_ASIS, 0, &pipid, NULL ),
 	 RV!=ENOEXEC,

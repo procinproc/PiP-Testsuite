@@ -118,6 +118,7 @@ int main( int argc, char **argv ) {
   }
 
   if( ( pid = fork() ) == 0 ) {
+    setpgid( 0, 0 );
     extval = spawn_tasks( ntasks, &argv[2] );
     switch( extval ) {
     case EXIT_PASS:
