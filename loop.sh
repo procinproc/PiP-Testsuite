@@ -156,7 +156,7 @@ if [ $# -lt 1 ]; then
     print_usage;
 fi
 
-/bin/which $1 > /dev/null 2>&1
+type -P $1 > /dev/null 2>&1
 if [ $? != 0 ]; then
     echo "$1: Command not found";
     exit 5;
