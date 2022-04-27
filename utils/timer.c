@@ -59,12 +59,12 @@ static void cleanup( void ) {
 
   if( pid > 0 ) {
     /* deliver SIGTERM to all PiP tasks and root */
-    asprintf( &sysstr, "%s x -k -d %d", PIPS, pid );
+    asprintf( &sysstr, "%s x -k -d %d > /dev/null 2>&1", PIPS, pid );
     system( sysstr );
     free( sysstr );
     usleep( 100 * 10000 );	/* 10 msec */
     /* deliver SIGKILL to make sure */
-    asprintf( &sysstr, "%s x -s KILL -d %d", PIPS, pid );
+    asprintf( &sysstr, "%s x -s KILL -d %d > /dev/null 2>&1", PIPS, pid );
     system( sysstr );
     free( sysstr );
     if( kill( pid, SIGTERM ) == 0 || errno != ESRCH ) {
@@ -115,7 +115,7 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
       fflush( NULL );
-      fprintf( stderr, "\n*** [%s] Timer expired (%d/%d sec) ***\n\n", 
+      fprintf( stderr, "\n***** [%s] Timer expired (%d/%d sec) *****\n\n", 
 	       prog, timer_period, timer_actual );
       fflush( NULL );
       unset_timer();
@@ -159,6 +159,40 @@ static void set_timer( int time ) {
 static void usage( void ) {
   fprintf( stderr, "Usage: %s <time> <prog> [<args>]\n", prog );
   exit( EXIT_UNTESTED );
+}
+
+static char *exit_status( int extval ) {
+  char *str;
+  switch( WEXITSTATUS(extval) ) {
+  case EXIT_PASS:
+    str = "EXIT_PASS";
+    break;
+  case EXIT_FAIL:
+    str = "EXIT_FAIL";
+    break;
+  case EXIT_XPASS:  /* passed, but it's unexpected. fixed recently?   */
+    str = "EXIT_XPASS";
+    break;
+  case EXIT_XFAIL:
+    str = "EXIT_XFAIL";
+    break;
+  case EXIT_UNRESOLVED:
+    str = "EXIT_UNRESOLVED";
+    break;
+  case EXIT_UNTESTED:
+    str = "EXIT_UNTESTED";
+    break;
+  case EXIT_UNSUPPORTED:
+    str = "EXIT_UNSUPPORTED";
+    break;
+  case EXIT_KILLED:
+    str = "EXIT_KILLED";
+    break;
+  default:
+    asprintf( &str, "(unknown:%d)", extval );
+    break;
+  }
+  return str;
 }
 
 int main( int argc, char **argv ) {
@@ -211,13 +245,13 @@ int main( int argc, char **argv ) {
       fprintf( stderr, "[%s] '%s' failed to wait: %s\n", 
 	       prog, target, strerror(errno) );
     } else if( WIFEXITED( status ) ) {
+      fprintf( stderr, "[%s] %s (PID:%d): %s\n",
+	       prog, target, pid, exit_status(status) );
       exit( WEXITSTATUS( status ) );
     } else if( WIFSIGNALED( status ) ) {
-      if( !timedout ) {
-	int sig = WTERMSIG( status );
-	fprintf( stderr, "[%s] '%s(%d)' terminated due to signal (%s)\n",
-		 prog, target, pid, strsignal(sig) );
-      }
+      int sig = WTERMSIG( status );
+      fprintf( stderr, "[%s] %s (PID:%d) terminated due to signal (%s)\n",
+	       prog, target, pid, strsignal(sig) );
     }
     exit( EXIT_UNRESOLVED );
 

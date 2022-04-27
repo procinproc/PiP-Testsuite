@@ -158,11 +158,6 @@ export OMP_NUM_THREADS=`${MCEXEC} ompnumthread`;
 
 debug=`${MCEXEC} ${LIBPIPSO} --debug`
 
-if ! [ -f ${PIP_PRELOAD} ]; then
-    echo "$base: Unable to find pip_preload.so";
-    exit 1;
-fi
-
 file_summary() {
     rm -f $sum_file;
     echo TEST_LOG_FILE=$TEST_LOG_FILE		>> $sum_file;
@@ -329,7 +324,6 @@ fi
 if [ x"$SUMMARY_FILE" = x ]; then
     echo "Testing PiP Version:" ${PIP_VERSION}
     echo "--with-pip=$PIP_DIR"
-    echo "LD_PRELOAD=$PIP_PRELOAD"
     echo "NTASKS:  " ${NTASKS}
     echo "NTHREADS:" ${OMP_NUM_THREADS}
     if [ x"${MCEXEC}" != x ]; then
