@@ -71,8 +71,11 @@ int main( int argc, char **argv ) {
 
   for( i=0; i<ntasks; i++ ) {
     aux[i] = i * 100;
+  }
+  fprintf( stderr, "ROOT [%d] aux:%p\n", pipid, aux );
+
+  for( i=0; i<ntasks; i++ ) {
     memset( &prog, 0, sizeof(prog) );
-    fprintf( stderr, "ROOT [%d] aux:%p\n", pipid, aux );
     pip_spawn_from_func( &prog, argv[0], "user_func", (void*) &arg,
 			 NULL, NULL, (void*) &aux[i] );
     pipid = i;
@@ -90,5 +93,6 @@ int main( int argc, char **argv ) {
     }
   }
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
+  free( aux );
   return EXIT_PASS;
 }
