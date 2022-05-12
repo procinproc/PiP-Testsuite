@@ -116,7 +116,7 @@ sigsegv() {
 }
 
 control_c() {
-    echo Interrupted !!;
+    echo " !! Interrupted !!";
     finalize;
     exit 4;
 }
