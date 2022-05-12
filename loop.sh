@@ -45,6 +45,11 @@ cmd=`basename $0`;
 ext=0;
 TMP='';
 
+time_total=0;
+time_min=10000;
+time_max=0;
+ntimes=0;
+
 PIP_MODE_CHECK=${dir}/utils/pip_mode_check
 if ! [ -x ${PIP_MODE_CHECK} ]; then
     echo "Unable to find ${PIP_MODE_CHECK}. Maybe not build yet."
@@ -97,6 +102,10 @@ finalize() {
 	    mv $TMP $FILE;
 	fi
     fi
+    if [ $ntimes -gt 0 ]; then
+	ave=`expr $time_total / $ntimes`
+	echo "Time (sec) ave:" $ave "min:" $time_min "max:" $time_max "(" $ntimes "times )"
+    fi
 }
 
 sigsegv() {
@@ -107,7 +116,7 @@ sigsegv() {
 }
 
 control_c() {
-    echo;
+    echo Interrupted !!;
     finalize;
     exit 4;
 }
@@ -200,6 +209,7 @@ while true; do
     if [ $nomode -eq 0 ]; then
 	for mode in $mlist; do
 	    echo -n "" > $TMP #rewind
+	    SECONDS=0
 	    if [ $display -eq 0 ]; then
 		echo "[[" "$i$mode" "]]" "$cmdline" ":" `date` >> $TMP;
 		if [ $quiet -eq 0 ]; then
@@ -210,6 +220,11 @@ while true; do
 		echo "[[" "$i$mode" "]]" "$cmdline" `date` | tee -a $TMP;
 		${PIP_MODE_CMD} $mode $@ 2>&1 | tee -a $TMP;
 	    fi
+	    t=$SECONDS;
+	    ntimes=`expr $ntimes + 1`
+	    time_total=`expr $time_total + $t`
+	    if [ $t -lt $time_min ]; then time_min=$t; fi
+	    if [ $t -gt $time_max ]; then time_max=$t; fi
 	    ext=$?;
 	    if [ $ext != 0 ] ; then
 		err_count=$((err_count+1));
@@ -277,5 +292,5 @@ done
 
 rm -f $TMP;
 
-prt_ext 0;
+finalize
 exit 0;

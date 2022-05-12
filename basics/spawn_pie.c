@@ -78,17 +78,12 @@ int main( int argc, char **argv ) {
   nargv[0] = "./prog-nordynamic";
   err = pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
 		   NULL, NULL, NULL );
-  /* this MAY succeed depending on system */
-  CHECK( RV=err,
-	 !(RV==ENOEXEC || RV==0),
-	 return(EXIT_FAIL) );
-  if( !err ) {
-#ifndef PIP_HAVE_LDPIP
-    CHECK( wait_termination(), RV, return(EXIT_FAIL) );
+#if PIP_VERSION_MINOR < 4
+  CHECK( RV=err, RV!=ENOEXEC, return(EXIT_FAIL) );
 #else
-    CHECK( wait_termination(), RV!=ENOEXEC, return(EXIT_FAIL) );
+  CHECK( RV=err, RV, return(EXIT_FAIL) );
+  CHECK( wait_termination(), RV, return(EXIT_FAIL) );
 #endif
-  }
 
   nargv[0] = "prog-pie";	/* not a path (no slash) */
   err = pip_spawn( nargv[0], nargv, NULL, PIP_CPUCORE_ASIS, NULL,
