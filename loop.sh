@@ -34,14 +34,15 @@
 dir=`dirname $0`;
 dir_real=`cd $dir && pwd`;
 
+cmdline="$0 $@";
+cmd=`basename $0`;
+
 if ! [ -f ${dir_real}/config.sh ]; then
-    ${dir_real}/configure --help
+    echo "$cmd: not yet configured"
     exit 1
 fi
 . $dir_real/config.sh
 
-cmdline="$0 $@";
-cmd=`basename $0`;
 ext=0;
 TMP='';
 
@@ -215,10 +216,10 @@ while true; do
 		if [ $quiet -eq 0 ]; then
 		    echo -n $i$mode "";
 		fi
-		${PIP_MODE_CMD} $mode $@ >> $TMP 2>&1;
+		${PIP_MODE_CMD} $mode $@ >> $TMP 2>&1 < /dev/null;
 	    else
 		echo "[[" "$i$mode" "]]" "$cmdline" `date` | tee -a $TMP;
-		${PIP_MODE_CMD} $mode $@ 2>&1 | tee -a $TMP;
+		${PIP_MODE_CMD} $mode $@ 2>&1 < /dev/null | tee -a $TMP;
 	    fi
 	    t=$SECONDS;
 	    ntimes=`expr $ntimes + 1`

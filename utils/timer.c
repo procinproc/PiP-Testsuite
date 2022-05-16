@@ -67,7 +67,7 @@ static void cleanup( void ) {
     asprintf( &sysstr, "%s x -s KILL -d %d > /dev/null 2>&1", PIPS, pid );
     system( sysstr );
     free( sysstr );
-    if( kill( pid, SIGTERM ) == 0 || errno != ESRCH ) {
+    if( killpg( pid, SIGTERM ) == 0 || errno != ESRCH ) {
       usleep( 100 * 1000 );	/* 100 msec */
       (void) kill( pid, SIGKILL );
     }

@@ -106,6 +106,7 @@ int main( int argc, char **argv ) {
 
   prog = argv[0];
 
+  setpgid( 0, 0 );
   set_sigint_watcher();
 
   if( argc < 3 ) return EXIT_UNTESTED;
@@ -118,7 +119,6 @@ int main( int argc, char **argv ) {
   }
 
   if( ( pid = fork() ) == 0 ) {
-    setpgid( 0, 0 );
     extval = spawn_tasks( ntasks, &argv[2] );
     switch( extval ) {
     case EXIT_PASS:

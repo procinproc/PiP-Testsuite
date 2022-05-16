@@ -35,24 +35,6 @@
 
 static int static_user_func( void *args ) __attribute__ ((unused));
 static int static_user_func( void *argp ) {
-  /* indeed, this function is not reachable */
-  int arg;
-  int pipid = -100;
-
-#if PIP_VERSION_MAJOR > 1
-  CHECK( pip_get_pipid( &pipid ), 	  RV!=EPERM, return(1) );
-#else
-  CHECK( pip_get_pipid( &pipid ), 	  RV,        return(1) );
-#endif
-  CHECK( pip_init( NULL, NULL, NULL, 0 ), RV, 	     return(1) );
-  CHECK( pip_get_pipid( &pipid ),	  RV,	     return(1) );
-  CHECK( argp==NULL,                      RV,        return(1) );
-  arg = *((int*) argp);
-  CHECK( pipid!=arg, 			  RV,	     return(1) );
-  return 0;
-}
-
-int global_user_func( void *argp ) {
   int arg = *((int*)argp);
   int pipid = -100;
 
@@ -65,6 +47,10 @@ int global_user_func( void *argp ) {
   CHECK( pip_get_pipid( &pipid ), 	  RV,        return(1) );
   CHECK( pipid!=arg, 			  RV,        return(1) );
   return 0;
+}
+
+int global_user_func( void *argp ) {
+  return static_user_func( argp );
 }
 
 int main( int argc, char **argv ) {
