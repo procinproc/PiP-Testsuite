@@ -77,7 +77,7 @@ int main( int argc, char **argv ) {
   for( i=0; i<ntasks; i++ ) {
     memset( &prog, 0, sizeof(prog) );
     pip_spawn_from_func( &prog, argv[0], "user_func", (void*) &arg,
-			 NULL, NULL, (void*) &aux[i] );
+			 NULL, (void*) &aux[i] );
     pipid = i;
     CHECK( pip_task_spawn( &prog, PIP_CPUCORE_ASIS, 0, &pipid, NULL ),
 	   RV,

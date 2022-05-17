@@ -81,43 +81,45 @@ int main( int argc, char **argv ) {
     if( pipid == 0 ) {
       count  = 1;
       countp = &count;
-      fprintf( stderr, ">> [%d] countp:%p\n", pipid, countp );
+      //fprintf( stderr, ">> [%d] countp:%p\n", pipid, countp );
       CHECK( pip_named_export( (void*) countp, "forward:%d", i ),
 	     RV, return(EXIT_FAIL) );
       CHECK( pip_named_import( prev, (void**) &cp, "forward:%d", i ),
 	     RV, return(EXIT_FAIL) );
-      fprintf( stderr, ">> [%d] count:%d @ %p\n", pipid, *cp, cp );
+      //fprintf( stderr, ">> [%d] count:%d @ %p\n", pipid, *cp, cp );
       CHECK(  cp!=countp, RV, return(EXIT_FAIL) );
       CHECK( *cp!=ntasks, RV, return(EXIT_FAIL) );
 
       count  = 1;
       countp = &count;
-      fprintf( stderr, "<< [%d] countp:%p\n", pipid, countp );
+      //fprintf( stderr, "<< [%d] countp:%p\n", pipid, countp );
       CHECK( pip_named_export( (void*) countp, "backward:%d", i ),
 	     RV, return(EXIT_FAIL) );
       CHECK( pip_named_import( next, (void**) &cp, "backward:%d", i ),
 	     RV, return(EXIT_FAIL) );
-      fprintf( stderr, "<< [%d] count:%d @ %p\n", pipid, *cp, cp );
+      //fprintf( stderr, "<< [%d] count:%d @ %p\n", pipid, *cp, cp );
       CHECK(  cp!=countp, RV, return(EXIT_FAIL) );
       CHECK( *cp!=ntasks, RV, return(EXIT_FAIL) );
 
     } else {
       CHECK( pip_named_import( prev, (void**) &countp, "forward:%d", i ),
 	     RV, return(EXIT_FAIL) );
-      fprintf( stderr, ">> [%d] count:%d @ %p\n", pipid, *countp, countp );
+      //fprintf( stderr, ">> [%d] count:%d @ %p\n", pipid, *countp, countp );
       (*countp) ++;
       CHECK( pip_named_export( (void*) countp, "forward:%d", i ),
 	     RV, return(EXIT_FAIL) );
 
       CHECK( pip_named_import( next, (void**) &countp, "backward:%d", i ),
 	     RV, return(EXIT_FAIL) );
-      fprintf( stderr, "<< [%d] count:%d @ %p\n", pipid, *countp, countp );
+      //fprintf( stderr, "<< [%d] count:%d @ %p\n", pipid, *countp, countp );
       (*countp) ++;
       CHECK( pip_named_export( (void*) countp, "backward:%d", i ),
 	     RV, return(EXIT_FAIL) );
     }
   }
+  fprintf( stderr, "[%d] >> barrier\n", pipid );
   CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
+  fprintf( stderr, "[%d] << barrier\n", pipid );
   CHECK( pip_fin(), RV, return(EXIT_FAIL) );
   return EXIT_PASS;
 }
