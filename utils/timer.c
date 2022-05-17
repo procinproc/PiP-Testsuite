@@ -58,17 +58,18 @@ static void cleanup( void ) {
   char *sysstr;
 
   if( pid > 0 ) {
+    fprintf( stderr, "Cleaning up ...\n" );
     /* deliver SIGTERM to all PiP tasks and root */
     asprintf( &sysstr, "%s x -k -d %d > /dev/null 2>&1", PIPS, pid );
     system( sysstr );
     free( sysstr );
-    usleep( 100 * 10000 );	/* 10 msec */
+    usleep( 10 * 10000 );	/* 10 msec */
     /* deliver SIGKILL to make sure */
     asprintf( &sysstr, "%s x -s KILL -d %d > /dev/null 2>&1", PIPS, pid );
     system( sysstr );
     free( sysstr );
     if( killpg( pid, SIGTERM ) == 0 || errno != ESRCH ) {
-      usleep( 100 * 1000 );	/* 100 msec */
+      usleep( 10 * 1000 );	/* 10 msec */
       (void) kill( pid, SIGKILL );
     }
   }
@@ -114,11 +115,11 @@ static void timer_watcher( int sig, siginfo_t *siginfo, void *dummy ) {
   timer_actual ++;
   if( ld == 0 ) {
     if( --timer_count <= 0 ) {
+      unset_timer();
       fflush( NULL );
-      fprintf( stderr, "\n***** [%s] Timer expired (%d/%d sec) *****\n\n", 
+      fprintf( stderr, "\n***** [%s] Timer expired (%d/%d sec) *****\n", 
 	       prog, timer_period, timer_actual );
       fflush( NULL );
-      unset_timer();
       timedout = 1;
       cleanup();
     }
@@ -226,6 +227,7 @@ int main( int argc, char **argv ) {
   }
 
   if( ( pid = fork() ) == 0 ) {
+    setpgrp();
     execvp( argv[2], &argv[2] );
     fprintf( stderr, "[%s] execvp(%s): %s (%d)\n", prog, argv[2],
 	     strerror(errno), errno );
