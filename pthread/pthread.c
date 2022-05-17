@@ -42,9 +42,10 @@ void *thread_main( void *argp ) {
 }
 
 int main( int argc, char **argv ) {
+  pip_barrier_t barr, *barrp;
   pthread_t threads[NTHREADS];
   int nthreads, niters;
-  int i, j;
+  int pipid, ntasks, i, j;
 
   nthreads = 0;
   if( argc > 1 ) {
@@ -59,6 +60,16 @@ int main( int argc, char **argv ) {
   }
   niters = ( niters <= 0 ) ? NITERS : niters;
 
+  barrp = &barr;
+  CHECK( pip_get_pipid(  &pipid  ), RV, return(EXIT_FAIL) );
+  CHECK( pip_get_ntasks( &ntasks ), RV, return(EXIT_FAIL) );
+  if( pipid == 0 ) {
+    CHECK( pip_barrier_init( barrp, ntasks ), RV, return(EXIT_FAIL) );
+    CHECK( pip_named_export(    (void*)  barrp,  "barrier" ), RV, return(EXIT_FAIL) );
+  } else {
+    CHECK( pip_named_import( 0, (void**) &barrp, "barrier" ), RV, return(EXIT_FAIL) );
+  }
+  CHECK( pip_barrier_wait( barrp ), RV, return(EXIT_FAIL) );
   for( i=0; i<niters; i++ ) {
     for( j=0; j<nthreads; j++ ) {
       CHECK( pthread_create( &threads[j], NULL, thread_main, NULL ),
