@@ -7,7 +7,5 @@ if test -z $1; then
     exit 1;
 fi
 
-( cd ..; autoconf )
-
 keyword=$1
 exec $keyword -config keywords,version -tag copyright,version,bsd2 ../
