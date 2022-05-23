@@ -208,13 +208,17 @@ err_count=0
 
 while true; do
     if [ $nomode -eq 0 ]; then
+	if [ $quiet -eq 0 ]; then
+	    echo -n "$i:";
+	fi
 	for mode in $mlist; do
+	    m=`echo $mode | cut -c 2 | tr -d '\n'`
 	    echo -n "" > $TMP #rewind
 	    SECONDS=0
 	    if [ $display -eq 0 ]; then
 		echo "[[" "$i$mode" "]]" "$cmdline" ":" `date` >> $TMP;
 		if [ $quiet -eq 0 ]; then
-		    echo -n $i$mode "";
+		    echo -n "$m";
 		fi
 		${PIP_MODE_CMD} $mode $@ >> $TMP 2>&1 < /dev/null;
 	    else
@@ -238,6 +242,9 @@ while true; do
 	    rm -f $TMP;
 	    touch $TMP;
 	done
+	if [ $quiet -eq 0 ]; then
+	    echo -n " ";
+	fi
     else			# nomode
 	echo "" > $TMP;
 	if [ $display -eq 0 ]; then
