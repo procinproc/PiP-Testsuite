@@ -138,7 +138,7 @@ extern char *__progname;
 
 INLINE void abend( int extval ) {
 #if PIP_VERSION_MAJOR > 1
-  (void) pip_kill_all_tasks();
+  (void) pip_kill_all_child_tasks();
 #endif
   exit( extval );
 }
