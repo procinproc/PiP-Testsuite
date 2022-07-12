@@ -37,7 +37,7 @@
 DIFF=`type -P diff`
 if [ x"$DIFF" == x ]; then
     echo "$0: skpped since there is no 'diff' command"
-    exit EXIT_UNTESTED;
+    exit $EXIT_UNTESTED;
 fi
 
 pips_log="pips-test"
@@ -247,7 +247,7 @@ cleanup
 
 if $flag_error; then
     echo "FAILED";
-    exit EXIT_FAILED;
+    exit $EXIT_FAILED;
 fi
 echo "succeeded"
-exit EXIT_PASS
+exit $EXIT_PASS
