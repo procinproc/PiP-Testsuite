@@ -34,10 +34,13 @@
 . ../config.sh
 . ../exit_code.sh.inc
 
-DIFF=`type -P diff`
+DIFF=`type -P cmp`
 if [ x"$DIFF" == x ]; then
-    echo "$0: skpped since there is no 'diff' command"
-    exit $EXIT_UNTESTED;
+    DIFF=`type -P diff`
+    if [ x"$DIFF" == x ]; then
+	echo "$0: skpped since there is no 'diff' command"
+	exit $EXIT_UNTESTED;
+    fi
 fi
 
 pips_log="pips-test"
