@@ -41,7 +41,7 @@
 
 int foo( void *arg ) { return 0; }
 
-char stack[8192];
+char stack[512*1024];
 
 int main() {
   int flags = pip_clone_flags( 0 );
