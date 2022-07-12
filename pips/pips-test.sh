@@ -32,6 +32,13 @@
 # $
 
 . ../config.sh
+. ../exit_code.sh.inc
+
+DIFF=`type -P diff`
+if [ x"$DIFF" == x ]; then
+    echo "$0: skpped since there is no 'diff' command"
+    exit EXIT_UNTESTED;
+fi
 
 pips_log="pips-test"
 flag_gen=false
@@ -50,7 +57,7 @@ check() {
     if [ $retv == 0 ]; then
 	if $flag; then
 	    if [ x"$file" != x ]; then
-		if ! diff $file.check $file.output >> $pips_log 2>&1; then
+		if ! $DIFF $file.check $file.output >> $pips_log 2>&1; then
 		    flag_error=true
 		    echo " >>> DIFF ($file)"
 		    echo "<<<< DIFF ($file)" >> $pips_log
@@ -71,7 +78,7 @@ check() {
 	    echo "<<<< NG" >> $pips_log
 	else
 	    if [ x"$file" != x ]; then
-		if ! diff $file.check $file.output >> $pips_log 2>&1; then
+		if ! $DIFF $file.check $file.output >> $pips_log 2>&1; then
 		    flag_error=true
 		    echo " >>> DIFF ($file)"
 		    echo "<<<< DIFF ($file)" >> $pips_log
@@ -239,8 +246,8 @@ do_test false pips-s-nosuch      -s nosuchsig
 cleanup
 
 if $flag_error; then
-    echo "FAILED"
-    exit 1
+    echo "FAILED";
+    exit EXIT_FAILED;
 fi
 echo "succeeded"
-exit 0
+exit EXIT_PASS
