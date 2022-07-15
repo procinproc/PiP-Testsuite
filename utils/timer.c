@@ -37,12 +37,15 @@
 
 #include <sys/time.h>
 #include <sys/wait.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <unistd.h>
 
 #define DEBUG_SCALE	(3)
+#define VM_SCALE	(5)
 
 static char *prog       = NULL;
 static char *target     = NULL;
@@ -198,6 +201,7 @@ static char *exit_status( int extval ) {
 
 int main( int argc, char **argv ) {
   char	*pip_test_timer_scale = getenv("PIP_TEST_TIMER_SCALE");
+  struct stat stbuf;
   int 	time, status, flag_debug = 0;
   char	rbuf[16], *yes = "yes";
   FILE	*fp;
@@ -224,6 +228,9 @@ int main( int argc, char **argv ) {
       }
     }
     pclose( fp );
+  }
+  if( stat( "/.dockerenv", &stbuf ) == 0 ) {
+    time *= VM_SCALE;
   }
 
   if( ( pid = fork() ) == 0 ) {
